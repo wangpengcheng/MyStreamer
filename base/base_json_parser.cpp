@@ -3,6 +3,13 @@
 NAMESPACE_START
 
 using namespace std;
+
+/*
+样例字符串：
+"{\"list\" : [{ \"camp\" : \"alliance\",\"occupation\" : \"paladin\",\"role_id\" : 1},\{\"camp\" : \"alliance\",\"occupation\" : \"Mage\",\"role_id\" : 2}],\"type\" : \"roles_msg\",\"valid\" : true}"
+
+
+*/
 /* 声明函数 */
 
 static bool ExtractString( const char** ptr, string& str );
@@ -29,42 +36,43 @@ bool SimpleJsonParser( const string& jsonStr, map<string, string>& values )
     {
         return false;
     }
+    /* 开始检查字符串内容 */
     for ( ; ; )
     {
         ptr++;
-
+        /* 获取第一个字符值 */
         if ( !ExtractString( &ptr, strName ) )
         {
             break;
         }
-
+        /* 检查中间是否为： */
         if ( *ptr != ':' )
         {
             return false;
         }
 
         ptr++;
-
+        /* 获取值 */
         if ( !ExtractValue( &ptr, strValue, false ) )
         {
             return false;
         }
-
+        /* 将属性和值进行添加 */
         values.insert( pair<string, string>( strName, strValue ) );
-
+        /* 如果遇到};直接结束*/
         if ( *ptr == '}' )
         {
             // all done
             break;
         }
-
+        /* 检查是否有下一个属性值，有则继续，没有则返回false */
         if ( *ptr != ',' )
         {
             // broken JSON
             return false;
         }
     }
-
+    /* 检查尾部 */
     if ( *ptr != '}' )
     {
         return false;
@@ -73,7 +81,7 @@ bool SimpleJsonParser( const string& jsonStr, map<string, string>& values )
     return true;
 }
 
-// Extract a string from JSON
+/* 获取连续的字符串，直到遇到 */
 bool ExtractString( const char** ptr, string& str )
 {
     const char* p = *ptr;
@@ -89,9 +97,10 @@ bool ExtractString( const char** ptr, string& str )
         string s;
 
         p++;
-
+        /* 检查字符串尾部 */
         while ( ( *p != '\0' ) && ( *p != '"' ) )
         {
+            /* 检查特殊字符 */
             if ( *p != '\\' )
             {
                 s.push_back( *p );
@@ -170,7 +179,7 @@ bool ExtractString( const char** ptr, string& str )
     return true;
 }
 
-// Extract a value from JSON
+// 对json值的解析
 bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
 {
     const char* p = *ptr;
@@ -192,20 +201,20 @@ bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
         }
         break;
 
-    case '{':   // object value
+    case '{':   // 如果检测到{;表示是一个对象，进行对象值的解析
         if ( !ExtractObjectAsString( &p, s ) )
         {
             return false;
         }
         break;
 
-    case '[':   // array value
+    case '[':   // 对数组进行解析
         if ( !ExtractArrayAsString( &p, s ) )
         {
             return false;
         }
         break;
-
+        /* 默认情况下的解析 */
     default:
         if ( ( *p == 't' ) || ( *p == 'f' ) || ( *p == 'n' ) || ( *p == '-' ) || ( ( *p >= '0' ) && ( *p <= '9' ) ) )
         {
@@ -219,7 +228,7 @@ bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
                 s.push_back( *p );
                 p++;
             }
-
+            /* 检查是否为t,f,n */
             if ( ( ( s[0] == 't' ) && ( s != "true"  ) ) ||
                  ( ( s[0] == 'f' ) && ( s != "false" ) ) ||
                  ( ( s[0] == 'n' ) && ( s != "null"  ) ) )
@@ -242,7 +251,7 @@ bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
     return true;
 }
 
-// Extract JSPN array as string
+// Extract JSPN array as string；解析数组
 static bool ExtractArrayAsString( const char** ptr, string& str )
 {
     const char* p = *ptr;
@@ -265,7 +274,7 @@ static bool ExtractArrayAsString( const char** ptr, string& str )
             {
                 break;
             }
-
+            //注意这里使用，进行分割
             if ( !s.empty( ) )
             {
                 s.append( "," );
@@ -287,7 +296,7 @@ static bool ExtractArrayAsString( const char** ptr, string& str )
         {
             return false;
         }
-
+        //前后添加新值
         s.insert( 0, 1, '[' );
         s.push_back( ']' );
 
@@ -319,7 +328,7 @@ static bool ExtractObjectAsString( const char** ptr, string& str )
         for (  ;; )
         {
             p++;
-
+            //检查属性
             if ( !ExtractString( &p, strName ) )
             {
                 break;
@@ -331,16 +340,17 @@ static bool ExtractObjectAsString( const char** ptr, string& str )
             }
 
             p++;
-
+            //检查，注意这里因为是对象，因此，需要在首位添加""作为序列化区分
             if ( !ExtractValue( &p, strValue, true ) )
             {
                 return false;
             }
-
+            //
             if ( !s.empty( ) )
             {
                 s.append( "," );
             }
+            //重新整合
             s.append( strName );
             s.push_back( ':' );
             s.append( strValue );
@@ -360,7 +370,7 @@ static bool ExtractObjectAsString( const char** ptr, string& str )
         {
             return false;
         }
-
+        /* 重新将对象值添加{} */
         s.insert( 0, 1, '{' );
         s.push_back( '}' );
 
