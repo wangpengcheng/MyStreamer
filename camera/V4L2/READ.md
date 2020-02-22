@@ -9,3 +9,4 @@ _参考链接：_
 - [V4L2获取usb视频流测试代码](https://blog.csdn.net/fengbingchun/article/details/95984569)
 - [V4L2 pixel format -- videodev2.h](https://blog.csdn.net/sheji105/article/details/86680697)
 - [摄像头v4l2编写，实现视频在帧缓冲显示](https://www.cnblogs.com/aquafly/p/6474555.html)
+- [V4L2深入理解](https://blog.csdn.net/myarrow/article/details/8475728#)
