@@ -359,7 +359,7 @@ void V4L2CameraData::VideoCaptureLoop( )
     // If JPEG encoding is used, client is notified with an image wrapping a mapped buffer.
     // If not used howver, we decode YUYV data into RGB.
     shared_ptr<Image> rgbImage;
-    
+    //非jpeg编码，就直接进行拷贝。
     if ( !JpegEncoding )
     {
         rgbImage = Image::Allocate( FrameWidth, FrameHeight, PixelFormat::RGB24);
@@ -423,7 +423,6 @@ void V4L2CameraData::VideoCaptureLoop( )
         }
         /* 获取总的处理时间 */
         handlingTime = static_cast<uint32_t>( std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::steady_clock::now( ) - startTime ).count( ) );
-        std::cout<<"handlingTime"<<handlingTime<<std::endl;
         /* 设置睡眠时间 */
         sleepTime    = ( handlingTime > frameTime ) ? 0 : ( frameTime - handlingTime );
     }

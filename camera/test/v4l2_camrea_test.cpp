@@ -18,7 +18,7 @@ int main(int argc,char* argv[])
     my_camera->SetFrameRate(20);
     my_camera->SetListener(&testlistener);
     my_camera->Start();
-    char temp=getchar();
+    char temp;
     while (1)
     {
         temp=getchar();

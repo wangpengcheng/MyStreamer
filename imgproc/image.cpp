@@ -48,7 +48,7 @@ std::shared_ptr<Image> Image::Allocate( int32_t width, int32_t height, PixelForm
     return std::shared_ptr<Image>( image );
 }
 
-//直接在已有的内存上直接进程创建
+//直接在已有的内存上直接进程创建。注意这里没有进行内存分配
 std::shared_ptr<Image> Image::Create( uint8_t* data, int32_t width, int32_t height, int32_t stride, PixelFormat format )
 {
     return std::shared_ptr<Image>( new (std::nothrow) Image( data, width, height, stride, format, false ) );

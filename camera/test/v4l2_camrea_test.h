@@ -39,8 +39,10 @@ OpenCVListener::~OpenCVListener()
 }
 
 void OpenCVListener::OnNewImage( const std::shared_ptr<const Image>& image ){
-    std::cout<<"width: "<<image->Width()<<"height"<<image->Height()<<std::endl;
+    std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<sizeof(image)<<";addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
     std::cout<<image->TimeStamp().tv_sec<<":"<<image->TimeStamp().tv_usec<<std::endl;
+    /* 在这里进行数据的输出 */
+    /* 在这里进行一次数据复制 */
     cvmat=cvMat(image->Width(),image->Height(),CV_8UC3,(void*)image->Data());
     img = cvDecodeImage(&cvmat,1);
     std::cout<<img->width<<","<<img->height<<std::endl;
