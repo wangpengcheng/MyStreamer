@@ -1,6 +1,7 @@
 set(LIB_SRC
    image_drawer.cpp
    image.cpp
+   jpeg_encoder.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/imgproc)
 add_library(stream_imgproc SHARED ${LIB_SRC})

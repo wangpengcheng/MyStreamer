@@ -60,8 +60,7 @@ public:
     // Raw data of the image
     uint8_t* Data( )       const { return mData;   }
 private:
-    /* data */
-    uint8_t*     mData;          
+    /* data */        
     int32_t      mWidth;            
     int32_t      mHeight;
     int32_t      mStride;           /* 记录每个像素点的大小 */
@@ -69,7 +68,14 @@ private:
     PixelFormat  mFormat;
     bool         mOwnMemory;
     struct timeval      mTimeStamp;          /* 记录图片的时间戳;后期可以换掉 */
+    uint8_t*     mData;  
 };
+/* 独立函数，将图片写入文件 */
+inline void WriteImageToFile(const std::shared_ptr<const Image>& srcImage)
+{
+    std::string file_name=std::to_string((int)srcImage->TimeStamp().tv_sec)+std::to_string((int)srcImage->TimeStamp().tv_usec);
+    WriteFile(file_name+".jpg",srcImage->Data(),srcImage->Size());
+}
 
 NAMESPACE_END
 

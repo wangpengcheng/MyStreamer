@@ -7,7 +7,7 @@
 #include "video_source_listener_interface.h"
 #include "image.h"
 #include <iostream>
-
+#include <string>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #define IMAGEWIDTH 3264
@@ -39,8 +39,11 @@ OpenCVListener::~OpenCVListener()
 }
 
 void OpenCVListener::OnNewImage( const std::shared_ptr<const Image>& image ){
-    std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<sizeof(image)<<";addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
+    /* 输出宽，高大小以及数据 指针地址 */
+    std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<image->Size()<<"data_addr"<<&image<<"; data_addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
     std::cout<<image->TimeStamp().tv_sec<<":"<<image->TimeStamp().tv_usec<<std::endl;
+    /* 将数据写入文件 */
+    WriteImageToFile(image);
     /* 在这里进行数据的输出 */
     /* 在这里进行一次数据复制 */
     cvmat=cvMat(image->Width(),image->Height(),CV_8UC3,(void*)image->Data());

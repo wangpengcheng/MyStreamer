@@ -84,7 +84,6 @@ inline uint32_t ImageBytesPerLine( uint32_t bitsPerLine )
     return ( bitsPerLine + 7 ) >> 3;
 }
 
-
 NAMESPACE_END
 
 #endif //IMG_TOOLS_H

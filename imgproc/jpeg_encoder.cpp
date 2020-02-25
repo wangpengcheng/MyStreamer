@@ -5,7 +5,7 @@ NAMESPACE_START
 /**
  * jpeg错误信息类
  */
-class JpegException : public exception
+class JpegException : public std::exception
 {
 public:
     virtual const char* what( ) const throw( )
