@@ -3,6 +3,7 @@ set(LIB_SRC
    base_obj_configuration_serializer.cpp
    base_manual_reset_event.cpp
    base_str_tools.cpp
+   base_ring_buffer.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 

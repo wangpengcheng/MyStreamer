@@ -421,10 +421,15 @@ int QueueTest()
      pthread_join(consumer_tid, NULL);
      return 0;
 }
+void RingBufferTest()
+{
+
+}
 using namespace std;
 int main(int argc,char* argv[])
 {
 	  //Test1();
-      QueueTest();
+      //QueueTest();
+      RingBufferTest();
 	  return 0;
 }

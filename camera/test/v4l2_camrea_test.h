@@ -40,10 +40,11 @@ OpenCVListener::~OpenCVListener()
 
 void OpenCVListener::OnNewImage( const std::shared_ptr<const Image>& image ){
     /* 输出宽，高大小以及数据 指针地址 */
-    std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<image->Size()<<"data_addr"<<&image<<"; data_addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
+    //std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<image->Size()<<"data_addr"<<&image<<"; data_addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
     std::cout<<image->TimeStamp().tv_sec<<":"<<image->TimeStamp().tv_usec<<std::endl;
+    auto temp_img=Image::Allocate(image->Width(),image->Height(),image->Format(),false);
     /* 将数据写入文件 */
-    WriteImageToFile(image);
+    //WriteImageToFile(image);
     /* 在这里进行数据的输出 */
     /* 在这里进行一次数据复制 */
     cvmat=cvMat(image->Width(),image->Height(),CV_8UC3,(void*)image->Data());

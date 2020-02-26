@@ -247,24 +247,26 @@ class SingleRingBuffer
 	typedef BaseSingleRingBufferData BaseData;
 public:
 	/* 空构造函数，一般不建议使用 */
-	SingleRingBuffer():buffer_data_(nullptr),buffer_length_(0),block_data_size_(0),block_reall_data_size_(0);
+	SingleRingBuffer();
 	/* 直接根据长度和类型进行数据的获取 */
 	SingleRingBuffer(const uint32_t block_size=0,
 					 const uint32_t length=0);
 
 	~SingleRingBuffer();
 	/* 每次存取个数据,注意存在exten指针,注意这里buffer内存一定要给够,并且是单存单取 */
-	uint32_t pop(T* buffer);
+	uint32_t pop(T* buffer,uint8_t* extend_ptr=nullptr);
 	/* 添加数据，注意格外数据指针 */
-	uint32_t push(T* buffer);
+	uint32_t push(T* buffer,uint8_t* extend_ptr=nullptr);
 private:
 	/* 释放缓存内存块 */
 	inline void FreeBuffer(){ 
-			if(buffer_data_){delete buffer_data_;buffer_data_=nullptr}
+			if(buffer_data_){delete buffer_data_;buffer_data_=nullptr;}
 	};					
 	BaseData* buffer_data_;				/* 数据存储基本对象；这里的主要数据对象在堆上进行分配，应该减少释放 */
 	uint32_t block_data_size_;			/* 存储每个数据的大小 */
 	uint32_t buffer_length_;			/* 其中存在的数据长度 */
+	bool isExtend_=false;				/*  是否需要进行扩充，当存在额外的数据时，需要考虑额外的数据扩充 */
+	uint32_t block_reall_data_size_;		/* 用于记录真正的存储数据的长度，方便变长计算 */
 };
 /* 指定构造函数 */
 template <typename T>
@@ -280,6 +282,8 @@ SingleRingBuffer<T>::SingleRingBuffer(const uint32_t block_size,const uint32_t l
 	{
 		/* 计算真实的数据地址的偏移 */
 		block_reall_data_size_=block_data_size_-type_size;
+		/* 表明需要额外的数据进行扩充 */
+		isExtend_=true;
 	}else{
 		//更新块大小
 		block_data_size_=type_size;
@@ -295,7 +299,12 @@ SingleRingBuffer<T>::~SingleRingBuffer()
 	FreeBuffer();
 }
 template <typename T>
-uint32_t SingleRingBuffer<T>::pop(T* buffer)
+SingleRingBuffer<T>::SingleRingBuffer():buffer_data_(nullptr),buffer_length_(0),block_data_size_(0),block_reall_data_size_(0)
+{
+
+}
+template <typename T>
+uint32_t SingleRingBuffer<T>::pop(T* buffer,uint8_t* extend_ptr)
 {
 	/* 计算读取的size */
 	uint32_t ret=0;
@@ -315,12 +324,14 @@ uint32_t SingleRingBuffer<T>::pop(T* buffer)
 	return ret; 
 }
 template <typename T>
-uint32_t SingleRingBuffer<T>::push(T* buffer)
+uint32_t SingleRingBuffer<T>::push(T* buffer,uint8_t* extend_ptr)
 {
 	uint32_t ret=0;
+	__sync_synchronize();
 	ret=buffer_data_->ForceWrite(buffer,sizeof(buffer));
-	ret+=buffer_data_->ForceWrite(extend_ptr,sizeof(extend_ptr));
-	
+	ret+=buffer_data_->ForceWrite(extend_ptr,block_reall_data_size_);
+	__sync_synchronize();
+	return ret;
 }
 NAMESPACE_END
 

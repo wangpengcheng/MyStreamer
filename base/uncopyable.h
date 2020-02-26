@@ -13,7 +13,16 @@ private:
     Uncopyable( const Uncopyable& ) = delete;
     Uncopyable& operator= ( const Uncopyable& ) = delete;
 };
+typedef Uncopyable noncopyable;
 
+class copyable
+{
+ protected:
+  copyable() = default;
+  ~copyable() = default;
+};
+
+}  // namespace muduo
 NAMESPACE_END
 
 #endif  //UNCOPYABLE_H
