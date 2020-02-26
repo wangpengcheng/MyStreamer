@@ -22,7 +22,6 @@ class copyable
   ~copyable() = default;
 };
 
-}  // namespace muduo
 NAMESPACE_END
 
 #endif  //UNCOPYABLE_H

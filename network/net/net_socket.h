@@ -27,7 +27,7 @@ class Socket : noncopyable
     : sockfd_(sockfd)
   { }
 
-  /* 析构函数 */
+  /* 析构函数;主要是关闭连接符 */
     ~Socket();
     /* socket文件描述符 */
     int fd() const { return sockfd_; }

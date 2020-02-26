@@ -15,10 +15,10 @@ namespace  net
     /* net命名空间 */
 namespace sockets
 {
-/* 地址类的静态转换函数 */
-const struct sockaddr* sockaddr_cast(const struct sockaddr_in6* addr);
+    /* 地址类的静态转换函数 */
+    const struct sockaddr* sockaddr_cast(const struct sockaddr_in6* addr);
 }
-} // namespace  net
+
 /**
  *  sockaddr_in的包装类
 */
@@ -68,5 +68,5 @@ private:
         struct sockaddr_in6 addr6_;
     };
 };
-
+} // namespace  net
 NAMESPACE_END

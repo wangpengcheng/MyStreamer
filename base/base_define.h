@@ -6,7 +6,9 @@
 
 
 #define MY_NAME_SPACE           MyStreamer
+
 #define NAMESPACE_START         namespace MY_NAME_SPACE {
+
 #define NAMESPACE_END           }
 
 #endif //BASE_TOOL_H

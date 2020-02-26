@@ -77,10 +77,25 @@ public:
     {
         return this->microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
     }
-
+    inline bool operator<=(const Timestamp& rhs)
+    {
+        return this->microSecondsSinceEpoch() <= rhs.microSecondsSinceEpoch();
+    }
+    inline bool operator>(const Timestamp& rhs)
+    {
+        return this->microSecondsSinceEpoch()> rhs.microSecondsSinceEpoch();
+    }
+    inline bool operator>=(const Timestamp& rhs)
+    {
+        return this->microSecondsSinceEpoch()>=rhs.microSecondsSinceEpoch();
+    }
     inline bool operator==(const Timestamp& rhs)
     {
         return this->microSecondsSinceEpoch() == rhs.microSecondsSinceEpoch();
+    }
+    inline bool operator!=(const Timestamp& rhs)
+    {
+        return this->microSecondsSinceEpoch() != rhs.microSecondsSinceEpoch();
     }
 
 
