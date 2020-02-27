@@ -22,7 +22,7 @@ public:
         repeat_(interval > 0.0),
         sequence_(s_numCreated_.incrementAndGet())
     { }
-
+    /* 执行回调 */
     void run() const
     {
         callback_();
@@ -31,19 +31,19 @@ public:
     Timestamp expiration() const  { return expiration_; }
     bool repeat() const { return repeat_; }
     int64_t sequence() const { return sequence_; }
-
+    /* 重新设置定时器 */
     void restart(Timestamp now);
 
     static int64_t numCreated() { return s_numCreated_.get(); }
 
 private:
     const TimerCallback callback_;              /* 回调函数 */
-    Timestamp expiration_;                      /* 过期时间 */
-    const double interval_;                     /* 设置时间间隔 */
+    Timestamp expiration_;                      /* 过期时间；即定时的时间 */
+    const double interval_;                     /* 设置触发的时间间隔 */
     const bool repeat_;                         /* 时钟是否可以重复 */
     const int64_t sequence_;                    /* 当前定时器的编号（基于s_numCreated_） */
 
-    static AtomicInt64 s_numCreated_;           /* 记录定时器的个数 */
+    static AtomicInt64 s_numCreated_;           /* 记录定已创建时器的个数 */
 };
 
 }  // namespace net

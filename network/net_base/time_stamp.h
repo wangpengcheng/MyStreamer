@@ -3,7 +3,7 @@
 
 #include "uncopyable.h"
 #include "base_types.h"
-
+#include <boost/operators.hpp>
 NAMESPACE_START
 
 ///
@@ -12,7 +12,9 @@ NAMESPACE_START
 /// This class is immutable.
 /// It's recommended to pass it by value, since it's passed in register on x64.
 ///
-class Timestamp 
+class Timestamp :   public copyable,
+                    public boost::equality_comparable<Timestamp>,
+                    public boost::less_than_comparable<Timestamp>
 {
 public:
     ///
@@ -72,37 +74,21 @@ public:
     /* 定义每毫秒的时间 */
 
     static const int kMicroSecondsPerSecond = 1000 * 1000;
-    /* 重载比较操作符号 */
-    inline bool operator<(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
-    }
-    inline bool operator<=(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch() <= rhs.microSecondsSinceEpoch();
-    }
-    inline bool operator>(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch()> rhs.microSecondsSinceEpoch();
-    }
-    inline bool operator>=(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch()>=rhs.microSecondsSinceEpoch();
-    }
-    inline bool operator==(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch() == rhs.microSecondsSinceEpoch();
-    }
-    inline bool operator!=(const Timestamp& rhs)
-    {
-        return this->microSecondsSinceEpoch() != rhs.microSecondsSinceEpoch();
-    }
 
 
 private:
     int64_t microSecondsSinceEpoch_;                        /* 格林威志时间的总的秒数 */
 };
+/* 重载比较操作符号 */
+inline bool operator<(Timestamp lhs, Timestamp rhs)
+{
+  return lhs.microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
+}
 
+inline bool operator==(Timestamp lhs, Timestamp rhs)
+{
+  return lhs.microSecondsSinceEpoch() == rhs.microSecondsSinceEpoch();
+}
 
 ///
 /// Gets time difference of two timestamps, result in seconds.

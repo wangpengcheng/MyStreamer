@@ -47,7 +47,9 @@ public:
     /** 
      * tie此方法是防止Channel类还在执行，上层调用导致 
      * Channel提前释放而出现的异常问题，下文会详细解释。
+     * 
      * */
+    /* 用于保存TcpConnection指针 */
     void tie(const std::shared_ptr<void>&);
 
     int fd() const { return fd_; }              //Channel拥有的fd
@@ -97,9 +99,18 @@ private:
     const int  fd_;                                 //channel负责的文件描述符
     int        events_;                             //注册的事件
     int        revents_;                            //poller设置的就绪的事件
+    /* 
+    * 保存fd在epoll/poll中的状态，有：
+    *    还没有添加到epoll中
+    *    已经添加到epoll中
+    *    添加到epoll中，又从epoll中删除了
+    */
     int        index_;                              //被poller使用的下标
     bool       logHup_;                             //是否生成某些日志
-
+    /* 
+    * tie_存储的是TcpConnection类型的指针，即TcpConnectionPtr
+    * 一个TcpConnection代表一个已经建立好的Tcp连接
+    */
     std::weak_ptr<void> tie_;                       /* 指向connet的弱连接 */
     bool tied_;
     bool eventHandling_;                            //是否处于处理事件中
@@ -107,7 +118,7 @@ private:
     ReadEventCallback readCallback_;                //读事件回调
     EventCallback writeCallback_;                   //写事件回调
     EventCallback closeCallback_;                   //关闭事件回调
-    ReadEventCallback errorCallback_;               //错误事件回调
+    EventCallback errorCallback_;               //错误事件回调
 };
 }// namespace net
 

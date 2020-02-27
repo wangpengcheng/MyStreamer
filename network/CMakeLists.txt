@@ -22,9 +22,17 @@ set(LIB_SRC
     ./net_base/thread_pool.cpp
     ./net_base/time_stamp.cpp
     ./net_base/time_zone.cpp
+    ./net/net_buffer.cpp
+    ./net/net_channel.cpp
+    ./net/net_connector.cpp
+    ./net/net_event_loop.cpp
     ./net/net_inet_address.cpp
+    ./net/net_poller.cpp
     ./net/net_socket.cpp
     ./net/net_sockets_ops.cpp
+    ./net/net_tcp_connection.cpp
+    ./net/net_timer.cpp
+    ./net/net_timer_queue.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 include_directories(${PROJECT_SOURCE_DIR}/network/net_base)

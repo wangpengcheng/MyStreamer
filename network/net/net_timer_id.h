@@ -8,7 +8,8 @@ namespace net
 class Timer;
 
 /**
- * 时间id对象，帮助取消时钟
+ * 时间id对象，帮助取消时钟；
+ * 只有定时器指针和对应队列中的序列号对象
 */
 class TimerId : public copyable
 {
@@ -29,7 +30,7 @@ friend class TimerQueue;
 
 private:
     Timer* timer_;              /* 计时器指针 */
-    int64_t sequence_;          /* 相关队列 */
+    int64_t sequence_;          /* 队列中的序号 */
 };
 
 
