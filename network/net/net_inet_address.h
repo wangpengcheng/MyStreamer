@@ -2,6 +2,9 @@
  * 域名地址解析函数
  * 
 */
+
+#ifndef NET_INTE_ADDRESS_H
+#define NET_INTE_ADDRESS_H
 #include "base_tool.h"
 #include "string_piece.h"
 #include "uncopyable.h"
@@ -70,3 +73,5 @@ private:
 };
 } // namespace  net
 NAMESPACE_END
+
+#endif

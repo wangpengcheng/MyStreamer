@@ -2,6 +2,7 @@
 #define NET_CONNECTOR_H
 #include "uncopyable.h"
 #include "net_inet_address.h"
+#include "logging.h"
 
 #include <functional>
 #include <memory>
