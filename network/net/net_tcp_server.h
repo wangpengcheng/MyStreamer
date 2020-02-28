@@ -54,6 +54,7 @@ public:
     /// - N means a thread pool with N threads, new connections
     ///   are assigned on a round-robin basis.
     void setThreadNum(int numThreads);
+    /*  */
     void setThreadInitCallback(const ThreadInitCallback& cb)
     { threadInitCallback_ = cb; }
     /// valid after calling start()
@@ -91,19 +92,31 @@ private:
 
     typedef std::map<string, TcpConnectionPtr> ConnectionMap;
 
+    /* TcpServer所在的主线程下运行的事件驱动循环，负责监听Acceptor的Channel */
     EventLoop* loop_;  // the acceptor loop
+    /* 服务器负责监听的本地ip和端口 */
     const string ipPort_;
+    /* 服务器名字，创建时传入 */
     const string name_;
+    /* Acceptor对象，负责监听客户端连接请求，运行在主线程的EventLoop中 */
     std::unique_ptr<Acceptor> acceptor_; // avoid revealing Acceptor
+    /* 事件驱动线程池，池中每个线程运行一个EventLoop */
     std::shared_ptr<EventLoopThreadPool> threadPool_;
+    /* 用户传入，有tcp连接到达或tcp连接关闭时调用，传给TcpConnection */
     ConnectionCallback connectionCallback_;
+    /* 用户传入，对端发来消息时调用，传给TcpConnection */
     MessageCallback messageCallback_;
+    /* 成功写入内核tcp缓冲区后调用，传给TcpConnection */
     WriteCompleteCallback writeCompleteCallback_;
+    /* 线程池初始化完成后调用，传给EventLoopThreadPool，再传给每个EventLoopThread */
     ThreadInitCallback threadInitCallback_;
     AtomicInt32 started_;
     // always in loop thread
+    /* TcpConnection特有id，每增加一个TcpConnection，nextConnId_加一 */
     int nextConnId_;
+    /* 所有的TcpConnection对象，智能指针 */
     ConnectionMap connections_;
+
 };
 
 }  // namespace net

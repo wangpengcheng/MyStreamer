@@ -43,7 +43,7 @@ public:
 
 private:
 
-    EventLoop* baseLoop_;
+    EventLoop* baseLoop_;               /* 主要事件驱动loop */
     string name_;
     bool started_;
     int numThreads_;

@@ -45,7 +45,7 @@ public:
   pid_t      tid_;
   ThreadFunc func_;
   string     name_;
-  CountDownLatch latch_;
+  CountDownLatch latch_;        /* 同步计时器 */
 
   static AtomicInt32 numCreated_;
 };

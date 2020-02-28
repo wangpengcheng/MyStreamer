@@ -67,11 +67,13 @@ struct ThreadData
       tid_(tid),
       latch_(latch)
   { }
-
-  void runInThread()
-  {
+/* 运行线程 */
+void runInThread()
+{
+  /* 获取当前的线程ID */
     *tid_ =  CurrentThread::tid();
     tid_ = NULL;
+    /* latch计数器-1 */
     latch_->countDown();
     latch_ = NULL;
 
@@ -79,7 +81,7 @@ struct ThreadData
     ::prctl(PR_SET_NAME,  CurrentThread::t_threadName);
     try
     {
-      func_();
+      func_();  /* 执行函数 */
        CurrentThread::t_threadName = "finished";
     }
     catch (const Exception& ex)
@@ -108,10 +110,11 @@ struct ThreadData
 
 void* startThread(void* obj)
 {
-  ThreadData* data = static_cast<ThreadData*>(obj);
-  data->runInThread();
-  delete data;
-  return NULL;
+    ThreadData* data = static_cast<ThreadData*>(obj);
+    /* 运行线程 */
+    data->runInThread();
+    delete data;
+    return NULL;
 }
 
 }  // namespace detail
@@ -170,13 +173,16 @@ void Thread::setDefaultName()
     name_ = buf;
   }
 }
-
+/* 开始线程 */
 void Thread::start()
 {
   assert(!started_);
   started_ = true;
   // FIXME: move(func_)
+  /* 创建子线程为线程函数提供的参数，封装起来就可以实现传递多个参数 */
   detail::ThreadData* data = new detail::ThreadData(func_, name_, &tid_, &latch_);
+  
+  /* 创建线程，子线程调用detail::startThread，statThread中，调用的是data的func函数 */
   if (pthread_create(&pthreadId_, NULL, &detail::startThread, data))
   {
     started_ = false;
@@ -185,6 +191,7 @@ void Thread::start()
   }
   else
   {
+    /* 等待函数开始被执行，一般不会有阻塞 */
     latch_.wait();
     assert(tid_ > 0);
   }

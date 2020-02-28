@@ -16,6 +16,7 @@ class EventLoop;
 class EventLoopThread : noncopyable
 {
  public:
+  /* 线程初始化回调函数，注意输入参数是evenloop事件循环 */
   typedef std::function<void(EventLoop*)> ThreadInitCallback;
 
   EventLoopThread(const ThreadInitCallback& cb = ThreadInitCallback(),

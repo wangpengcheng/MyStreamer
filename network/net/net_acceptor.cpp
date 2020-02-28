@@ -80,7 +80,7 @@ void Acceptor::handleRead()
      */
         if (newConnectionCallback_)
         {
-            /* 主要用于，构造tcpconnecttion */
+            /* 主要用于，构造tcpconnecttion,注意这里的connfd和peerAddr*/
             newConnectionCallback_(connfd, peerAddr);
         }
         else

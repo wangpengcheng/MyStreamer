@@ -19,6 +19,7 @@
 - [muduo网络库学习（四）事件驱动循环EventLoop](https://blog.csdn.net/sinat_35261315/article/details/78329657)
 - [muduo网络库学习（五）服务器监听类Acceptor及Tcp连接TcpConnection的建立与关闭](https://blog.csdn.net/sinat_35261315/article/details/78343266)
 - [muduo源码分析：ThreadPool 线程池的实现](https://blog.csdn.net/amoscykl/article/details/83624187)
+- [常见的并发网络服务程序设计方案](https://blog.csdn.net/amoscykl/article/details/83247033)
 
 ## 3. epoll
 

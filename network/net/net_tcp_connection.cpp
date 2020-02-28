@@ -18,7 +18,7 @@ void MY_NAME_SPACE::net::defaultConnectionCallback(const TcpConnectionPtr& conn)
                 << (conn->connected() ? "UP" : "DOWN");
     // do not call conn->forceClose(), because some users want to register message callback only.
 }
-/* 设置默认的消息回调 */
+/* 设置默认的消息回调;在用户没有设置回调时使用 */
 void MY_NAME_SPACE::net::defaultMessageCallback(const TcpConnectionPtr&,
                                         Buffer* buf,
                                         Timestamp)
@@ -189,7 +189,9 @@ void TcpConnection::sendInLoop(const void* data, size_t len)
     /* 检查是否还有没有写完 */
     if (!faultError && remaining > 0)
     {
+        /* 剩余的数量 */
         size_t oldLen = outputBuffer_.readableBytes();
+        /* 检查是否存在高水位现象 */
         if (oldLen + remaining >= highWaterMark_
             && oldLen < highWaterMark_
             && highWaterMarkCallback_)
@@ -343,7 +345,7 @@ void TcpConnection::stopReadInLoop()
  * 7.TcpServer让tcp连接所属线程调用TcpConnection的connectEstablished
  * 8.connectEstablished开启对客户端套接字的Channel的可读监听，然后调用用户提供的回调函数
  */
-/* 连接剑姬之后 */
+/* 连接建立 */
 void TcpConnection::connectEstablished()
 {
     loop_->assertInLoopThread();

@@ -53,9 +53,9 @@ class ThreadPool : noncopyable
   Condition notEmpty_ GUARDED_BY(mutex_);     /* 非空 */
   Condition notFull_ GUARDED_BY(mutex_);    /* 非满 */
   string name_;
-  Task threadInitCallback_;
-  std::vector<std::unique_ptr<Thread>> threads_;
-  std::deque<Task> queue_ GUARDED_BY(mutex_);
+  Task threadInitCallback_;                 /* 当前执行的任务 */
+  std::vector<std::unique_ptr<Thread>> threads_;  /* 线程队列 */
+  std::deque<Task> queue_ GUARDED_BY(mutex_);     /* 任务队列 */
   size_t maxQueueSize_;
   bool running_;
 };
