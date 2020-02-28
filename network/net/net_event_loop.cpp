@@ -17,7 +17,7 @@ using namespace MY_NAME_SPACE::net;
 namespace
 {
 __thread EventLoop* t_loopInThisThread = 0; /* 记录当前loop的线程id指针 */
-
+/* 设置超时事件为10s */
 const int kPollTimeMs = 10000;
 /* 创建事件描述符 */
 int createEventfd()

@@ -31,7 +31,10 @@ class Poller : noncopyable
   Poller(EventLoop* loop);
   virtual ~Poller();
 
-  //不许在I/O线程中调用,I/O复用的封装
+   /* 
+   * 监听函数，对于epoll是epoll_wait，对于poll是poll 
+   * 返回epoll_wait/poll返回的时间
+   */
   virtual Timestamp poll(int timeoutMs, ChannelList* activeChannels) = 0;
 
   //更新Channel
@@ -49,12 +52,21 @@ class Poller : noncopyable
     ownerLoop_->assertInLoopThread();
   }
 
- protected:
-  typedef std::map<int, Channel*> ChannelMap;       //map关联容器的关键字为channel_所管理的fd
-  ChannelMap channels_;                             //存储事件分发器的map
+protected:
+    /* 
+    * Channel，保存fd和需要监听的events，以及各种回调函数（可读/可写/错误/关闭等）
+    * 类似libevent的struct event
+    */
+    typedef std::map<int, Channel*> ChannelMap;       //map关联容器的关键字为channel_所管理的fd
+    /* 保存所有事件Channel，类似libevent中base的注册队列 */
+    ChannelMap channels_;                             //存储事件分发器的map
 
- private:
-  EventLoop* ownerLoop_;                            //属于哪个loop
+private:
+    /* 
+   * EventLoop，事件驱动主循环，用于调用poll函数
+   * 类似libevent的struct event_base
+   */
+    EventLoop* ownerLoop_;                            //属于哪个loop
 };
 
 }  // namespace net

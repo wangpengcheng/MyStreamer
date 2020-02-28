@@ -72,7 +72,7 @@ int Socket::accept(InetAddress* peeraddr)
 
 void Socket::shutdownWrite()
 {
-  sockets::shutdownWrite(sockfd_);
+    sockets::shutdownWrite(sockfd_);
 }
 
 void Socket::setTcpNoDelay(bool on)

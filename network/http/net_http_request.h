@@ -132,12 +132,12 @@ public:
         ++colon;
         while (colon < end && isspace(*colon))
         {
-        ++colon;
+            ++colon;
         }
         string value(colon, end);
         while (!value.empty() && isspace(value[value.size()-1]))
         {
-        value.resize(value.size()-1);
+            value.resize(value.size()-1);
         }
         headers_[field] = value;
     }
@@ -148,7 +148,7 @@ public:
         std::map<string, string>::const_iterator it = headers_.find(field);
         if (it != headers_.end())
         {
-        result = it->second;
+            result = it->second;
         }
         return result;
     }

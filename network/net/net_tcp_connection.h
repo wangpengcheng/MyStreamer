@@ -127,15 +127,32 @@ private:
     StateE state_;  // FIXME: use atomic variable
     bool reading_;
     // we don't expose those classes to client.
+    /* 用于tcp连接的套接字，以及用于监听套接字的Channel */
     std::unique_ptr<Socket> socket_;
     std::unique_ptr<Channel> channel_;
+    /* 本地<地址，端口>，客户端<地址，端口>，由TcpServer传入 */
     const InetAddress localAddr_;
     const InetAddress peerAddr_;
+    /* 连接建立后/关闭后的回调函数，通常是由用户提供给TcpServer，然后TcpServer提供给TcpConnection */
     ConnectionCallback connectionCallback_;
+    /* 当tcp连接有消息通信时执行的回调函数，也是由用户提供 */
     MessageCallback messageCallback_;
+    /* 
+   * 写入tcp缓冲区之后的回调函数
+   * 通常是tcp缓冲区满然后添加到应用层缓冲区后，由应用层缓冲区写入内核tcp缓冲区
+   * 后执行，一般用户不关系这部分
+   */
     WriteCompleteCallback writeCompleteCallback_;
+    /* 高水位回调，设定缓冲区接收大小，如果应用层缓冲区堆积的数据大于某个给定值时调用 */
     HighWaterMarkCallback highWaterMarkCallback_;
+    /* 
+   * tcp连接关闭时调用的回调函数，由TcpServer设置，用于TcpServer将这个要关闭的TcpConnection从
+   * 保存着所有TcpConnection的map中删除
+   * 这个回调函数和TcpConnection自己的handleClose不同，后者是提供给Channel的，函数中会使用到
+   * closeCallback_
+   */
     CloseCallback closeCallback_;
+    /* 高水位值 */
     size_t highWaterMark_;
     Buffer inputBuffer_;
     Buffer outputBuffer_; // FIXME: use list<Buffer> as output buffer.

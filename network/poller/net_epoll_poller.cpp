@@ -44,20 +44,24 @@ EPollPoller::~EPollPoller()
 {
   	::close(epollfd_);
 }
-
+/* 关键poll函数 */
 Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
 {
 	LOG_TRACE << "fd total count " << channels_.size();
+	/* 查询满足监听事件的数目 */
 	int numEvents = ::epoll_wait(epollfd_,
 								&*events_.begin(),
 								static_cast<int>(events_.size()),
 								timeoutMs);
 	int savedErrno = errno;
+	/* 获取当前的时间戳 */
 	Timestamp now(Timestamp::now());
 	if (numEvents > 0)
 	{
 		LOG_TRACE << numEvents << " events happened";
+		/* 处理监听发生的事件 */
 		fillActiveChannels(numEvents, activeChannels);
+		/* 如果较多，就对events进行扩容 */
 		if (implicit_cast<size_t>(numEvents) == events_.size())
 		{
 			events_.resize(events_.size()*2);
@@ -78,25 +82,45 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
 	}
 	return now;
 }
-
+/* 处理监听发生的事件 */
 void EPollPoller::fillActiveChannels(int numEvents,
                                      ChannelList* activeChannels) const
 {
+	/* 检查是否大于事件种类数目，一维一个 */
 	assert(implicit_cast<size_t>(numEvents) <= events_.size());
+	/* 遍历发生的事件的集合 */
 	for (int i = 0; i < numEvents; ++i)
 	{
+		/* 获取监听到的事件 */
 		Channel* channel = static_cast<Channel*>(events_[i].data.ptr);
+		/*
+		这是epoll模式epoll_event事件的数据结构，其中data不仅可以保存fd，也可以保存一个void*类型的指针。
+		typedef union epoll_data {
+					void    *ptr;
+					int      fd;
+					uint32_t u32;
+					uint64_t u64;
+				} epoll_data_t;
+				struct epoll_event {
+					uint32_t     events;    // Epoll events 
+					epoll_data_t data;      //User data variable 
+				};
+		*/
 #ifndef NDEBUG
+		/* 获取文件描述符 */
 		int fd = channel->fd();
 		ChannelMap::const_iterator it = channels_.find(fd);
+		/* 检查文件描述是否存在 */
 		assert(it != channels_.end());
 		assert(it->second == channel);
 #endif
+		/* 把已发生的事件传给channel,写到通道当中 */
 		channel->set_revents(events_[i].events);
+		/* 将其添加到已激活的事件队列中 */
 		activeChannels->push_back(channel);
   }
 }
-
+/* 更新监听的事件 */
 void EPollPoller::updateChannel(Channel* channel)
 {
 	Poller::assertInLoopThread();
@@ -119,6 +143,7 @@ void EPollPoller::updateChannel(Channel* channel)
 		}
 
 		channel->set_index(kAdded);
+		/* 添加channel响应事件 */
 		update(EPOLL_CTL_ADD, channel);
 	}
 	else
@@ -140,7 +165,7 @@ void EPollPoller::updateChannel(Channel* channel)
 		}
 	}
 }
-
+/* 移除事件通道 */
 void EPollPoller::removeChannel(Channel* channel)
 {
 	Poller::assertInLoopThread();
@@ -161,13 +186,15 @@ void EPollPoller::removeChannel(Channel* channel)
 	}
 	channel->set_index(kNew);
 }
-
+/* 更新事件监听，包括时钟监听 */
 void EPollPoller::update(int operation, Channel* channel)
 {
 	struct epoll_event event;
 	memZero(&event, sizeof event);
+	/* 将channel转换为event */
 	event.events = channel->events();
 	event.data.ptr = channel;
+	/* 获取事件的文件描述符 */
 	int fd = channel->fd();
 	LOG_TRACE << "epoll_ctl op = " << operationToString(operation)
 		<< " fd = " << fd << " event = { " << channel->eventsToString() << " }";

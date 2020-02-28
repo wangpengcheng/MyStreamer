@@ -72,22 +72,26 @@ void ThreadPool::run(Task task)
 {
   if (threads_.empty())
   {
-    task();
+      task();
   }
   else
   {
     MutexLockGuard lock(mutex_);
+    /* 所有线程都在运行 */
     while (isFull())
     {
-      notFull_.wait();
+        /* 等待空闲的线程 */
+        notFull_.wait();
     }
+    /* 确认未满 */
     assert(!isFull());
-
+    /* 将task添加到队列中 */
     queue_.push_back(std::move(task));
+    /* 提示存在新任务 */
     notEmpty_.notify();
   }
 }
-
+/* 获取一个任务 */
 ThreadPool::Task ThreadPool::take()
 {
   MutexLockGuard lock(mutex_);
@@ -114,7 +118,7 @@ bool ThreadPool::isFull() const
   mutex_.assertLocked();
   return maxQueueSize_ > 0 && queue_.size() >= maxQueueSize_;
 }
-
+/* 开启线程 */
 void ThreadPool::runInThread()
 {
   try
@@ -123,13 +127,14 @@ void ThreadPool::runInThread()
     {
       threadInitCallback_();
     }
+    /* 不断的进行任务的获取 */
     while (running_)
     {
-      Task task(take());
-      if (task)
-      {
-        task();
-      }
+        Task task(take());
+        if (task)
+        {
+          task();
+        }
     }
   }
   catch (const Exception& ex)

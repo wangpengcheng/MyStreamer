@@ -63,6 +63,9 @@ void Channel::remove()
     loop_->removeChannel(this);
 }
 //核心：事件处理函数
+/*
+ * 根据fd激活事件的不同，调用不同的fd的回调函数
+ */
 void Channel::handleEvent(Timestamp receiveTime)
 {
     /* 
@@ -93,6 +96,7 @@ void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
     eventHandling_ = true;
     LOG_TRACE << reventsToString();
+    /* 关闭事件 */
     if ((revents_ & POLLHUP) && !(revents_ & POLLIN))
     {
         if (logHup_)
@@ -106,7 +110,7 @@ void Channel::handleEventWithGuard(Timestamp receiveTime)
     {
         LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLNVAL";
     }
-    //读事件处理
+    //错误件处理
     if (revents_ & (POLLERR | POLLNVAL))
     {
         if (errorCallback_) errorCallback_();

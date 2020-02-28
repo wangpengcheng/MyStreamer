@@ -18,6 +18,7 @@ class EventLoop;
  * 连接关键函数；这个函数，对socket描述符进行修改；
  * 只会对event和handler进行连接操作；
  * 主要负责对事件对象的分发
+ * 相当于内核中的epoll_event
 */
 class Channel : noncopyable
 {
@@ -60,7 +61,7 @@ public:
     //开启/关闭读事件，并更新channel信息
     void enableReading() { events_ |= kReadEvent; update(); }
     void disableReading() { events_ &= ~kReadEvent; update(); }
-    /* 开启/关闭写事件 */
+    /* 开启/关闭写事件监听 */
     void enableWriting() { events_ |= kWriteEvent; update(); }
     void disableWriting() { events_ &= ~kWriteEvent; update(); }
     /* 停止所有事件 */
@@ -96,7 +97,7 @@ private:
     static const int kWriteEvent;
 
     EventLoop* loop_;                               //channel所属的loop
-    const int  fd_;                                 //channel负责的文件描述符
+    const int  fd_;                                 //channel负责的文件描述符；主要用于时间计时器
     int        events_;                             //注册的事件
     int        revents_;                            //poller设置的就绪的事件
     /* 

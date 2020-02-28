@@ -19,7 +19,7 @@ NAMESPACE_START
 
 class Thread : Uncopyable
 {
- public:
+public:
   typedef std::function<void ()> ThreadFunc;
 
   explicit Thread(ThreadFunc, const string& name = string());

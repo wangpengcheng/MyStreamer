@@ -1,7 +1,6 @@
 #ifndef NET_TCPCLIENT_H
 #define NET_TCPCLIENT_H
 
-
 #include "base_mutex.h"
 #include "net_tcp_connection.h"
 

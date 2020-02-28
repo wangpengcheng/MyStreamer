@@ -50,8 +50,8 @@ class ThreadPool : noncopyable
   Task take();
 
   mutable MutexLock mutex_;
-  Condition notEmpty_ GUARDED_BY(mutex_);
-  Condition notFull_ GUARDED_BY(mutex_);
+  Condition notEmpty_ GUARDED_BY(mutex_);     /* 非空 */
+  Condition notFull_ GUARDED_BY(mutex_);    /* 非满 */
   string name_;
   Task threadInitCallback_;
   std::vector<std::unique_ptr<Thread>> threads_;

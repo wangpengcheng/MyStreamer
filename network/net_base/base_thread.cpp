@@ -39,13 +39,13 @@ void afterFork()
 
 class ThreadNameInitializer
 {
- public:
-  ThreadNameInitializer()
-  {
-     CurrentThread::t_threadName = "main";
-    CurrentThread::tid();
-    pthread_atfork(NULL, NULL, &afterFork);
-  }
+public:
+    ThreadNameInitializer()
+    {
+      CurrentThread::t_threadName = "main";
+      CurrentThread::tid();
+      pthread_atfork(NULL, NULL, &afterFork);
+    }
 };
 
 ThreadNameInitializer init;
