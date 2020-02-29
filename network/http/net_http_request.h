@@ -192,6 +192,7 @@ private:
 };
 
 }  // namespace net
+typedef net::HttpRequest WebRequest;
 NAMESPACE_END
 
 #endif  // NET_HTTP_HTTPREQUEST_H

@@ -74,7 +74,7 @@ private:
     string body_;
 };
 }  // namespace net
-
+typedef net::HttpResponse WebResponse;
 NAMESPACE_END
 
 #endif  // NET_HTTP_HTTPRESPONSE_H

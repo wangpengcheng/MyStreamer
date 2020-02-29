@@ -1,5 +1,5 @@
-#ifndef CAMERA_LISTENER_H
-#define CAMERA_LISTENER_H
+#ifndef VIDEO_LISTENER_H
+#define VIDEO_LISTENER_H
 #include "video_source_listener_interface.h"
 
 NAMESPACE_START

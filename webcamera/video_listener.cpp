@@ -22,3 +22,11 @@ void VideoListener::OnNewImage( const std::shared_ptr<const Image>& image )
     owner_->VideoSourceErrorMessage.clear( );
     owner_->VideoSourceError = false;
 }
+// An error coming from video source
+void VideoListener::OnError( const string& errorMessage, bool /* fatal */ )
+{
+    std::lock_guard<std::mutex> imageLock( owner_->ImageGuard );
+
+    owner_->VideoSourceErrorMessage = errorMessage;
+    owner_->VideoSourceError = true;
+}
