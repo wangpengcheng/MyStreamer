@@ -3,7 +3,7 @@
 
 using namespace MY_NAME_SPACE;
 using namespace MY_NAME_SPACE::net;
-
+/* 按照行来对参数进行读取 */
 bool HttpContext::processRequestLine(const char* begin, const char* end)
 {
   bool succeed = false;
@@ -47,7 +47,7 @@ bool HttpContext::processRequestLine(const char* begin, const char* end)
   return succeed;
 }
 
-// return false if any error
+/* 检查请求，结构体是否发生错误 */
 bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 {
   bool ok = true;

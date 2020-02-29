@@ -33,6 +33,7 @@ HttpServer::HttpServer(EventLoop* loop,
   : server_(loop, listenAddr, name, option),
     httpCallback_(detail::defaultHttpCallback)
 {
+    /* 设置连接的函数 */
   server_.setConnectionCallback(
       std::bind(&HttpServer::onConnection, this, _1));
   server_.setMessageCallback(
@@ -45,7 +46,7 @@ void HttpServer::start()
         << "] starts listenning on " << server_.ipPort();
     server_.start();
 }
-
+/* 设置连接结构体 */
 void HttpServer::onConnection(const TcpConnectionPtr& conn)
 {
     if (conn->connected())
@@ -53,36 +54,41 @@ void HttpServer::onConnection(const TcpConnectionPtr& conn)
         conn->setContext(HttpContext());
     }
 }
-
+/* 设置连接响应函数 */
 void HttpServer::onMessage(const TcpConnectionPtr& conn,
                            Buffer* buf,
                            Timestamp receiveTime)
 {
     HttpContext* context = boost::any_cast<HttpContext>(conn->getMutableContext());
-
+    /* 解析连接 */
     if (!context->parseRequest(buf, receiveTime))
     {
         conn->send("HTTP/1.1 400 Bad Request\r\n\r\n");
         conn->shutdown();
     }
-
+    /*  */
     if (context->gotAll())
     {
         onRequest(conn, context->request());
         context->reset();
     }
 }
-
+/* 执行请求的相关函数 */
 void HttpServer::onRequest(const TcpConnectionPtr& conn, const HttpRequest& req)
 {
     const string& connection = req.getHeader("Connection");
     bool close = connection == "close" ||
         (req.getVersion() == HttpRequest::kHttp10 && connection != "Keep-Alive");
+    /* 创建响应结构体 */
     HttpResponse response(close);
+    /* 执行相关函数 */
     httpCallback_(req, &response);
     Buffer buf;
+    /* 将结构体，添加到buffer中 */
     response.appendToBuffer(&buf);
+    /* 发送buffer */
     conn->send(&buf);
+    /* 检查是否需要关闭 */
     if (response.closeConnection())
     {
         conn->shutdown();

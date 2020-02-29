@@ -49,8 +49,8 @@ private:
                     Timestamp receiveTime);
     void onRequest(const TcpConnectionPtr&, const HttpRequest&);
 
-    TcpServer server_;
-    HttpCallback httpCallback_;
+    TcpServer server_;                          /* tcp server */
+    HttpCallback httpCallback_;                 /* 响应回调函数 */
 };
 
 }  // namespace net

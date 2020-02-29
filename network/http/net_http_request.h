@@ -12,9 +12,11 @@
 #include <map>
 #include <assert.h>
 #include <stdio.h>
-
+#include <unordered_map>
 NAMESPACE_START
-
+/**
+ * 对http请求结构体的优化
+*/
 namespace net
 {
 
@@ -23,11 +25,23 @@ class HttpRequest : public copyable
 public:
     enum Method
     {
-        kInvalid, kGet, kPost, kHead, kPut, kDelete
+        kInvalid, 
+        kGet, 
+        kPost, 
+        kHead, 
+        kPut, 
+        kDelete
     };
     enum Version
     {
-        kUnknown, kHttp10, kHttp11
+        kUnknown, 
+        kHttp10, 
+        kHttp11,
+
+    };
+    struct HttpDataType
+    {
+        static std::unordered_map<std::string,Method> request_methods;
     };
 
     HttpRequest()
@@ -41,36 +55,37 @@ public:
         version_ = v;
     }
 
-    Version getVersion() const
+    inline Version getVersion() const
     { return version_; }
-
+    /* 设置http的请求 */
     bool setMethod(const char* start, const char* end)
     {
         assert(method_ == kInvalid);
         string m(start, end);
+        
         if (m == "GET")
         {
-        method_ = kGet;
+            method_ = kGet;
         }
         else if (m == "POST")
         {
-        method_ = kPost;
+            method_ = kPost;
         }
         else if (m == "HEAD")
         {
-        method_ = kHead;
+            method_ = kHead;
         }
         else if (m == "PUT")
         {
-        method_ = kPut;
+            method_ = kPut;
         }
         else if (m == "DELETE")
         {
-        method_ = kDelete;
+            method_ = kDelete;
         }
         else
         {
-        method_ = kInvalid;
+            method_ = kInvalid;
         }
         return method_ != kInvalid;
     }
@@ -103,7 +118,7 @@ public:
         }
         return result;
     }
-
+    /* 设置路径 */
     void setPath(const char* start, const char* end)
     {
         path_.assign(start, end);
@@ -111,7 +126,7 @@ public:
 
     const string& path() const
     { return path_; }
-
+    /* 设置查询参数 */
     void setQuery(const char* start, const char* end)
     {
         query_.assign(start, end);
@@ -130,6 +145,7 @@ public:
     {
         string field(start, colon);
         ++colon;
+        /* 解析参数 */
         while (colon < end && isspace(*colon))
         {
             ++colon;
@@ -167,12 +183,12 @@ public:
     }
 
 private:
-    Method method_;
-    Version version_;
-    string path_;
-    string query_;
-    Timestamp receiveTime_;
-    std::map<string, string> headers_;
+    Method method_;                         /* 使用方法 */
+    Version version_;                       /* http版本信息 */
+    string path_;                           /* 路径 */
+    string query_;                          /* 查询参数 */
+    Timestamp receiveTime_;                 /* 接收时间 */
+    std::map<string, string> headers_;      /* header相关参数 */
 };
 
 }  // namespace net

@@ -12,7 +12,7 @@ namespace net
 {
 
 class Buffer;
-
+/* http上下文信息，用来解析请求状态参数 */
 class HttpContext : public copyable
 {
 public:

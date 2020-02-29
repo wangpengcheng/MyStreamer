@@ -141,6 +141,7 @@ add_subdirectory(base)
 add_subdirectory(imgproc)
 add_subdirectory(camera)
 add_subdirectory(network)
+#add_subdirectory(webcamera)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 

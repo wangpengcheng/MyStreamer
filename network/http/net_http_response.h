@@ -6,25 +6,29 @@
 #include "base_types.h"
 
 #include <map>
-
+#include <unordered_map>
 NAMESPACE_START
-
+/* 主要是组成http的关键文字部分 */
 namespace net
 {
 
 class Buffer;
+
 class HttpResponse : public copyable
 {
 public:
+    /* http响应状态参数 */
     enum HttpStatusCode
     {
-        kUnknown,
-        k200Ok = 200,
+        kUnknown=0,
+        k200Ok = 200,                       
         k301MovedPermanently = 301,
         k400BadRequest = 400,
         k404NotFound = 404,
+        k500ServerError=505
     };
-
+    typedef std::unordered_map<int,string> HttpStateMap;
+    static HttpStateMap state_map;
     explicit HttpResponse(bool close)
         : statusCode_(kUnknown),
         closeConnection_(close)
@@ -36,34 +40,39 @@ public:
 
     void setStatusMessage(const string& message)
     { statusMessage_ = message; }
-
+    /* 是否关闭连接 */
     void setCloseConnection(bool on)
     { closeConnection_ = on; }
 
     bool closeConnection() const
     { return closeConnection_; }
-
+    /* 设置上下文 */
     void setContentType(const string& contentType)
     { addHeader("Content-Type", contentType); }
 
     // FIXME: replace string with StringPiece
     void addHeader(const string& key, const string& value)
     { headers_[key] = value; }
-
+    inline std::map<std::string, std::string> getHeaders() const
+    {
+        return headers_;
+    }
+    /* 设置主体信息 */
     void setBody(const string& body)
     { body_ = body; }
-
+    /* 添加到buffer中 */
     void appendToBuffer(Buffer* output) const;
-
+    /* 添加快速发送函数 */
+    void SendFast(HttpStatusCode send_code,const string& body);
+    
 private:
-    std::map<string, string> headers_;
+    std::map<string, string> headers_;          /* 结构体的主要信息 */
     HttpStatusCode statusCode_;
     // FIXME: add http version
     string statusMessage_;
     bool closeConnection_;
     string body_;
 };
-
 }  // namespace net
 
 NAMESPACE_END

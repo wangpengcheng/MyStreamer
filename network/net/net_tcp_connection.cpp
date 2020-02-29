@@ -376,12 +376,13 @@ void TcpConnection::handleRead(Timestamp receiveTime)
 {
     loop_->assertInLoopThread();
     int savedErrno = 0;
+    /* 使用inputBuffer进行读取 */
     ssize_t n = inputBuffer_.readFd(channel_->fd(), &savedErrno);
     if (n > 0)
     {
         messageCallback_(shared_from_this(), &inputBuffer_, receiveTime);
     }
-    else if (n == 0)
+    else if (n == 0)/* 如果为0就关闭连接 */
     {
         handleClose();
     }

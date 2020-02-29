@@ -62,10 +62,11 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
     else if (req.path() == "/hello")
     {
         resp->setStatusCode(HttpResponse::k200Ok);
+        std::string body=req.query();
         resp->setStatusMessage("OK");
         resp->setContentType("text/plain");
         resp->addHeader("Server", "Muduo");
-        resp->setBody("hello, world!\n");
+        resp->setBody("hello, world!\n"+body);
     }
     else
     {
