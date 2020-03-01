@@ -16,8 +16,9 @@ void FileRequestHandler::HandleHttpRequest( const WebRequest& request,WebRespons
 {
     string req_path=request.path();
     std::string full_name=root_path_+req_path;
+    std::string type="";
     if(FileExiting(full_name)){
-        std::string type=GetFileType(req_path);
+        type=GetFileType(req_path);
         auto search=WebResponse::file_type.find(type);
         if(search!=WebResponse::file_type.end()){
             type=search->second;
@@ -27,14 +28,18 @@ void FileRequestHandler::HandleHttpRequest( const WebRequest& request,WebRespons
         if(!type.empty())
         {
             std::string file_string=ReadFile(full_name);
-            response.setStatusCode(WebResponse::k200Ok);
-            response.setStatusMessage("OK");
-            response.setContentType(type);
-            response.setBody(file_string);
-            return ;
+            if(!file_string.empty())
+            {
+                response.setStatusCode(WebResponse::k200Ok);
+                response.setStatusMessage("OK");
+                response.setContentType(type);
+                response.setBody(file_string);
+                return ;
+            }else{
+                std::cout<<"read file:"<<full_name<<"error"<<std::endl;
+            }
+            
         }
     }
-    std::cout<<"====================="<<std::endl;
-    std::cout<<"file:"<<full_name<<"error"<<std::endl;
-    response.SendFast(WebResponse::k404NotFound,"Not Found this file");
+    response.SendFast(WebResponse::k404NotFound," :(  Not Found File:"+req_path+" .");
 }

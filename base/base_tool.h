@@ -65,22 +65,20 @@ inline double cs_time(void) {
 inline bool FileExiting(const std::string& file_full_name)
 {
   std::ifstream fin(file_full_name);
-  return fin.good();
+  return fin.is_open();
 };
 inline std::string ReadFile(std::string file_full_name)
 {
-
   std::ifstream fin(file_full_name);
-  /* 检查文件是否存在 */
-  if(!fin.good()){
-    return "";
-  }else{
-    std::stringstream buffer;  
-    buffer << fin.rdbuf(); 
-    std::string str((std::istreambuf_iterator<char>(fin)),  
-                 std::istreambuf_iterator<char>());
-    return str;
-  }
+    /* 检查文件是否存在 */
+    if(!fin.is_open()){
+      return "";
+    }else{
+      std::ostringstream tmp;
+      tmp << fin.rdbuf();
+      std::string str = tmp.str();
+      return str;
+    }
 };
 /* 字符串处理函数获取文件后缀名称 */
 inline std::string GetFileType(const std::string& file_name)
@@ -90,7 +88,7 @@ inline std::string GetFileType(const std::string& file_name)
 	if(n==std::string::npos||n==0){
 		return "";
 	}else{
-		return file_name.substr(n+1);
+		return file_name.substr(n);
 	}
 };
 #endif //BASE_TOOL_H

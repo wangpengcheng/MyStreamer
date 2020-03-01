@@ -39,7 +39,6 @@ void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
 {
     string req_path=req.path();
     std::string full_name=root_path_+req_path;
-    std::cout<<"file name "<<full_name<<std::endl;
     /* 首先进行文件查找 */
     if(FileExiting(full_name)){
        file_hander.HandleHttpRequest(req,(*resp));

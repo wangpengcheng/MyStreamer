@@ -19,6 +19,9 @@ HttpResponse::HttpStateMap HttpResponse::state_map={
 };
 std::unordered_map<std::string,std::string > HttpResponse::file_type={
     {".html", "text/html"},
+    {".css","text/css"},
+    {".js","application/x-javascript"},
+    
     {".avi", "video/x-msvideo"},
     {".bmp", "image/bmp"},
     {".c", "text/plain"},
