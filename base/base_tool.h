@@ -23,7 +23,7 @@ inline std::time_t getTimeStamp()
     auto tmp=std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch());
     std::time_t timestamp = tmp.count();
     return timestamp;
-}
+};
 
 inline void WriteFile(std::string file_name ,uint8_t* buffer,uint32_t buffer_size )
 {
@@ -35,7 +35,7 @@ inline void WriteFile(std::string file_name ,uint8_t* buffer,uint32_t buffer_siz
         std::cout<<"file open error"<<std::endl;
     }
     
-}
+};
 inline double cs_time(void) {
   double now;
 #ifndef _WIN32
@@ -61,12 +61,12 @@ inline double cs_time(void) {
         11644473600;
 #endif /* _WIN32 */
   return now;
-}
+};
 inline bool FileExiting(const std::string& file_full_name)
 {
   std::ifstream fin(file_full_name);
   return fin.good();
-}
+};
 inline std::string ReadFile(std::string file_full_name)
 {
 
@@ -80,10 +80,17 @@ inline std::string ReadFile(std::string file_full_name)
     std::string str((std::istreambuf_iterator<char>(fin)),  
                  std::istreambuf_iterator<char>());
     return str;
+  }
 };
 /* 字符串处理函数获取文件后缀名称 */
 inline std::string GetFileType(const std::string& file_name)
 {
-  file_name.find();
-}
+	std::string::size_type n;
+	n=file_name.rfind(".");
+	if(n==std::string::npos||n==0){
+		return "";
+	}else{
+		return file_name.substr(n+1);
+	}
+};
 #endif //BASE_TOOL_H

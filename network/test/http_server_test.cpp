@@ -30,7 +30,7 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
 {
 
     /* 获取线程id */
-    //pid_t id=static_cast<pid_t>(::syscall(SYS_gettid));
+    pid_t id=static_cast<pid_t>(::syscall(SYS_gettid));
     //std::cout << "Headers " << req.methodString() << " " << req.path() << std::endl;
     if (!benchmark)
     {

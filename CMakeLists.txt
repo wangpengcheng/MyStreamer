@@ -28,7 +28,10 @@ include_directories(${PROJECT_SOURCE_DIR}/base)
 include_directories(${PROJECT_SOURCE_DIR}/camera)
 include_directories(${PROJECT_SOURCE_DIR}/camera/V4L2)
 include_directories(${PROJECT_SOURCE_DIR}/imgproc)
-
+include_directories(${PROJECT_SOURCE_DIR}/network/net_base)
+include_directories(${PROJECT_SOURCE_DIR}/network/net)
+include_directories(${PROJECT_SOURCE_DIR}/network/http)
+include_directories(${PROJECT_SOURCE_DIR}/webcamera)
 
 # 设置LISBS
 set(CXX_LIBS "jpeg pthread")
@@ -117,8 +120,7 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 #set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/Bin)
 # 
 
-# 创建可执行文件工程
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES})
+
 
 # # 添加目标链接
 # # 链接OpenCV
@@ -128,6 +130,11 @@ add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES})
 # # 链接darknet
 # target_link_libraries(${PROJECT_NAME} libdarknet.so)
 
+# 创建可执行文件工程
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES})
+
+
+
 # 设置cxx libs
 target_link_libraries(${PROJECT_NAME} 
     jpeg 
@@ -135,13 +142,14 @@ target_link_libraries(${PROJECT_NAME}
     stream_base 
     stream_camera
     stream_imgproc
+    stream_network
+    stream_webcamera
 )
-
 add_subdirectory(base)
 add_subdirectory(imgproc)
 add_subdirectory(camera)
 add_subdirectory(network)
-#add_subdirectory(webcamera)
+add_subdirectory(webcamera)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 

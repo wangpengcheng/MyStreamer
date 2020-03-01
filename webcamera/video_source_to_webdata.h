@@ -10,6 +10,7 @@
 #include "jpeg_encoder.h"
 #include "net_http_response.h"
 
+#include <mutex>
 NAMESPACE_START
 
 /* 定义结构体的数据类 */
@@ -29,7 +30,7 @@ public:
         VideoSourceErrorMessage( ), 
         ImageGuard( ), 
         BufferGuard( ),
-        JpegEncoder(jpegQuality,true)
+        jpeg_encoder(jpegQuality,true)
     {
         /* 为jpeg分配buffer */
         JpegBuffer = (uint8_t*) malloc( JPEG_BUFFER_SIZE );
@@ -66,7 +67,7 @@ public:
     std::string             VideoSourceErrorMessage;
     std::mutex              ImageGuard;                     /* 图片锁 */
     std::mutex              BufferGuard;                    /* buffer锁 */
-    JpegEncoder             JpegEncoder;                    /* jpeg编码器 */
+    JpegEncoder             jpeg_encoder;                    /* jpeg编码器 */
 };
 
 NAMESPACE_END

@@ -71,7 +71,7 @@ void VideoSourceToWebData::EncodeCameraImage( )
             {
                 // encode image as JPEG (buffer is re-allocated if too small by encoder)
                 JpegSize      = JpegBufferSize;
-                InternalError = JpegEncoder.EncodeToMemory( CameraImage, &JpegBuffer, &JpegSize );
+                InternalError = jpeg_encoder.EncodeToMemory( CameraImage, &JpegBuffer, &JpegSize );
             }
         }
 

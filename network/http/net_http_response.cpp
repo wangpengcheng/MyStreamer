@@ -17,7 +17,22 @@ HttpResponse::HttpStateMap HttpResponse::state_map={
     {HttpResponse::HttpStatusCode::kUnknown,"Unkown error"},
 
 };
-
+std::unordered_map<std::string,std::string > HttpResponse::file_type={
+    {".html", "text/html"},
+    {".avi", "video/x-msvideo"},
+    {".bmp", "image/bmp"},
+    {".c", "text/plain"},
+    {".doc", "application/msword"},
+    {".gif", "image/gif"},
+    {".gz", "application/x-gzip"},
+    {".htm", "text/html"},
+    {".ico", "image/x-icon"},
+    {".jpg", "image/jpeg"},
+    {".png", "image/png"},
+    {".txt", "text/plain"},
+    {".mp3", "audio/mp3"},
+    {"default", "text/html"}
+};
 /* 将头部信息写入到buffer中，在server中调用，使用send进行发送 */
 void HttpResponse::appendToBuffer(Buffer* output) const
 {

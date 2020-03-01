@@ -9,7 +9,7 @@ class VideoListener:public VideoSourceListenerInterface
 {
 public:
 
-    VideoListener(VideoSourceToWebData* owner):owner_(owner){}
+    VideoListener(VideoSourceToWebData* owner);
     ~VideoListener();
     /* 重载接收函数 */
     void OnNewImage( const std::shared_ptr<const Image>& image );

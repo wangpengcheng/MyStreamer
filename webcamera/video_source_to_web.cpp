@@ -36,9 +36,9 @@ std::shared_ptr<WebRequestHandlerInterface> VideoSourceToWeb::CreateMjpegHandler
 // Get/Set JPEG quality (valid only if camera provides uncompressed images)
 uint16_t VideoSourceToWeb::JpegQuality( ) const
 {
-    return mData->JpegEncoder.Quality( );
+    return mData->jpeg_encoder.Quality( );
 }
 void VideoSourceToWeb::SetJpegQuality( uint16_t quality )
 {
-    mData->JpegEncoder.SetQuality( quality );
+    mData->jpeg_encoder.SetQuality( quality );
 }

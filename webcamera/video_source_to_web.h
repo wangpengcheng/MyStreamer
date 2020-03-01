@@ -8,6 +8,7 @@
 #include "uncopyable.h"
 #include "video_source_listener_interface.h"
 
+
 NAMESPACE_START
 
 class VideoSourceToWebData;

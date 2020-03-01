@@ -7,6 +7,14 @@
 #include <iostream>
 
 using namespace MY_NAME_SPACE;
+VideoListener::VideoListener(VideoSourceToWebData* owner):owner_(owner)
+{
+
+}
+VideoListener::~VideoListener()
+{
+
+}
 /* 将图片写入owner_ */
 void VideoListener::OnNewImage( const std::shared_ptr<const Image>& image )
 {

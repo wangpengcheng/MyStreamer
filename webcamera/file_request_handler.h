@@ -4,11 +4,12 @@
 
 NAMESPACE_START
 
-class FileRequestHandler:public WebRequestHandlerInterface
+class FileRequestHandler//:public WebRequestHandlerInterface
 {
 public:
+    explicit FileRequestHandler();
     FileRequestHandler(const std::string &new_path_);
-
+    inline void setRootPath(const std::string & new_path){root_path_=new_path;} 
     void HandleHttpRequest( const WebRequest& request,WebResponse&  response );
 private:
     std::string root_path_;

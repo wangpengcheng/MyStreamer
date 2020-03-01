@@ -1,6 +1,30 @@
 #include "web_request_handler.h"
 #include <mutex>
+
+
 NAMESPACE_START
+WebRequestHandlerInterface::WebRequestHandlerInterface(
+    const std::string& uri, 
+    bool canHandleSubContent
+    ):mUri(uri),mCanHandleSubContent(canHandleSubContent)
+{
+     // make sure all URIs start with /
+    if ( mUri[0] != '/' )
+    {
+        mUri = '/' + mUri;
+    }
+
+    // make sure nothing finishes with /
+    while ( ( mUri.length( ) > 1 ) && ( mUri.back( ) == '/' ) )
+    {
+        mUri.pop_back( );
+    }
+}
+
+WebRequestHandlerInterface::~WebRequestHandlerInterface()
+{
+
+}
 void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebResponse& response)
 {
     if(Owner->IsError())
@@ -26,11 +50,6 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
         }
     }
 
-}
-
-void FileRequestHandler::HandleHttpRequest(const WebRequest& request, WebResponse& response)
-{
-    
 }
 void MjpegRequestHandler::HandleHttpRequest( const WebRequest& request, WebResponse& response )
 {

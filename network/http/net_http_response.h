@@ -30,6 +30,7 @@ public:
     };
     typedef std::unordered_map<int,string> HttpStateMap;
     static HttpStateMap state_map;
+    static std::unordered_map<std::string,std::string> file_type;
     explicit HttpResponse(bool close)
         : statusCode_(kUnknown),
         closeConnection_(close)
