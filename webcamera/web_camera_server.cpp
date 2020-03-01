@@ -50,7 +50,7 @@ void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
             auto func=search->second;
             func->HandleHttpRequest(req,(*resp));
         }else{
-            resp->SendFast(WebResponse::k404NotFound,"Not found This file");
+            resp->SendFast(WebResponse::k404NotFound,"Not found request service ");
         }
     }
     

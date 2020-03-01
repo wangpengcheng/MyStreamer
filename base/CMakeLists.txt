@@ -4,6 +4,7 @@ set(LIB_SRC
    base_manual_reset_event.cpp
    base_str_tools.cpp
    base_ring_buffer.cpp
+   base_tool.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 

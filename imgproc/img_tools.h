@@ -10,8 +10,6 @@
 #include "base_error.h"
 #include "uncopyable.h"
 
-NAMESPACE_START
-
 /* 
  * 定义支持的图片格式，方便确定数据长度和单位 
  * https://blog.csdn.net/airk000/article/details/23875759?utm_source=blogxgwz8#commentBox
@@ -64,26 +62,13 @@ typedef union
 /* 数据格式工具函数 */
 
 // 记录各种数据格式需要对应的每个数据的长度
-inline uint32_t ImageBitsPerPixel( PixelFormat format )
-{
-    static int sizes[]     = { 0, 8, 24, 32, 8 };
-    int        formatIndex = static_cast<int>( format );
-    //检查越界并输出
-    return ( formatIndex >= ( sizeof( sizes ) / sizeof( sizes[0] ) ) ) ? 0 : sizes[formatIndex];
-}
+uint32_t ImageBitsPerPixel( PixelFormat format );
 
 // R当每行的位数已知时，返回每个stride的字节数（stride总是32位对齐）
-inline uint32_t ImageBytesPerStride( uint32_t bitsPerLine )
-{
-    return ( ( bitsPerLine + 31 ) & ~31 ) >> 3;
-}
+uint32_t ImageBytesPerStride( uint32_t bitsPerLine );
 
 //当每行的位数已知时，返回每行的字节数（行总是8位对齐）
-inline uint32_t ImageBytesPerLine( uint32_t bitsPerLine )
-{
-    return ( bitsPerLine + 7 ) >> 3;
-}
+uint32_t ImageBytesPerLine( uint32_t bitsPerLine );
 
-NAMESPACE_END
 
 #endif //IMG_TOOLS_H
