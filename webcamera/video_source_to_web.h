@@ -3,15 +3,15 @@
  * 主要的videolistener以及jpeg缓冲区
 */
 
-#ifndef VIDEO_TO_WEB_H
-#define VIDEO_TO_WEB_H
+#ifndef VIDEO_SOURCE_TO_WEB_H
+#define VIDEO_SOURCE_TO_WEB_H
 #include "uncopyable.h"
 #include "video_source_listener_interface.h"
 
 NAMESPACE_START
 
 class VideoSourceToWebData;
-class WebRequestHandler;
+class WebRequestHandlerInterface;
 class VideoSourceToWeb : private Uncopyable
 {
 public:
@@ -22,12 +22,12 @@ public:
     VideoSourceListenerInterface* VideoSourceListener( ) const;
 
     // Create web request handler to provide camera images as JPEGs
-    std::shared_ptr<WebRequestHandler> CreateJpegHandler( const std::string& uri ) const;
+    std::shared_ptr<WebRequestHandlerInterface> CreateJpegHandler( const std::string& uri ) const;
 
-    // Create web request handler to provide camera images as MJPEG stream
-    std::shared_ptr<WebRequestHandler> CreateMjpegHandler( const std::string& uri, uint32_t frameRate ) const;
+    /* 创建控制句柄 */ 
+    std::shared_ptr<WebRequestHandlerInterface> CreateMjpegHandler( const std::string& uri, uint32_t frameRate ) const;
 
-    // Get/Set JPEG quality (valid only if camera provides uncompressed images)
+    /* 设置图片的压缩质量 */
     uint16_t JpegQuality( ) const;
     void SetJpegQuality( uint16_t quality );
 

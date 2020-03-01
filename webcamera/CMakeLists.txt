@@ -10,8 +10,9 @@ find_library(BOOSTSYSTEM_LIBRARY NAMES boost_system)
 set(LIB_SRC
     video_listener.cpp
     video_source_to_webdata.cpp
-    video_to_web.cpp
+    video_source_to_web.cpp
     web_request_handler.cpp
+    web_camera_server.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 include_directories(${PROJECT_SOURCE_DIR}/network/net_base)

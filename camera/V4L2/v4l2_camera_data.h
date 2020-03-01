@@ -85,7 +85,7 @@ public:
     Error SetVideoProperty( VideoProperty property, int32_t value );
     Error GetVideoProperty( VideoProperty property, int32_t* value ) const;
     Error GetVideoPropertyRange( VideoProperty property, int32_t* min, int32_t* max, int32_t* step, int32_t* def ) const;
-
+    inline std::map<VideoProperty, int32_t> GetVideoPropertys(){return PropertiesToSet;}
     private:
     bool Init( );
     void VideoCaptureLoop( );

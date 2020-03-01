@@ -3,7 +3,7 @@
 
 using namespace MY_NAME_SPACE;
 using namespace MY_NAME_SPACE::net;
-/* 按照行来对参数进行读取 */
+/* 按照行来对参数进行读取 主要进行参数解析*/
 bool HttpContext::processRequestLine(const char* begin, const char* end)
 {
   bool succeed = false;

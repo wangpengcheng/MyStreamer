@@ -46,6 +46,12 @@ void HttpServer::start()
         << "] starts listenning on " << server_.ipPort();
     server_.start();
 }
+void HttpServer::stop()
+{
+     LOG_WARN << "HttpServer[" << server_.name()
+        << "] Stop Not complate" << server_.ipPort();
+    //TODO 完成安全的销毁
+}
 /* 设置连接结构体 */
 void HttpServer::onConnection(const TcpConnectionPtr& conn)
 {
@@ -66,7 +72,7 @@ void HttpServer::onMessage(const TcpConnectionPtr& conn,
         conn->send("HTTP/1.1 400 Bad Request\r\n\r\n");
         conn->shutdown();
     }
-    /*  */
+    /* 解析所有参数 */
     if (context->gotAll())
     {
         onRequest(conn, context->request());
@@ -86,6 +92,7 @@ void HttpServer::onRequest(const TcpConnectionPtr& conn, const HttpRequest& req)
     Buffer buf;
     /* 将结构体，添加到buffer中 */
     response.appendToBuffer(&buf);
+
     /* 发送buffer */
     conn->send(&buf);
     /* 检查是否需要关闭 */

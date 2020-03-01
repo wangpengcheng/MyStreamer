@@ -11,6 +11,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sys/time.h>
+#include <sstream>
+#include <fstream>  
+#include <streambuf>  
 
 /* 获取当前的时间 */
 inline std::time_t getTimeStamp()
@@ -31,5 +35,55 @@ inline void WriteFile(std::string file_name ,uint8_t* buffer,uint32_t buffer_siz
         std::cout<<"file open error"<<std::endl;
     }
     
+}
+inline double cs_time(void) {
+  double now;
+#ifndef _WIN32
+  struct timeval tv;
+  if (gettimeofday(&tv, NULL /* tz */) != 0) return 0;
+  now = (double) tv.tv_sec + (((double) tv.tv_usec) / 1000000.0);
+#else
+  SYSTEMTIME sysnow;
+  FILETIME ftime;
+  GetLocalTime(&sysnow);
+  SystemTimeToFileTime(&sysnow, &ftime);
+  /*
+   * 1. VC 6.0 doesn't support conversion uint64 -> double, so, using int64
+   * This should not cause a problems in this (21th) century
+   * 2. Windows FILETIME is a number of 100-nanosecond intervals since January
+   * 1, 1601 while time_t is a number of _seconds_ since January 1, 1970 UTC,
+   * thus, we need to convert to seconds and adjust amount (subtract 11644473600
+   * seconds)
+   */
+  now = (double) (((int64_t) ftime.dwLowDateTime +
+                   ((int64_t) ftime.dwHighDateTime << 32)) /
+                  10000000.0) -
+        11644473600;
+#endif /* _WIN32 */
+  return now;
+}
+inline bool FileExiting(const std::string& file_full_name)
+{
+  std::ifstream fin(file_full_name);
+  return fin.good();
+}
+inline std::string ReadFile(std::string file_full_name)
+{
+
+  std::ifstream fin(file_full_name);
+  /* 检查文件是否存在 */
+  if(!fin.good()){
+    return "";
+  }else{
+    std::stringstream buffer;  
+    buffer << fin.rdbuf(); 
+    std::string str((std::istreambuf_iterator<char>(fin)),  
+                 std::istreambuf_iterator<char>());
+    return str;
+};
+/* 字符串处理函数获取文件后缀名称 */
+inline std::string GetFileType(const std::string& file_name)
+{
+  file_name.find();
 }
 #endif //BASE_TOOL_H

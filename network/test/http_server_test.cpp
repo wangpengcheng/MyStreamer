@@ -30,8 +30,8 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
 {
 
     /* 获取线程id */
-    pid_t id=static_cast<pid_t>(::syscall(SYS_gettid));
-    std::cout << "Headers " << req.methodString() << " " << req.path() << std::endl;
+    //pid_t id=static_cast<pid_t>(::syscall(SYS_gettid));
+    //std::cout << "Headers " << req.methodString() << " " << req.path() << std::endl;
     if (!benchmark)
     {
         const std::map<string, string>& headers = req.headers();
@@ -49,7 +49,8 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
         resp->addHeader("Server", "Muduo");
         string now = Timestamp::now().toFormattedString();
         resp->setBody("<html><head><title>This is title</title></head>"
-            "<body><h1>Hello</h1>Now is " + now + "thread id"+std::to_string(id)+
+            "<body><h1>Hello</h1>Now is " + now + "thread id"+std::to_string(id)+"<br>"
+            +"path:"+req.path()+" meth:"+req.methodString()+" query:"+req.query()+
             "</body></html>");
     }
     else if (req.path() == "/favicon.ico")
@@ -80,7 +81,6 @@ int main(int argc, char* argv[])
 {
     /* 输出threadid */
     pid_t id=static_cast<pid_t>(::syscall(SYS_gettid));
-    std::cout<<"main thread id:"<<std::to_string(id)<<std::endl;
     int numThreads = 1;
     if (argc > 1)
     {

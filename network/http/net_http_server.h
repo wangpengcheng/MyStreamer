@@ -41,13 +41,15 @@ public:
     }
 
     void start();
-
+    void stop();
 private:
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn,
                     Buffer* buf,
                     Timestamp receiveTime);
+    /* 注意谨慎使用 */
     void onRequest(const TcpConnectionPtr&, const HttpRequest&);
+    
 
     TcpServer server_;                          /* tcp server */
     HttpCallback httpCallback_;                 /* 响应回调函数 */

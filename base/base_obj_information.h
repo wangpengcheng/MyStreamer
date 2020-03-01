@@ -23,10 +23,10 @@ public:
     virtual PropertyMap GetAllProperties( ) const = 0;
 };
 
-class XObjectInformationMap : public BaseObjectInformation
+class ObjectInformationMap : public BaseObjectInformation
 {
 public:
-    XObjectInformationMap( const PropertyMap& infoMap ) : InfoMap( infoMap ) { }
+    ObjectInformationMap( const PropertyMap& infoMap ) : InfoMap( infoMap ) { }
 
     virtual Error GetProperty( const std::string& propertyName, std::string& value ) const
     {

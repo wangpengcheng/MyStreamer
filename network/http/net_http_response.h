@@ -4,6 +4,7 @@
 
 #include "uncopyable.h"
 #include "base_types.h"
+#include "net_tcp_connection.h"
 
 #include <map>
 #include <unordered_map>
@@ -64,16 +65,16 @@ public:
     void appendToBuffer(Buffer* output) const;
     /* 添加快速发送函数 */
     void SendFast(HttpStatusCode send_code,const string& body);
-    
 private:
     std::map<string, string> headers_;          /* 结构体的主要信息 */
-    HttpStatusCode statusCode_;
+    HttpStatusCode statusCode_;                 /* http状态 */
     // FIXME: add http version
-    string statusMessage_;
-    bool closeConnection_;
+    string statusMessage_;                      /* 对应的状态回应信息 */
+    bool closeConnection_;                      /* 关闭连接 */
     string body_;
+
 };
-}  // namespace net
+}  // namespace ne
 typedef net::HttpResponse WebResponse;
 NAMESPACE_END
 
