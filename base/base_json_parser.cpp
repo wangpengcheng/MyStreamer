@@ -1,6 +1,5 @@
 #include "base_json_parser.h"
 
-NAMESPACE_START
 
 using namespace std;
 
@@ -384,5 +383,3 @@ static bool ExtractObjectAsString( const char** ptr, string& str )
 
     return true;
 }
-
-NAMESPACE_END

@@ -12,6 +12,7 @@ HttpResponse::HttpStateMap HttpResponse::state_map={
     {HttpResponse::HttpStatusCode::k200Ok,"OK"},
     {HttpResponse::HttpStatusCode::k400BadRequest,"400 Bad Request"},
     {HttpResponse::HttpStatusCode::k404NotFound,"404 Not Found"},
+    {HttpResponse::HttpStatusCode::k405MethodNotAllowed,"Method Not Allowed"},
     {HttpResponse::HttpStatusCode::k301MovedPermanently,"301 Moved Permanently"},
     {HttpResponse::HttpStatusCode::k500ServerError,"500 Server Error"},
     {HttpResponse::HttpStatusCode::kUnknown,"Unkown error"},

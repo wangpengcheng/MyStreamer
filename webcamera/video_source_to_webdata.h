@@ -63,7 +63,7 @@ public:
     uint32_t           JpegSize;
     VideoListener      VideoSourceListener;                 /* 视频监听者 */
     /* 图片那指向source的img */
-    std::shared_ptr<Image> CameraImage;                 
+    std::shared_ptr<Image>  CameraImage;                 
     std::string             VideoSourceErrorMessage;
     std::mutex              ImageGuard;                     /* 图片锁 */
     std::mutex              BufferGuard;                    /* buffer锁 */

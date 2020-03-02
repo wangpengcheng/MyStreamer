@@ -4,7 +4,6 @@
 #ifndef BASE_JSON_PARSER_H
 #define BASE_JSON_PARSER_H
 #include "base_tool.h"
-NAMESPACE_START
 #include <string>
 #include <map>
 /* 
@@ -18,6 +17,5 @@ NAMESPACE_START
 bool SimpleJsonParser( const std::string& jsonStr, std::map<std::string, std::string>& values );
 
 
-NAMESPACE_END
 
 #endif

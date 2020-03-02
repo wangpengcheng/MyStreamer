@@ -1,10 +1,11 @@
 set(LIB_SRC
-   base_error.cpp
-   base_obj_configuration_serializer.cpp
-   base_manual_reset_event.cpp
-   base_str_tools.cpp
-   base_ring_buffer.cpp
-   base_tool.cpp
+    base_error.cpp
+    base_json_parser.cpp
+    base_manual_reset_event.cpp
+    base_obj_configuration_serializer.cpp
+    base_ring_buffer.cpp
+    base_str_tools.cpp
+    base_tool.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 

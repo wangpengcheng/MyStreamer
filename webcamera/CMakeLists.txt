@@ -8,6 +8,7 @@ set(LIB_SRC
     web_request_handler.cpp
     web_camera_server.cpp
     file_request_handler.cpp
+    web_camera_control_handler.cpp
 )
 include_directories(${PROJECT_SOURCE_DIR}/base)
 include_directories(${PROJECT_SOURCE_DIR}/imgproc)

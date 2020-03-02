@@ -48,7 +48,7 @@ double cs_time(void) {
 bool FileExiting(const std::string& file_full_name)
 {
   std::ifstream fin(file_full_name);
-  return fin.is_open();
+  return fin.good();
 };
 std::string ReadFile(std::string file_full_name)
 {

@@ -3,7 +3,6 @@
 #include "base_str_tools.h"
 
 
-NAMESPACE_START
 // 去除开头的空字符
 std::string& StringLTrimg( std::string& s )
 {
@@ -48,5 +47,3 @@ std::string& StringReplace(std::string& s, const std::string& lookFor, const std
 
     return s;
 }
-
-NAMESPACE_END

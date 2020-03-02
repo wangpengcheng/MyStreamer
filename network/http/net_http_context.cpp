@@ -15,6 +15,7 @@ bool HttpContext::processRequestLine(const char* begin, const char* end)
     space = std::find(start, end, ' ');
     if (space != end)
     {
+      /* 查找参数 */
       const char* question = std::find(start, space, '?');
       if (question != space)
       {
