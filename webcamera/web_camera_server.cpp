@@ -33,7 +33,6 @@ void WebCameraServer::Start()
 void WebCameraServer::AddHandler(const string & hander_name,const std::shared_ptr<WebRequestHandlerInterface> handler)
 {
     function_map_[hander_name]=handler;
-    std::cout<<"map size:"<<function_map_.size()<<std::endl;
 }
 
 void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
