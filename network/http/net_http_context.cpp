@@ -51,6 +51,9 @@ bool HttpContext::processRequestLine(const char* begin, const char* end)
 /* 检查请求，结构体是否发生错误 */
 bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 {
+
+	//	std::string buffer(buf->peek(),buf->readableBytes());
+	//std::cout<<"=======buffer:"<<buffer<<std::endl;	
 	bool ok = true;
 	bool hasMore = true;
 	while (hasMore)
@@ -97,5 +100,8 @@ bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 			std::cout<<"======="<<body<<std::endl;
 		}
 	}
+	       std::string buffer(buf->peek(),buf->readableBytes());
+        std::cout<<"=======buffer:"<<buffer<<std::endl;
+
 	return ok;
 }
