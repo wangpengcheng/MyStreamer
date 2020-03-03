@@ -15,13 +15,13 @@
 }
 
 .ui-page .ui-header {
-    background-color: #00A040 !important;
-    background: linear-gradient(#008040, #00A040) !important;
+    background-color: rgb(218, 26, 131) !important;
+    background: linear-gradient(#165234, #c1b634) !important;
 }
 
 .ui-page .ui-footer {
-    background-color: #008040 !important;
-    background: linear-gradient(#00A040, #008040) !important;
+    background-color: #2bb972 !important;
+    background: linear-gradient(rgb(45, 155, 89), #008040) !important;
 }
 
 .ui-page .ui-header .ui-btn-right {
@@ -59,7 +59,7 @@
 }
 
 #camera {
-    border: 10px #006010 solid;
+    border: 10px #9bbfa1 solid;
 }
 
 #copyright {

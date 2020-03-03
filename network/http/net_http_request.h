@@ -171,7 +171,8 @@ public:
 
     const std::map<string, string>& headers() const
     { return headers_; }
-
+    inline std::string getBody(){return ex_body_;}
+    inline std::string setBody(const std::string & new_body_){ex_body_=new_body_;}
     void swap(HttpRequest& that)
     {
         std::swap(method_, that.method_);
@@ -189,6 +190,7 @@ private:
     string query_;                          /* 查询参数 */
     Timestamp receiveTime_;                 /* 接收时间 */
     std::map<string, string> headers_;      /* header相关参数 */
+    std::string ex_body_;                   /* 额外的body参数 */
 };
 
 }  // namespace net
