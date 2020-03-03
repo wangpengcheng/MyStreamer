@@ -27,7 +27,7 @@ WebRequestHandlerInterface::~WebRequestHandlerInterface()
 }
 void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebResponse& response)
 {
-    if(Owner->IsError())
+    if(!Owner->IsError())
     {
         Owner->EncodeCameraImage();
     }
@@ -36,7 +36,7 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
         Owner->ReportError(response);
     }else{
         std::lock_guard<std::mutex> lock(Owner->BufferGuard);
-        if(Owner->JpegSize==0)
+        if(Owner==0)
         {
             response.SendFast(WebResponse::k500ServerError,"No image from video source");
         }else{
@@ -51,6 +51,8 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
     }
 
 }
+
+
 void MjpegRequestHandler::HandleHttpRequest( const WebRequest& request, WebResponse& response )
 {
     //TODO:实现流的连续传输。tcp连续写入

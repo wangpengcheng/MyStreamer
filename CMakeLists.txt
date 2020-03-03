@@ -3,19 +3,27 @@ project(MyStreamer)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 set(CXX_FLAGS
-    -g
-    -Wall
     -std=c++11
     -D_PTHREADS
-    -Wno-unused-parameter
 )
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 set(CMAKE_CXX_COMPILER "g++")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O0")
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O0")
+    set(CXX_FLAGS
+        -g
+        -Wall
+        -Wno-unused-parameter
+    )
+else()
+    set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
+message(STATUS "Build Type is:" ${CMAKE_BUILD_TYPE})
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 

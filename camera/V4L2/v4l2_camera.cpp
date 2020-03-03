@@ -13,6 +13,8 @@ V4L2Camera::V4L2Camera( ):
 
 V4L2Camera::~V4L2Camera( )
 {
+    SignalToStop();
+    WaitForStop();
     delete mData;
 }
 

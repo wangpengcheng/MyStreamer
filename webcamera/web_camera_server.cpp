@@ -33,10 +33,12 @@ void WebCameraServer::Start()
 void WebCameraServer::AddHandler(const string & hander_name,const std::shared_ptr<WebRequestHandlerInterface> handler)
 {
     function_map_[hander_name]=handler;
+    std::cout<<"map size:"<<function_map_.size()<<std::endl;
 }
 
 void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
 {
+
     string req_path=req.path();
     std::string full_name=root_path_+req_path;
     /* 首先进行文件查找 */
@@ -51,7 +53,8 @@ void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
             func->HandleHttpRequest(req,(*resp));
         }else{
             resp->SendFast(WebResponse::k404NotFound,"Not found request service ");
+            resp->setCloseConnection(true);
         }
     }
-    
+
 }
