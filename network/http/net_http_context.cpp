@@ -51,13 +51,8 @@ bool HttpContext::processRequestLine(const char* begin, const char* end)
 /* 检查请求，结构体是否发生错误 */
 bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 {
-<<<<<<< HEAD
-
-=======
-
 	//	std::string buffer(buf->peek(),buf->readableBytes());
 	//std::cout<<"=======buffer:"<<buffer<<std::endl;	
->>>>>>> 04a180b5966693034f4257666286c9b326cdc298
 	bool ok = true;
 	bool hasMore = true;
 	while (hasMore)
@@ -90,8 +85,13 @@ bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 				}else{
 					// empty line, end of header
 					// FIXME:
-					state_ = kGotAll;
-					hasMore = false;
+					if(!request_.getHeader("Content-Length").empty()){
+						state_ = kExpectBody
+					}else{
+						state_ = kGotAll;
+						hasMore = false;
+					}
+					
 				}
 				buf->retrieveUntil(crlf + 2);
 			}else{
