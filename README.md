@@ -19,3 +19,24 @@
 - [ ] imgproc图像处理模块完善
 - [ ] 异构设备GPU，FPGA加速支持
 - [ ] 深度学习目标检测模型加速
+
+
+## Install And Test
+```shell
+# git clone 
+git clone https://github.com/wangpengcheng/MyStreamer.git
+cd MyStreamer
+
+# build 
+mkdir build
+cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
+
+# run and test
+
+#test Mystreamer 
+./install/bin/Release/MyStreamer
+
+# test_http_sever
+./install/bin/Release/http_server_test
+
+``` 
