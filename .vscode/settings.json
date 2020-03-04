@@ -55,6 +55,7 @@
         "mutex": "cpp",
         "condition_variable": "cpp",
         "unordered_set": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "map": "cpp"
     }
 }
