@@ -9,7 +9,7 @@
 NAMESPACE_START
 
 /**
- * 强求响应控制句柄函数，主要是方便添加reposens函数;对于不同的reques和Response进行处理
+ * 请求响应控制句柄函数，主要是方便添加reposens函数;对于不同的reques和Response进行处理
 */
 
 class  WebRequestHandlerInterface
@@ -26,7 +26,7 @@ private:
     bool            mCanHandleSubContent;
 };
 
-// Web request handler providing camera images as JPEGs
+// jpeg图片请求
 class JpegRequestHandler : public WebRequestHandlerInterface
 {
 private:
@@ -44,7 +44,7 @@ public:
     void HandleHttpRequest( const WebRequest& request,WebResponse&  response  );
 };
 
-// Web request handler providing camera images as MJPEG stream
+//MJPEG stream 流发送,暂未实现
 class MjpegRequestHandler : public WebRequestHandlerInterface
 {
 private:

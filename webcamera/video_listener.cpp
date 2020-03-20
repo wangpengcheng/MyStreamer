@@ -19,6 +19,7 @@ VideoListener::~VideoListener()
 void VideoListener::OnNewImage( const std::shared_ptr<const Image>& image )
 {
     std::lock_guard<std::mutex> lock( owner_->ImageGuard );
+    /* 将数据拷贝过来 */
     owner_->InternalError = image->CopyDataOrClone( owner_->CameraImage );
     if ( owner_->InternalError == Error::Success )
     {

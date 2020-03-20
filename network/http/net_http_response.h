@@ -9,7 +9,9 @@
 #include <map>
 #include <unordered_map>
 NAMESPACE_START
-/* 主要是组成http的关键文字部分 */
+/* 主要是组成http respone的关键文字部分
+ * 方便设置参数；并将参数写入到buffer中
+ */
 namespace net
 {
 
@@ -27,10 +29,12 @@ public:
         k400BadRequest = 400,
         k404NotFound = 404,
         k405MethodNotAllowed=405,
-        k500ServerError=505
+        k500ServerError=500
     };
     typedef std::unordered_map<int,string> HttpStateMap;
+    /* 状态映射图 */
     static HttpStateMap state_map;
+    /* 文件请求图 */
     static std::unordered_map<std::string,std::string> file_type;
     explicit HttpResponse(bool close)
         : statusCode_(kUnknown),
@@ -73,7 +77,7 @@ private:
     // FIXME: add http version
     string statusMessage_;                      /* 对应的状态回应信息 */
     bool closeConnection_;                      /* 关闭连接 */
-    string body_;
+    string body_;                               /* http主体信息 */
 
 };
 }  // namespace ne

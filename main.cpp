@@ -19,6 +19,7 @@ int main(int argc,char* argv[])
     auto jpeg_handler=video_web.CreateJpegHandler("jpeg");
     MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",1);
     my_camera->Start();
+    /* 添加图像服务 */
     camera_server.AddHandler("/camera/jpeg",jpeg_handler);
    // camera_server.AddHandler("/camera/info",std::make_shared<MyStreamer::CameraInfoHandler>(my_camera,"/camera/info"));
     camera_server.Start();

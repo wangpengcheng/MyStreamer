@@ -19,7 +19,7 @@ TcpServer::TcpServer(EventLoop* loop,
     : loop_(CHECK_NOTNULL(loop)),
         ipPort_(listenAddr.toIpPort()),
         name_(nameArg),
-        acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),
+        acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),/* 使用loop初始化accpter */
         threadPool_(new EventLoopThreadPool(loop, name_)),
         connectionCallback_(defaultConnectionCallback),
         messageCallback_(defaultMessageCallback),
@@ -66,7 +66,7 @@ void TcpServer::start()
           /* 
         * Acceptor和TcpServer在同一个线程，通常会直接调用 
         * std::bind只能值绑定，如果传入智能指针会增加引用计数，这里传递普通指针
-        * 因为TcpServer没有销毁，所以不用担心Acceptor会销毁
+        * 因为TcpServer没有销毁，所以不用担心Acceptor会销毁；绑定主要监听函数
         */
         loop_->runInLoop(
             std::bind(&Acceptor::listen, get_pointer(acceptor_)));
@@ -107,6 +107,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
     LOG_INFO << "TcpServer::newConnection [" << name_
             << "] - new connection [" << connName
             << "] from " << peerAddr.toIpPort();
+    /*  */
     InetAddress localAddr(sockets::getLocalAddr(sockfd));
     // FIXME poll with zero timeout to double confirm the new connection
     // FIXME use make_shared if necessary
@@ -121,7 +122,9 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
     connections_[connName] = conn;
     /* 为tcp连接设置回调函数（由用户提供） */
     conn->setConnectionCallback(connectionCallback_);
+    /* 设置消息回调函数 */
     conn->setMessageCallback(messageCallback_);
+    /* 设置写入回调函数 */
     conn->setWriteCompleteCallback(writeCompleteCallback_);
      /* 
     * 关闭回调函数，由TcpServer设置，作用是将这个关闭的TcpConnection从map中删除

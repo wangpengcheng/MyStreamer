@@ -33,7 +33,7 @@ public:
     void SetJpegQuality( uint16_t quality );
 
 private:
-    VideoSourceToWebData* mData;
+    VideoSourceToWebData* mData;            /* 视频转向web的关键数据结构 */
 };
 
 NAMESPACE_END

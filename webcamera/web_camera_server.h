@@ -35,8 +35,8 @@ private:
     RequestMap function_map_;
     /* 跟文件目录 */
     std::string root_path_;
-     /* 文件查找函数 */
-    FileRequestHandler file_hander;
+     /* 文件查找函数;这里是自带的 */
+    FileRequestHandler file_hander; 
     /* 循环事件 */
     net::EventLoop   loop_;
     /* http 服务器 */

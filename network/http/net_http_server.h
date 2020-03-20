@@ -43,7 +43,9 @@ public:
     void start();
     void stop();
 private:
+    /* 连接处理函数 */
     void onConnection(const TcpConnectionPtr& conn);
+    /* 消息处理函数 */
     void onMessage(const TcpConnectionPtr& conn,
                     Buffer* buf,
                     Timestamp receiveTime);

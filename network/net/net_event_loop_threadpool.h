@@ -15,7 +15,9 @@ namespace net
 
 class EventLoop;
 class EventLoopThread;
-
+/**
+ * Eventloop线程池；主要还是对多个eventloop进行调度
+*/
 class EventLoopThreadPool : noncopyable
 {
 public:
@@ -28,7 +30,7 @@ public:
 
     // valid after calling start()
     /// round-robin
-    EventLoop* getNextLoop();
+    EventLoop* getNextLoop();/* 获取空闲的线程 */
 
     /// with the same hash code, it will always return the same EventLoop
     EventLoop* getLoopForHash(size_t hashCode);
@@ -48,8 +50,8 @@ private:
     bool started_;
     int numThreads_;
     int next_;
-    std::vector<std::unique_ptr<EventLoopThread>> threads_;
-    std::vector<EventLoop*> loops_;
+    std::vector<std::unique_ptr<EventLoopThread>> threads_; /* 线程集合 */
+    std::vector<EventLoop*> loops_; /* 循环事件集合 */
 };
 
 }  // namespace net

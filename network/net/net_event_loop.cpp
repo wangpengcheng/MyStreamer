@@ -58,7 +58,7 @@ EventLoop::EventLoop()
         callingPendingFunctors_(false),
         iteration_(0),
         threadId_(CurrentThread::tid()),
-        poller_(Poller::newDefaultPoller(this)),
+        poller_(Poller::newDefaultPoller(this)),//初始化poll;虽然每个线程都有poll但是只有accpter回正式调用
         timerQueue_(new TimerQueue(this)),
         wakeupFd_(createEventfd()),
         wakeupChannel_(new Channel(this, wakeupFd_)),

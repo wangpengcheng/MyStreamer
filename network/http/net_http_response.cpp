@@ -18,6 +18,7 @@ HttpResponse::HttpStateMap HttpResponse::state_map={
     {HttpResponse::HttpStatusCode::kUnknown,"Unkown error"},
 
 };
+/* 请求文件类型初始化 */
 std::unordered_map<std::string,std::string > HttpResponse::file_type={
     {".html", "text/html"},
     {".css","text/css"},
@@ -61,7 +62,7 @@ void HttpResponse::appendToBuffer(Buffer* output) const
         /* 添加连接状态 */
         output->append("Connection: Keep-Alive\r\n");
     }
-
+    /* 逐步添加header */
     for (const auto& header : headers_)
     {
         output->append(header.first);
@@ -74,7 +75,7 @@ void HttpResponse::appendToBuffer(Buffer* output) const
     /* 添加主体 */
     output->append(body_);
 }
-
+/* 设置快速发送 */
 void HttpResponse::SendFast(HttpStatusCode send_code,const string& body)
 {
     setStatusCode(send_code);

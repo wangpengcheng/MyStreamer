@@ -54,7 +54,7 @@ public:
     /// - N means a thread pool with N threads, new connections
     ///   are assigned on a round-robin basis.
     void setThreadNum(int numThreads);
-    /*  */
+    /* 设置线程初始化回调函数 */
     void setThreadInitCallback(const ThreadInitCallback& cb)
     { threadInitCallback_ = cb; }
     /// valid after calling start()
@@ -69,16 +69,19 @@ public:
 
     /// Set connection callback.
     /// Not thread safe.
+    //连接处理函数；非线程安全
     void setConnectionCallback(const ConnectionCallback& cb)
     { connectionCallback_ = cb; }
 
     /// Set message callback.
     /// Not thread safe.
+    //消息回调函数，一般为可读的回调函数
     void setMessageCallback(const MessageCallback& cb)
     { messageCallback_ = cb; }
 
     /// Set write complete callback.
     /// Not thread safe.
+    //写入回调函数
     void setWriteCompleteCallback(const WriteCompleteCallback& cb)
     { writeCompleteCallback_ = cb; }
 

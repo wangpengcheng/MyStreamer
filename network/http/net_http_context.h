@@ -31,7 +31,7 @@ public:
 
     // default copy-ctor, dtor and assignment are fine
 
-    // return false if any error
+    // 解析请求
     bool parseRequest(Buffer* buf, Timestamp receiveTime);
 
     bool gotAll() const
@@ -53,8 +53,8 @@ public:
     private:
     bool processRequestLine(const char* begin, const char* end);
 
-    HttpRequestParseState state_;
-    HttpRequest request_;
+    HttpRequestParseState state_;       /* 请求状态 */
+    HttpRequest request_;               /* 请求解析 */
     };
 
 }  // namespace net

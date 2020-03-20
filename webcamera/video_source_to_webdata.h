@@ -56,7 +56,7 @@ public:
     volatile bool      NewImageAvailable;                   /* 是否存在新图片 */
     volatile bool      VideoSourceError;                    /* 视频源错误 */
     Error               InternalError;                      
-    /* jpegbuffer相关类 */
+    /* jpegbuffer相关类;主要是是用来执行jpeg压缩 */
     uint8_t*           JpegBuffer;                          /* jpegbuffer缓冲 */
     uint32_t           JpegBufferSize;
     /* 图片类 */

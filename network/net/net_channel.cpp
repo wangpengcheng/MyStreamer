@@ -95,6 +95,7 @@ void Channel::handleEvent(Timestamp receiveTime)
 void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
     eventHandling_ = true;
+    /* 输出注册的事件 */
     LOG_TRACE << reventsToString();
     /* 关闭事件 */
     if ((revents_ & POLLHUP) && !(revents_ & POLLIN))

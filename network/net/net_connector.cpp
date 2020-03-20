@@ -31,13 +31,15 @@ Connector::~Connector()
 void Connector::start()
 {
     connect_ = true;
+    /* 开始连接处理事件循环 */
     loop_->runInLoop(std::bind(&Connector::startInLoop, this)); // FIXME: unsafe
 }
-
+/* 开始循环 */
 void Connector::startInLoop()
 {
     loop_->assertInLoopThread();
     assert(state_ == kDisconnected);
+    /* 进行连接处理 */
     if (connect_)
     {
         connect();
@@ -65,10 +67,12 @@ void Connector::stopInLoop()
         retry(sockfd);
     }
 }
-
+/* tcp connect 连接处理函数 */
 void Connector::connect()
 {
+    /* 创建非阻塞的socket连接描述符 */
     int sockfd = sockets::createNonblockingOrDie(serverAddr_.family());
+    /* 绑定地址连接 */
     int ret = sockets::connect(sockfd, serverAddr_.getSockAddr());
     int savedErrno = (ret == 0) ? 0 : errno;
     switch (savedErrno)
@@ -77,15 +81,15 @@ void Connector::connect()
         case EINPROGRESS:
         case EINTR:
         case EISCONN:
-        connecting(sockfd);
+            connecting(sockfd);/* 执行连接函数 */
         break;
 
         case EAGAIN:
         case EADDRINUSE:
         case EADDRNOTAVAIL:
         case ECONNREFUSED:
-        case ENETUNREACH:
-        retry(sockfd);
+        case ENETUNREACH:/* 没有到达网络的可用路由 */
+            retry(sockfd);/* 重新尝试 */  
         break;
 
         case EACCES:
@@ -94,19 +98,19 @@ void Connector::connect()
         case EALREADY:
         case EBADF:
         case EFAULT:
-        case ENOTSOCK:
-        LOG_SYSERR << "connect error in Connector::startInLoop " << savedErrno;
-        sockets::close(sockfd);
+        case ENOTSOCK:/* 非socket上执行socket操作 */
+            LOG_SYSERR << "connect error in Connector::startInLoop " << savedErrno;
+            sockets::close(sockfd);
         break;
 
         default:
-        LOG_SYSERR << "Unexpected error in Connector::startInLoop " << savedErrno;
-        sockets::close(sockfd);
+            LOG_SYSERR << "Unexpected error in Connector::startInLoop " << savedErrno;
+            sockets::close(sockfd);
         // connectErrorCallback_();
         break;
     }
 }
-
+/* 开启事件循环 */
 void Connector::restart()
 {
     loop_->assertInLoopThread();
@@ -115,28 +119,33 @@ void Connector::restart()
     connect_ = true;
     startInLoop();
 }
-
+/* 执行连接函数 */
 void Connector::connecting(int sockfd)
 {
     setState(kConnecting);
     assert(!channel_);
+    /* 重新设置channel */
     channel_.reset(new Channel(loop_, sockfd));
+    /* 设置写回调 */
     channel_->setWriteCallback(
         std::bind(&Connector::handleWrite, this)); // FIXME: unsafe
+    /* 设置错误回调 */
     channel_->setErrorCallback(
         std::bind(&Connector::handleError, this)); // FIXME: unsafe
 
     // channel_->tie(shared_from_this()); is not working,
     // as channel_ is not managed by shared_ptr
+    /* 设置事件为可写事件 */
     channel_->enableWriting();
 }
-
+/* 重新设置监听事件 */
 int Connector::removeAndResetChannel()
 {
     channel_->disableAll();
     channel_->remove();
     int sockfd = channel_->fd();
     // Can't reset channel_ here, because we are inside Channel::handleEvent
+    /* 将重设事件添加到事件循环中 */
     loop_->queueInLoop(std::bind(&Connector::resetChannel, this)); // FIXME: unsafe
     return sockfd;
 }
@@ -156,24 +165,23 @@ void Connector::handleWrite()
         int err = sockets::getSocketError(sockfd);
         if (err)
         {
-        LOG_WARN << "Connector::handleWrite - SO_ERROR = "
-                << err << " " << strerror_tl(err);
-        retry(sockfd);
+            LOG_WARN << "Connector::handleWrite - SO_ERROR = "
+                    << err << " " << strerror_tl(err);
+            retry(sockfd);
         }
         else if (sockets::isSelfConnect(sockfd))
         {
-        LOG_WARN << "Connector::handleWrite - Self connect";
-        retry(sockfd);
+            LOG_WARN << "Connector::handleWrite - Self connect";
+            retry(sockfd);
         }
         else
         {
-        setState(kConnected);
+            setState(kConnected);
+        /* 执行写入回调 */
         if (connect_)
         {
             newConnectionCallback_(sockfd);
-        }
-        else
-        {
+        }else{
             sockets::close(sockfd);
         }
         }
@@ -196,17 +204,20 @@ void Connector::handleError()
         retry(sockfd);
     }
 }
-
+/* 重新连接 */
 void Connector::retry(int sockfd)
 {
+    /* 关闭原来的连接 */
     sockets::close(sockfd);
     setState(kDisconnected);
     if (connect_)
     {
         LOG_INFO << "Connector::retry - Retry connecting to " << serverAddr_.toIpPort()
                 << " in " << retryDelayMs_ << " milliseconds. ";
+        /* 一段时间后重新执行 */
         loop_->runAfter(retryDelayMs_/1000.0,
                         std::bind(&Connector::startInLoop, shared_from_this()));
+        /* 更新重新连接的时间 */
         retryDelayMs_ = std::min(retryDelayMs_ * 2, kMaxRetryDelayMs);
     }
     else

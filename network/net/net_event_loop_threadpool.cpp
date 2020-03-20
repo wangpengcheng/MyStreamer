@@ -28,7 +28,7 @@ EventLoopThreadPool::~EventLoopThreadPool()
  * 
  * 1.主线程EventLoopThreadPool创建EventLoopThread对象
  * 2.主线程EventLoopThread构造函数中初始化线程类Thread并传递回调函数EventLoopThread::threadFunc
- * 3.主线程EventLoopThreadPool创建完EventLoopThread后，调用EventLoopThread::startLoop函数
+ * 3.主线程EventLoopThreadPool创建完EventLoopThread后，调用EventLoopThread::startLoop函数；开始阻塞在等待处
  * 4.主线程EventLoopThread::startLoop函数开启线程类Thread，即调用Thread::start
  * 5.主线程Thread::start函数中使用pthread_create创建线程后
  *   子线程调用回调函数EventLoopThread::threadFunc，主线程返回到EventLoopThread::startLoop

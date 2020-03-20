@@ -140,7 +140,7 @@ private:
     int64_t iteration_;             //事件循环的次数
     const pid_t threadId_;          //运行loop的线程ID，一个线程只能有一个eventloop
     Timestamp pollReturnTime_;          /* poll阻塞的时间 */
-    std::unique_ptr<Poller> poller_;    /* 指向的poller列表 */
+    std::unique_ptr<Poller> poller_;    /* 指向的poller列表,表示只有一个poller_ */
     std::unique_ptr<TimerQueue> timerQueue_;    /* 指向的时间队列 */
     int wakeupFd_;                              /* 唤醒当前线程的定时器描述符 */
     /* 

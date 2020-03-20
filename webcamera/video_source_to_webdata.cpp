@@ -11,7 +11,7 @@ bool VideoSourceToWebData::IsError( )
     return ( ( InternalError != Error::Success ) || ( VideoSourceError ) );
 }
 
-// Report an error as HTTP response
+// 报告HTTP错误
 void VideoSourceToWebData::ReportError( net::HttpResponse& response )
 {
     if ( InternalError != Error::Success )

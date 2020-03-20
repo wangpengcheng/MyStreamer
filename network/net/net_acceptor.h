@@ -27,7 +27,7 @@ class InetAddress;
 class Acceptor : noncopyable
 {
 public:
-    /* 定义回调函数雷子那个 */
+    /* 定义回调函数 */
     typedef std::function<void (int sockfd, const InetAddress&)> NewConnectionCallback;
     /* 构造函数，监听地址 */
     Acceptor(EventLoop* loop, const InetAddress& listenAddr, bool reuseport);

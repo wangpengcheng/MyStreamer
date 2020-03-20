@@ -8,7 +8,7 @@ EventLoopThread::EventLoopThread(const ThreadInitCallback& cb,
                                  const string& name)
     : loop_(NULL),
         exiting_(false),
-        thread_(std::bind(&EventLoopThread::threadFunc, this), name),
+        thread_(std::bind(&EventLoopThread::threadFunc, this), name),/* 在这里创建线程并绑定对应的函数 */
         mutex_(),
         cond_(mutex_),
         callback_(cb)
@@ -48,6 +48,7 @@ EventLoop* EventLoopThread::startLoop()
         /* 这里的cond_.notify 由threadFunc创建，在thread初始化时就存在了，一般不会阻塞;
             会自动创建一个loop_
             */
+        /* 开启事件循环前，需要保证线程和event已经就绪 */
         while (loop_ == NULL)
         {
             cond_.wait();
@@ -62,7 +63,7 @@ void EventLoopThread::threadFunc()
 {
     /* 创建loop */
     EventLoop loop;
-    /* 存在回调;就继续执行 */
+    /* 存在回调;就继续执行回调函数 */
     if (callback_)
     {
         callback_(&loop);

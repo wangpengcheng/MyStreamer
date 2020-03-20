@@ -156,7 +156,7 @@ private:
     size_t highWaterMark_;
     Buffer inputBuffer_;
     Buffer outputBuffer_; // FIXME: use list<Buffer> as output buffer.
-    boost::any context_;
+    boost::any context_;        /* 处理上下文消息的任意指针 */
     // FIXME: creationTime_, lastReceiveTime_
     //        bytesReceived_, bytesSent_
 };

@@ -35,6 +35,7 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
     {
         Owner->ReportError(response);
     }else{
+        /* 这里对图像数据加锁，避免竞争访问 */
         std::lock_guard<std::mutex> lock(Owner->BufferGuard);
         if(Owner==0)
         {

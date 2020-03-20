@@ -13,6 +13,10 @@ namespace net
 
 class EventLoop;
 
+/*
+事件循环线程;
+主要是执行eventloop中的函数
+*/
 class EventLoopThread : noncopyable
 {
  public:

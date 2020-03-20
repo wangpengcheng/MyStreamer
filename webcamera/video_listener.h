@@ -16,7 +16,7 @@ public:
     /* 重载错误信息 */
     void OnError( const std::string& errorMessage, bool fatal );
 private:
-    VideoSourceToWebData* owner_;
+    VideoSourceToWebData* owner_;           /* 数据转换的关键数据结构 */
 };
 
 NAMESPACE_END
