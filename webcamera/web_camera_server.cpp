@@ -39,8 +39,7 @@ void WebCameraServer::AddHandler(const string & hander_name,const std::shared_pt
 void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
 {
 
-
- //   auto M=req.headers();
+//    auto M=req.headers();
 // std::map<std::string,std::string>::iterator iter;//定义一个迭代指针iter
 //    for(iter=M.begin(); iter!=M.end(); iter++){
  //       std::cout<<iter->first <<"->"<<iter->second<<std::endl;   

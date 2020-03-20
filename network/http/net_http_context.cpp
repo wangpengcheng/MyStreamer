@@ -51,8 +51,8 @@ bool HttpContext::processRequestLine(const char* begin, const char* end)
 /* 检查请求，结构体是否发生错误 */
 bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 {
-	//	std::string buffer(buf->peek(),buf->readableBytes());
-	//std::cout<<"=======buffer:"<<buffer<<std::endl;	
+	//std::string buffer(buf->peek(),buf->readableBytes());
+	//std::cout<<"=======full  buffer:"<<buffer<<std::endl;
 	bool ok = true;
 	bool hasMore = true;
 	while (hasMore)
@@ -85,27 +85,23 @@ bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 				}else{
 					// empty line, end of header
 					// FIXME:
-					if(!request_.getHeader("Content-Length").empty()){
-						state_ = kExpectBody
-					}else{
-						state_ = kGotAll;
-						hasMore = false;
-					}
-					
-				}
+                    state_ = kGotAll;
+                    hasMore = false;
+			    }
 				buf->retrieveUntil(crlf + 2);
 			}else{
 				hasMore = false;
 			}
 		}else if (state_ == kExpectBody){
 			// FIXME:
-			const char* end_body=buf->findCRLF();
-			std::string body(buf->peek(),end_body);
-			std::cout<<"======="<<body<<std::endl;
+			//const char* end_body=buf->findCRLF();
+			//std::string body(buf->peek(),end_body);
+			//std::cout<<"======="<<body<<std::endl;
+
 		}
 	}
-	       std::string buffer(buf->peek(),buf->readableBytes());
-        std::cout<<"=======buffer:"<<buffer<<std::endl;
-
+    /*在这里进行buffer的构造 */
+//	std::string body(buf->peek(),buf->readableBytes());
+    //request_.setBody(body);
 	return ok;
 }

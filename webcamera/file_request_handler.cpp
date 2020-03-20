@@ -38,7 +38,7 @@ void FileRequestHandler::HandleHttpRequest( const WebRequest& request,WebRespons
             }else{
                 std::cout<<"read file:"<<full_name<<"error"<<std::endl;
             }
-            
+
         }
     }
     response.SendFast(WebResponse::k404NotFound," :(  Not Found File:"+req_path+" .");
