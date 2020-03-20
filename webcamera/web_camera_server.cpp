@@ -43,11 +43,11 @@ void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
  //       std::cout<<temp->first<<":"<<temp->second<<std::endl;
  //   }
 
-    auto M=req.headers();
- std::map<std::string,std::string>::iterator iter;//定义一个迭代指针iter
-    for(iter=M.begin(); iter!=M.end(); iter++){
-        std::cout<<iter->first <<"->"<<iter->second<<std::endl;
-}
+//    auto M=req.headers();
+// std::map<std::string,std::string>::iterator iter;//定义一个迭代指针iter
+//    for(iter=M.begin(); iter!=M.end(); iter++){
+//        std::cout<<iter->first <<"->"<<iter->second<<std::endl;
+//}
     string req_path=req.path();
     std::string full_name=root_path_+req_path;
     /* 首先进行文件查找 */

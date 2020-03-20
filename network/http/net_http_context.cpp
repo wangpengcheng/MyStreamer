@@ -101,7 +101,7 @@ bool HttpContext::parseRequest(Buffer* buf, Timestamp receiveTime)
 		}
 	}
     /*在这里进行buffer的构造 */
-	std::string body(buf->peek(),buf->readableBytes());
-    request_.setBody(body);
+//	std::string body(buf->peek(),buf->readableBytes());
+    //request_.setBody(body);
 	return ok;
 }
