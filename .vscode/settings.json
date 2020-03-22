@@ -56,6 +56,22 @@
         "condition_variable": "cpp",
         "unordered_set": "cpp",
         "xstring": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "ios": "cpp",
+        "set": "cpp",
+        "xthread": "cpp",
+        "xfacet": "cpp",
+        "xfunctional": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xmemory0": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
     }
 }
