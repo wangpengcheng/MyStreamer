@@ -56,8 +56,10 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb)
         threads_.push_back(std::unique_ptr<EventLoopThread>(t));
         /* 创建新线程，返回新线程的事件驱动循环EventLoop */
         /* EventLoopThread主线程返回后，将事件驱动循环保存下来，然后继续创建线程 */
+        /* 线程在event loop创建之后，会调用loop陷入无限循环 */
         loops_.push_back(t->startLoop());
     }
+    //没有创建线程由，主线程执行函数
     if (numThreads_ == 0 && cb)
     {
         cb(baseLoop_);
@@ -73,7 +75,7 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb)
     */
     
 }
-
+//获取下一条线程
 EventLoop* EventLoopThreadPool::getNextLoop()
 {
     baseLoop_->assertInLoopThread();
@@ -85,6 +87,7 @@ EventLoop* EventLoopThreadPool::getNextLoop()
         // round-robin
         loop = loops_[next_];
         ++next_;
+        /* 超过之后，重新设置为0 */
         if (implicit_cast<size_t>(next_) >= loops_.size())
         {
             next_ = 0;

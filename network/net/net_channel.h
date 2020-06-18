@@ -58,7 +58,7 @@ public:
     void set_revents(int revt) { revents_ = revt; } // used by pollers;设置事件集合
     // 检查当前Channel是否未处理任何事件
     bool isNoneEvent() const { return events_ == kNoneEvent; }
-    //开启/关闭读事件，并更新channel信息
+    //开启/关闭读事件，并更新channel信息，将读写事件写入epoll
     void enableReading() { events_ |= kReadEvent; update(); }
     void disableReading() { events_ &= ~kReadEvent; update(); }
     /* 开启/关闭写事件监听 */
@@ -80,7 +80,7 @@ public:
     std::string eventsToString() const;
 
     void doNotLogHup() { logHup_ = false; }
-    /* 所属处理线程 */
+    /* 所属处理实现循环 */
     EventLoop* ownerLoop() { return loop_; }
     void remove();
 

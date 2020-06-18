@@ -49,6 +49,7 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
 {
 	LOG_TRACE << "fd total count " << channels_.size();
 	/* 查询满足监听事件的数目 */
+	/* 返回事件集合，包括事件和fd数组 */
 	int numEvents = ::epoll_wait(epollfd_,
 								&*events_.begin(),
 								static_cast<int>(events_.size()),
@@ -109,6 +110,7 @@ void EPollPoller::fillActiveChannels(int numEvents,
 #ifndef NDEBUG
 		/* 获取文件描述符 */
 		int fd = channel->fd();
+		/* 查找fd是否在监听队列中，注意只有已经连接的才会在里面 */
 		ChannelMap::const_iterator it = channels_.find(fd);
 		/* 检查文件描述是否存在 */
 		assert(it != channels_.end());
@@ -124,6 +126,7 @@ void EPollPoller::fillActiveChannels(int numEvents,
 void EPollPoller::updateChannel(Channel* channel)
 {
 	Poller::assertInLoopThread();
+	//获取其对应的map index
 	const int index = channel->index();
 	LOG_TRACE << "fd = " << channel->fd()
 		<< " events = " << channel->events() << " index = " << index;
@@ -141,7 +144,7 @@ void EPollPoller::updateChannel(Channel* channel)
 			assert(channels_.find(fd) != channels_.end());
 			assert(channels_[fd] == channel);
 		}
-
+		//
 		channel->set_index(kAdded);
 		/* 添加channel响应事件 */
 		update(EPOLL_CTL_ADD, channel);

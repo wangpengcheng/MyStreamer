@@ -49,7 +49,7 @@ private:
     string name_;
     bool started_;
     int numThreads_;
-    int next_;
+    int next_;                          /* 记录线程池中已经使用的下标 */
     std::vector<std::unique_ptr<EventLoopThread>> threads_; /* 线程集合 */
     std::vector<EventLoop*> loops_; /* 循环事件集合 */
 };

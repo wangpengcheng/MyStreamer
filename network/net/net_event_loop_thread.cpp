@@ -30,7 +30,7 @@ EventLoopThread::~EventLoopThread()
 EventLoop* EventLoopThread::startLoop()
 {
     assert(!thread_.started());
-    /* 主线程调用线程类的start函数，创建线程 */
+    /* 主线程调用线程类的start函数，创建线程；线程的主要执行函数是 threadFunc*/
     thread_.start();
 
     EventLoop* loop = NULL;
@@ -55,7 +55,7 @@ EventLoop* EventLoopThread::startLoop()
         }
         loop = loop_;
     }
-
+    /* 返回当前线程的loop */
     return loop;
 }
 /* 执行函数，这里会创建一个eventloop */
@@ -75,9 +75,13 @@ void EventLoopThread::threadFunc()
         /* 发送消息，解除startLoop的阻塞 */
         cond_.notify();
     }
-    /* 子线程开启事件监听，进入无限循环，不返回 */
+    /* 子线程开启事件监听，进入无限循环，监听Accpetor 发送的socket描述符，进行处理，不返回 */
     loop.loop();
     //assert(exiting_);
+    /* 循环结束，表明，出现问题，意外终止了，或者主动终止了循环，
+        此时销毁loop，并重新设置
+        线程执行函数结束
+     */
     MutexLockGuard lock(mutex_);
     loop_ = NULL;
 }

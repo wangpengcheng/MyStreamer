@@ -187,7 +187,7 @@ bool V4L2CameraData::Init( )
         }
         else if ( videoFormat.fmt.pix.pixelformat != pixelFormat )
         {
-            NotifyError( string( "The camera does not support requested format: " ) + ( ( JpegEncoding ) ? "MJPEG" : "YUYV" )+("\n")+("Please Use:")+(V4L2pixelFormatToStr(videoFormat.fmt.pix.pixelformat)), true );
+            NotifyError(string( "The camera does not support requested format: " ) + ( ( JpegEncoding ) ? "MJPEG" : "YUYV" )+("\n")+("Please Use:")+(V4L2pixelFormatToStr(videoFormat.fmt.pix.pixelformat)), true );
             std::string result="";
             V4L2GetSuportFormat(VideoFd,result);
             ret = false;
@@ -278,7 +278,7 @@ bool V4L2CameraData::Init( )
         }
     }
 
-    // 是否流处理
+    // 开始以流发方式，发送数据
     if ( ret )
     {
         int type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -431,13 +431,11 @@ void V4L2CameraData::VideoCaptureLoop( )
 // Background control thread - performs camera init/clean-up and runs video loop
 void V4L2CameraData::ControlThreadHanlder( V4L2CameraData* me )
 {    
-    if ( me->Init( ) )
+    if ( me->Init() )
     {
-        me->VideoCaptureLoop( );
+        me->VideoCaptureLoop();
     }
-    
-    me->Cleanup( );
-    
+    me->Cleanup();
     {
         lock_guard<recursive_mutex> lock( me->Sync );
         me->Running = false;

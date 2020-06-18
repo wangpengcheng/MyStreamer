@@ -44,7 +44,7 @@ class Poller : noncopyable
   virtual void removeChannel(Channel* channel) = 0;
 
   virtual bool hasChannel(Channel* channel) const;
-
+  /* 静态函数 */
   static Poller* newDefaultPoller(EventLoop* loop);
 
   void assertInLoopThread() const

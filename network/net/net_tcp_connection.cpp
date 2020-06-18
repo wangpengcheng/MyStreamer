@@ -40,7 +40,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
     state_(kConnecting),
     reading_(true),
     socket_(new Socket(sockfd)),
-    channel_(new Channel(loop, sockfd)),
+    channel_(new Channel(loop, sockfd)),/*  每个TCPconnet都会由自己的监听事件管理 */
     localAddr_(localAddr),
     peerAddr_(peerAddr),
     highWaterMark_(64*1024*1024)
@@ -101,6 +101,7 @@ void TcpConnection::send(const StringPiece& message)
         }
         else
         {
+            //将其添加到循环队列中
             void (TcpConnection::*fp)(const StringPiece& message) = &TcpConnection::sendInLoop;
             loop_->runInLoop(
                 std::bind(fp,
@@ -316,6 +317,12 @@ void TcpConnection::startReadInLoop()
     loop_->assertInLoopThread();
     if (!reading_ || !channel_->isReading())
     {
+        /* 设置可读；将可读事件写入epoll中
+            调用events_ |= kReadEvent; update();
+            loop_->updateChannel(channel_);
+            poller_->updateChannel(channel_);
+            
+        */
         channel_->enableReading();
         reading_ = true;
     }
@@ -351,7 +358,7 @@ void TcpConnection::connectEstablished()
     loop_->assertInLoopThread();
     assert(state_ == kConnecting);
     setState(kConnected);
-    /* Channel中对TcpConnection的弱引用在这里设置 */
+    /* Channel中对TcpConnection的弱引用在这里设置；将指针你设置到channel事件管理器中 */
     channel_->tie(shared_from_this());
     /* 设置对可读事件的监听，同时将Channel添加到Poller中 */
     channel_->enableReading();

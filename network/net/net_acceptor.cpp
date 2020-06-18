@@ -44,7 +44,7 @@ Acceptor::~Acceptor()
     acceptChannel_.remove();
     ::close(idleFd_);
 }
-
+/* 将其转换为被动监听 */
 void Acceptor::listen()
 {
     loop_->assertInLoopThread();
@@ -81,6 +81,9 @@ void Acceptor::handleRead()
         if (newConnectionCallback_)
         {
             /* 主要用于，构造tcpconnecttion,注意这里的connfd和peerAddr*/
+            /* 这里一般是主线程执行，创建TCP连接函数，
+            并将产生的交给线程池中的线程解决
+             */
             newConnectionCallback_(connfd, peerAddr);
         }
         else

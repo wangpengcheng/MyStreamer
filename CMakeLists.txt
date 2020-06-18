@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(MyStreamer)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-set(CXX_FLAGS
-    -std=c++11
-    -D_PTHREADS
-)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -23,6 +19,14 @@ else()
     set(CMAKE_CXX_FLAGS_DEBUG "-O3")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
+
+## Compile as C++11, supported in ROS Kinetic and newer
+set(CXX_FLAGS
+    ${CXX_FLAGS}
+    -std=c++11
+    -D_PTHREADS
+)
+
 message(STATUS "Build Type is:" ${CMAKE_BUILD_TYPE})
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")

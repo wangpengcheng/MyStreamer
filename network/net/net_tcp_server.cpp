@@ -42,6 +42,7 @@ TcpServer::~TcpServer()
     {
         TcpConnectionPtr conn(item.second);
         item.second.reset();
+        /* 绑定可读写时的执行函数，注意这里是在loop中循环执行；因此 */
         conn->getLoop()->runInLoop(
         std::bind(&TcpConnection::connectDestroyed, conn));
     }
@@ -60,7 +61,7 @@ void TcpServer::start()
     {
         /* 一般这里是一个空函数，注意这里已经有baseloop了*/
         threadPool_->start(threadInitCallback_);
-        /* 检查并没有在监听 */
+        /* 将acceptor设置为监听状态 */
         assert(!acceptor_->listenning());
         /* 运行监听函数 */
           /* 
@@ -142,6 +143,12 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
     * 5.当前线程是TcpServer的主线程，不是TcpConnection的线程，如果在这个线程直接调用会阻塞监听客户端请求
     * 6.其实这里不是因为线程不安全，即使在这个线程调用也不会出现线程不安全，因为TcpConnection本就是由这个线程创建的
     */
+    /* 注意:
+        这里的 newConnection 一般由TCPsever 主线程，也就是Acceptorz执行，
+        所以注入的函数，不会马上执行
+        而是调用event_loop thread的queueInLoop将函数添加到执行队列中，在下一次循环中运行；保证线程的独立性
+        因此
+    */
     ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
 }
 
@@ -159,7 +166,9 @@ void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn)
     size_t n = connections_.erase(conn->name());
     (void)n;
     assert(n == 1);
+    //获取链接所在线程
     EventLoop* ioLoop = conn->getLoop();
+    //将销毁线程添加到循环队列中
     ioLoop->queueInLoop(
         std::bind(&TcpConnection::connectDestroyed, conn));
 }

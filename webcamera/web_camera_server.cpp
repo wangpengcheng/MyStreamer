@@ -35,7 +35,7 @@ void WebCameraServer::AddHandler(const string & hander_name,const std::shared_pt
 {
     function_map_[hander_name]=handler;
 }
-/* 主要的请求处理函数 */
+/* 主要的请求处理函数 ;使用命令模式对处理函数的注册*/
 void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
 {
 

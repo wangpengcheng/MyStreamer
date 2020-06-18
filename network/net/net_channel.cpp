@@ -44,12 +44,13 @@ Channel::~Channel()
  *      那么提升的shared_ptr是null
  *      可以通过是否是null判断Tcp是否还处于连接，因为如果断开，那么这个TcpConnection就被销毁了
  */
+/* 用于保存TcpConnection指针；由此来区别是否已经连接 */
 void Channel::tie(const std::shared_ptr<void>& obj)
 {
     tie_ = obj;
-    tied_ = true;
+    tied_ = true;/* 是否已经建立连接 */
 }
-
+/* 更新循环中的激活事件 */
 void Channel::update()
 {
     addedToLoop_ = true;
@@ -74,8 +75,10 @@ void Channel::handleEvent(Timestamp receiveTime)
     * 函数返回，栈空间对象销毁，提升的shared_ptr guard销毁，引用计数减一
     */
     std::shared_ptr<void> guard;
+    /* 已经建立连接 */
     if (tied_)
     {
+        
         guard = tie_.lock();
         if (guard)
         {

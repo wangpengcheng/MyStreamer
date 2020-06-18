@@ -124,7 +124,7 @@ void Connector::connecting(int sockfd)
 {
     setState(kConnecting);
     assert(!channel_);
-    /* 重新设置channel */
+    /* 重新设置channel；注意channel在这里创建*/
     channel_.reset(new Channel(loop_, sockfd));
     /* 设置写回调 */
     channel_->setWriteCallback(

@@ -62,7 +62,7 @@ private:
     /* 绑定的loop */
     EventLoop* loop_;
     /* 服务器地址 */               
-    InetAddress serverAddr_;
+    InetAddress serverAddr_;        
     /* 是否连接 */
     bool connect_; // atomic
     States state_;  // FIXME: use atomic variable

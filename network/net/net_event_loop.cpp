@@ -60,8 +60,8 @@ EventLoop::EventLoop()
         threadId_(CurrentThread::tid()),
         poller_(Poller::newDefaultPoller(this)),//初始化poll;虽然每个线程都有poll但是只有accpter回正式调用
         timerQueue_(new TimerQueue(this)),
-        wakeupFd_(createEventfd()),
-        wakeupChannel_(new Channel(this, wakeupFd_)),
+        wakeupFd_(createEventfd()), //创建唤醒事件描述符
+        wakeupChannel_(new Channel(this, wakeupFd_)), /*  每个事件循环会有一个唤醒Channel ；主要还是给Acceptor使用*/
         currentActiveChannel_(NULL)
 {
     LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
@@ -117,10 +117,12 @@ void EventLoop::loop()
 
     while (!quit_)
     {
-        /* 清除活动事件 */
+        /* 清除时间循环中的活动事件 */
         activeChannels_.clear();
          /* epoll_wait返回后会将所有就绪的Channel添加到激活队列activeChannel中 */
-        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
+         /* 循环检测是否可读写 */
+         /* 获取可操作的事件，并返回事件集合 */
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);/*  注意这里不会阻塞，而是会直接执行 */
         ++iteration_;
         /* 输出激活的事件 */
         if (Logger::logLevel() <= Logger::TRACE)

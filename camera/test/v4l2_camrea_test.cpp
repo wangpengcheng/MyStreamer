@@ -14,7 +14,7 @@ int main(int argc,char* argv[])
     auto my_camera=V4L2Camera::Create();
     /* 创建监听者 */
     OpenCVListener testlistener;
-    my_camera->SetVideoDeviceName("/dev/video1");
+    my_camera->SetVideoDeviceName("/dev/video0");
     my_camera->SetFrameRate(20);
     my_camera->SetListener(&testlistener);
     my_camera->Start();
