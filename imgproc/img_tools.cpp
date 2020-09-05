@@ -5,6 +5,7 @@
 uint32_t ImageBitsPerPixel( PixelFormat format )
 {
     static int sizes[]     = { 0, 8, 24, 32, 8 };
+    // 将其转换为索引
     int        formatIndex = static_cast<int>( format );
     //检查越界并输出
     return ( formatIndex >= ( sizeof( sizes ) / sizeof( sizes[0] ) ) ) ? 0 : sizes[formatIndex];

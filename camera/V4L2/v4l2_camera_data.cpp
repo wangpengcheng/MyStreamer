@@ -374,6 +374,7 @@ void V4L2CameraData::VideoCaptureLoop( )
     // 等待一段时间再进行数据的读取
     while ( !NeedToStop.Wait( sleepTime ) )
     {
+        // 获取当前的系统时间
         std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now( );
 
         // dequeue buffer
@@ -406,7 +407,7 @@ void V4L2CameraData::VideoCaptureLoop( )
             image->UpdateTimeStamp(videoBuffer.timestamp);
             if ( image )
             {
-                //分发全部的image指针,使用
+                //分发全部的image指针，主要是调用监听者的对应监听函数
                 NotifyNewImage( image );
             }
             else
@@ -431,6 +432,7 @@ void V4L2CameraData::VideoCaptureLoop( )
 // Background control thread - performs camera init/clean-up and runs video loop
 void V4L2CameraData::ControlThreadHanlder( V4L2CameraData* me )
 {    
+    // 进行初始化并开始摄像头线程
     if ( me->Init() )
     {
         me->VideoCaptureLoop();

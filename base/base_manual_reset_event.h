@@ -15,7 +15,7 @@ NAMESPACE_START
 /*
 定义基础事件数据结构
 */
-class BaseManualResetEventData{
+class BaseManualResetEventData {
 public:
         BaseManualResetEventData( ) :
             Counter( 0 ), Triggered( false ),

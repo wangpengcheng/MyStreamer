@@ -14,7 +14,8 @@
 NAMESPACE_START
 
 /**
- * 定义对libjpeg函数的统一封装类 
+ * 定义对libjpeg函数的统一封装类
+ * 主要用于
  * https://www.iteye.com/blog/canlynet-1433259
  * https://blog.csdn.net/qq_34888036/article/details/81058600
 */
