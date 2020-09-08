@@ -10,7 +10,7 @@
 #include <time.h>
 
 NAMESPACE_START
-/* 定义时钟封装 */
+/* 定义时钟封装,主要将Linux时间转换为自定义时间 */
 class TimeZone
 {
 public:
