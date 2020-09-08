@@ -9,16 +9,20 @@ using namespace std;
 
 int main(int argc,char* argv[])
 {
-    /* 创建数据转换器 */
+    /* 创建视频数据转换器 */
     MyStreamer::VideoSourceToWeb video_web;
     /* 创建摄像头 */
     auto my_camera=MyStreamer::V4L2Camera::Create();
     my_camera->SetVideoDeviceName("/dev/video0");
     //是否开启jpeg编码，不开启的化，只能接收jpeg的摄像头视频源
     my_camera->EnableJpegEncoding(false);
+    // 设置帧率
     my_camera->SetFrameRate(20);
+    // 设置监听者
     my_camera->SetListener(video_web.VideoSourceListener());
+    // 创建图片handler 
     auto jpeg_handler=video_web.CreateJpegHandler("jpeg");
+    // 创建
     MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",1);
     my_camera->Start();
     /* 添加图像服务 */

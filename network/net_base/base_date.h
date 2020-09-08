@@ -10,14 +10,14 @@
 
 NAMESPACE_START
 
-class Date:public Uncopyable
+class Date : public Uncopyable
 {
 public:
     struct YearMonthDay
     {
-        int year; // [1900..2500]
-        int month;  // [1..12]
-        int day;  // [1..31]
+        int year;  // [1900..2500]
+        int month; // [1..12]
+        int day;   // [1..31]
     };
     /* 定义每周的天数 */
     static const int kDaysPerWeek = 7;
@@ -28,7 +28,8 @@ public:
     ///
     Date()
         : julianDayNumber_(0)
-    {}
+    {
+    }
 
     ///
     /// Constucts a yyyy-mm-dd Date.
@@ -41,16 +42,17 @@ public:
     ///
     explicit Date(int julianDayNum)
         : julianDayNumber_(julianDayNum)
-    {}
+    {
+    }
 
     ///
     /// Constucts a Date from struct tm
     ///
-    explicit Date(const struct tm&);
+    explicit Date(const struct tm &);
 
     // default copy/assignment/dtor are Okay
 
-    void swap(Date& that)
+    void swap(Date &that)
     {
         std::swap(julianDayNumber_, that.julianDayNumber_);
     }
@@ -82,14 +84,13 @@ public:
     // [0, 1, ..., 6] => [Sunday, Monday, ..., Saturday ]
     int weekDay() const
     {
-        return (julianDayNumber_+1) % kDaysPerWeek;
+        return (julianDayNumber_ + 1) % kDaysPerWeek;
     }
 
     int julianDayNumber() const { return julianDayNumber_; }
 
 private:
     int julianDayNumber_;
-
 };
 
 inline bool operator<(Date x, Date y)
@@ -101,7 +102,6 @@ inline bool operator==(Date x, Date y)
 {
     return x.julianDayNumber() == y.julianDayNumber();
 }
-
 
 NAMESPACE_END
 

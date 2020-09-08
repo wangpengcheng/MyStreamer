@@ -26,11 +26,11 @@ private:
     bool            mCanHandleSubContent;
 };
 
-// jpeg图片请求
+// jpeg图片请求，对网络请求进行再次封装,每次请求输出单张图片
 class JpegRequestHandler : public WebRequestHandlerInterface
 {
 private:
-    VideoSourceToWebData* Owner;
+    VideoSourceToWebData* Owner;/* 关键操作处理函数 */
 
 public:
     JpegRequestHandler( 

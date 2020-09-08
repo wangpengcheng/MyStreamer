@@ -4,6 +4,7 @@
 
 
 #include <stdint.h>
+
 /*===== Linux header start ======*/
 #include <string.h>
 #include <fcntl.h>
@@ -12,6 +13,7 @@
 #include <sys/mman.h>
 #include <linux/videodev2.h>
 /*===== Linux header end ======*/
+
 #include "base_tool.h"
 #include "img_tools.h"
 

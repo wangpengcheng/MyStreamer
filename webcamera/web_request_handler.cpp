@@ -3,6 +3,7 @@
 
 
 NAMESPACE_START
+
 WebRequestHandlerInterface::WebRequestHandlerInterface(
     const std::string& uri, 
     bool canHandleSubContent
@@ -25,6 +26,7 @@ WebRequestHandlerInterface::~WebRequestHandlerInterface()
 {
 
 }
+//
 void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebResponse& response)
 {
     if(!Owner->IsError())
@@ -37,13 +39,14 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
     }else{
         /* 这里对图像数据加锁，避免竞争访问 */
         std::lock_guard<std::mutex> lock(Owner->BufferGuard);
-        if(Owner==0)
+        if(Owner==nullptr)
         {
             response.SendFast(WebResponse::k500ServerError,"No image from video source");
         }else{
             response.setStatusCode(WebResponse::k200Ok);
             response.setStatusMessage("OK");
             response.setContentType("image/png");
+            /* 注意这里取消缓存 */
             response.addHeader("Cache-Control","no-store, must-revalidate");
             response.addHeader("Pragma","no-cache");
             response.addHeader("Expires","0");

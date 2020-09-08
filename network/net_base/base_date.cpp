@@ -14,9 +14,13 @@ char require_32_bit_integer_at_least[sizeof(int) >= sizeof(int32_t) ? 1 : -1];
 int getJulianDayNumber(int year, int month, int day)
 {
     (void) require_32_bit_integer_at_least; // no warning please
+    // 计算月份年，2月份之前算上一年
     int a = (14 - month) / 12;
+    // 计算年
     int y = year + 4800 - a;
+    // 计算对应的月份
     int m = month + 12 * a - 3;
+    // 计算天数
     return day + (153*m + 2) / 5 + y*365 + y/4 - y/100 + y/400 - 32045;
 }
 struct Date::YearMonthDay getYearMonthDay(int julianDayNumber)
