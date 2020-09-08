@@ -12,7 +12,11 @@
 
 #include <assert.h>
 #include <string.h> // memcpy
-
+/**
+ * 
+ * 日志流信息
+ * 主要用于重载流
+ * **/
 NAMESPACE_START
 namespace detail
 {
@@ -50,11 +54,13 @@ namespace detail
 
         // write to data_ directly
         char *current() { return cur_; }
+        // 检测剩余的容量空间
         int avail() const { return static_cast<int>(end() - cur_); }
         void add(size_t len) { cur_ += len; }
-
+        // 重置标志位
         void reset() { cur_ = data_; }
-        void bzero() { memZero(data_, sizeof data_); }
+        // 
+        void bzero() { memZero(data_, sizeof(data_)); }
 
         // for used by GDB
         const char *debugString();
@@ -64,18 +70,21 @@ namespace detail
         StringPiece toStringPiece() const { return StringPiece(data_, length()); }
 
     private:
-        const char *end() const { return data_ + sizeof data_; }
+        const char *end() const { return data_ + sizeof(data_); }
         // Must be outline function for cookies.
         static void cookieStart();
         static void cookieEnd();
 
-        void (*cookie_)();
-        char data_[SIZE];
-        char *cur_;
+        void (*cookie_)();      /*cookie_函数指针*/
+        char data_[SIZE];       /* 数据的大小 */
+        char *cur_;             /* 当前的数据指针 */
     };
 
 } // namespace detail
-
+/**
+ * 小型日志缓冲类
+ * 
+ * **/
 class LogStream : noncopyable
 {
     typedef LogStream self;
@@ -181,7 +190,9 @@ private:
     char buf_[32];
     int length_;
 };
-
+/**
+ * 全局重载流变化
+ * **/
 inline LogStream &operator<<(LogStream &s, const Fmt &fmt)
 {
     s.append(fmt.data(), fmt.length());

@@ -33,6 +33,7 @@ void ThreadPool::start(int numThreads)
 {
     assert(threads_.empty());
     running_ = true;
+    // 存储空间预留
     threads_.reserve(numThreads);
     for (int i = 0; i < numThreads; ++i)
     {
@@ -95,15 +96,20 @@ ThreadPool::Task ThreadPool::take()
 {
     MutexLockGuard lock(mutex_);
     // always use a while-loop, due to spurious wakeup
+    // 阻塞等待任务队列
     while (queue_.empty() && running_)
     {
         notEmpty_.wait();
     }
+    // 任务函数
     Task task;
+    // 
     if (!queue_.empty())
     {
+        // 获取第一个任务
         task = queue_.front();
         queue_.pop_front();
+        // 发送信号显示未满
         if (maxQueueSize_ > 0)
         {
             notFull_.notify();
@@ -122,6 +128,7 @@ void ThreadPool::runInThread()
 {
     try
     {
+        // 执行初始化回调任务
         if (threadInitCallback_)
         {
             threadInitCallback_();
@@ -130,6 +137,7 @@ void ThreadPool::runInThread()
         while (running_)
         {
             Task task(take());
+            // 执行任务
             if (task)
             {
                 task();

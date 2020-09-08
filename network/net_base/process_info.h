@@ -16,7 +16,10 @@
 #include <sys/types.h>
 
 NAMESPACE_START
-
+/**
+ * 处理信息抽象类
+ * 记录当前
+ * **/
 namespace ProcessInfo
 {
     pid_t pid();

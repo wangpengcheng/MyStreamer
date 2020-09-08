@@ -57,11 +57,11 @@ private:
     Condition notEmpty_ GUARDED_BY(mutex_); /* 非空 */
     Condition notFull_ GUARDED_BY(mutex_);  /* 非满 */
     string name_;
-    Task threadInitCallback_;                      /* 当前执行的任务 */
+    Task threadInitCallback_;                      /* 线程池初始化任务，主要用于任务分发 */
     std::vector<std::unique_ptr<Thread>> threads_; /* 线程队列 */
-    std::deque<Task> queue_ GUARDED_BY(mutex_);    /* 任务队列 */
+    std::deque<Task> queue_ GUARDED_BY(mutex_);    /* 任务队列访问指针 */
     size_t maxQueueSize_;
-    bool running_;
+    bool running_;                                  /* 是否存在线程正在运行 */
 };
 
 NAMESPACE_END
