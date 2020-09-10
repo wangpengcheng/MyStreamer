@@ -1,5 +1,9 @@
 #include "base_tool.h"
 
+/**
+ * 
+ * 获取当前的时间戳字符串
+ * */
 std::time_t getTimeStamp()
 {
     std::chrono::time_point<std::chrono::system_clock,std::chrono::milliseconds> tp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());

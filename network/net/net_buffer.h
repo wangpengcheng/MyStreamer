@@ -70,16 +70,24 @@ public:
     }
     /* 可读的数据就是起始位置和结束位置中间的部分 */
     size_t readableBytes() const
-    { return writerIndex_ - readerIndex_; }
+    { 
+        return writerIndex_ - readerIndex_;
+    }
 
     size_t writableBytes() const
-    { return buffer_.size() - writerIndex_; }
+    { 
+        return buffer_.size() - writerIndex_;
+    }
 
     size_t prependableBytes() const
-    { return readerIndex_; }
+    { 
+        return readerIndex_;
+    }
     /* 返回数据起始位置 */
     const char* peek() const
-    { return begin() + readerIndex_; }
+    { 
+        return begin() + readerIndex_; 
+    }
 
     const char* findCRLF() const
     {
@@ -111,7 +119,7 @@ public:
         return static_cast<const char*>(eol);
     }
 
-    /* 调整readerIndex，后移len */
+    /* 调整readerIndex，后移len,房前进行数据的读取 */
     void retrieve(size_t len)
     {
         assert(len <= readableBytes());
@@ -121,7 +129,7 @@ public:
         */
         if (len < readableBytes())
         {
-        readerIndex_ += len;
+            readerIndex_ += len;
         }
         else
         {
@@ -217,17 +225,21 @@ public:
     }
 
     char* beginWrite()
-    { return begin() + writerIndex_; }
+    { 
+        return begin() + writerIndex_;
+    }
 
     const char* beginWrite() const
-    { return begin() + writerIndex_; }
+    { 
+        return begin() + writerIndex_;
+    }
 
     void hasWritten(size_t len)
     {
         assert(len <= writableBytes());
         writerIndex_ += len;
     }
-
+    /* 擦除长度 */
     void unwrite(size_t len)
     {
         assert(len <= readableBytes());
@@ -240,7 +252,7 @@ public:
     void appendInt64(int64_t x)
     {
         int64_t be64 = sockets::hostToNetwork64(x);
-        append(&be64, sizeof be64);
+        append(&be64, sizeof(be64));
     }
 
     ///
@@ -249,18 +261,18 @@ public:
     void appendInt32(int32_t x)
     {
         int32_t be32 = sockets::hostToNetwork32(x);
-        append(&be32, sizeof be32);
+        append(&be32, sizeof(be32));
     }
 
     void appendInt16(int16_t x)
     {
         int16_t be16 = sockets::hostToNetwork16(x);
-        append(&be16, sizeof be16);
+        append(&be16, sizeof(be16));
     }
 
     void appendInt8(int8_t x)
     {
-        append(&x, sizeof x);
+        append(&x, sizeof(x));
     }
 
     ///
@@ -307,7 +319,7 @@ public:
     {
         assert(readableBytes() >= sizeof(int64_t));
         int64_t be64 = 0;
-        ::memcpy(&be64, peek(), sizeof be64);
+        ::memcpy(&be64, peek(), sizeof(be64));
         return sockets::networkToHost64(be64);
     }
 
@@ -319,7 +331,7 @@ public:
     {
         assert(readableBytes() >= sizeof(int32_t));
         int32_t be32 = 0;
-        ::memcpy(&be32, peek(), sizeof be32);
+        ::memcpy(&be32, peek(), sizeof(be32));
         return sockets::networkToHost32(be32);
     }
 
@@ -327,7 +339,7 @@ public:
     {
         assert(readableBytes() >= sizeof(int16_t));
         int16_t be16 = 0;
-        ::memcpy(&be16, peek(), sizeof be16);
+        ::memcpy(&be16, peek(), sizeof(be16));
         return sockets::networkToHost16(be16);
     }
 
@@ -344,7 +356,7 @@ public:
     void prependInt64(int64_t x)
     {
         int64_t be64 = sockets::hostToNetwork64(x);
-        prepend(&be64, sizeof be64);
+        prepend(&be64, sizeof(be64));
     }
 
     ///
@@ -353,18 +365,18 @@ public:
     void prependInt32(int32_t x)
     {
         int32_t be32 = sockets::hostToNetwork32(x);
-        prepend(&be32, sizeof be32);
+        prepend(&be32, sizeof(be32));
     }
 
     void prependInt16(int16_t x)
     {
         int16_t be16 = sockets::hostToNetwork16(x);
-        prepend(&be16, sizeof be16);
+        prepend(&be16, sizeof(be16));
     }
 
     void prependInt8(int8_t x)
     {
-        prepend(&x, sizeof x);
+        prepend(&x, sizeof(x));
     }
     /* 读取指定长度 */
     void prepend(const void* /*restrict*/ data, size_t len)
@@ -399,10 +411,14 @@ public:
     private:
 
     char* begin()
-    { return &*buffer_.begin(); }
+    { 
+        return &*buffer_.begin();
+    }
 
     const char* begin() const
-    { return &*buffer_.begin(); }
+    { 
+        return &*buffer_.begin();
+    }
     /* 调整空间大小 */
     void makeSpace(size_t len)
     {

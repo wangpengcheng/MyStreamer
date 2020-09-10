@@ -108,7 +108,7 @@ private:
 	unsigned readIndex_;
 	//环形队列首地址
 	T* buffer_;
-	//环形队列的尺寸
+	//环形队列的大小
 	unsigned size_;
 };
 /**
@@ -191,17 +191,16 @@ public:
 	virtual ~BaseSingleRingBufferData();
     /* 数据大小 */
 	inline uint32_t Size(){return size_;}
-	
 	/*  数据指针 */
 	inline data_type* Data(){return data_;}
 	/* 释放内存 */
     inline void Free(){if(data_) free(data_);}
-	/* 重新设置in和out指针，并重置buffer */
+	/* 重新设置in和out指针，并重置buffer，清楚数据 */
 	inline void Clean(){
 		Reset();
 		memset(data_,0,sizeof(data_type)*size_);
 	}
-	 /* 重新设置指针 */
+	 /* 重新设置指针，不清除数据 */
     inline void Reset(){
 		in_ptr_=0;
 		out_ptr_=0;
@@ -239,7 +238,7 @@ private:
 
 /**
  * 对单个数据进行封装，设置通用模板类ringsinglebuffer;
- * 直接通过类和长度直接进行定义
+ * 直接通过类和长度直接进行定义，单环形缓冲区
 */
 template <typename T>
 class SingleRingBuffer
@@ -323,6 +322,11 @@ uint32_t SingleRingBuffer<T>::pop(T* buffer,uint8_t* extend_ptr)
 	};
 	return ret; 
 }
+/**
+ * 双重内存屏障进行写入
+ * 
+ * 
+*/
 template <typename T>
 uint32_t SingleRingBuffer<T>::push(T* buffer,uint8_t* extend_ptr)
 {

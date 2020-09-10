@@ -15,7 +15,7 @@ BaseSingleRingBufferData::~BaseSingleRingBufferData()
 /* 成功直接返回 */
 bool BaseSingleRingBufferData::Initialize(uint32_t buffer_size)
 {
-    /* 检查大小写 */
+    /* 检查大小 */
     if(!is_power_of_2(buffer_size)){
         buffer_size=roundup_power_of_2(buffer_size);
     }
@@ -30,7 +30,7 @@ uint32_t BaseSingleRingBufferData::GetDataLen()
 	/* 获取外部指针注意这里的 */
 	register uint32_t out;
 	out=out_ptr_;
-	return (out_ptr_<in_ptr_?(in_ptr_-out_ptr_):(size_-out_ptr_+in_ptr_));
+	return (out_ptr_<in_ptr_)?(in_ptr_-out_ptr_):(size_-out_ptr_+in_ptr_));
 }
 uint32_t BaseSingleRingBufferData::MoveOut(const uint32_t len)
 {

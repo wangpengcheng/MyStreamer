@@ -38,6 +38,7 @@ const size_t Buffer::kInitialSize;
  *   readv(int fd, const struct iovec *iov, int iovcnt);分散读
  *   writev(int fd, const struct iovec *iov, int iovcnt);集中写
  */
+/* 从fd文件中读取数据到buffer中 */
 ssize_t Buffer::readFd(int fd, int* savedErrno)
 {
     // saved an ioctl()/FIONREAD call to tell how much to read
@@ -50,12 +51,13 @@ ssize_t Buffer::readFd(int fd, int* savedErrno)
     /* 定义两块内存，一块是读缓冲区，一块是栈空间 */
     vec[0].iov_base = begin()+writerIndex_;
     vec[0].iov_len = writable;
+    // 栈空间
     vec[1].iov_base = extrabuf;
-    vec[1].iov_len = sizeof extrabuf;
+    vec[1].iov_len = sizeof(extrabuf);
     // when there is enough space in this buffer, don't read into extrabuf.
     // when extrabuf is used, we read 128k-1 bytes at most.
     /* 如果应用层读缓冲区足够大(大于128k，初始时才1k -.-)，就不需要往栈区写数据了 */
-    const int iovcnt = (writable < sizeof extrabuf) ? 2 : 1;
+    const int iovcnt = (writable < sizeof(extrabuf)) ? 2 : 1;
      /* 分散读，返回读取的字节数 */
     const ssize_t n = sockets::readv(fd, vec, iovcnt);
     if (n < 0)
@@ -77,7 +79,7 @@ ssize_t Buffer::readFd(int fd, int* savedErrno)
         * 因为读缓冲区已经写满了，所以writerIndex指针就指向缓冲区的末尾
         */
         writerIndex_ = buffer_.size();
-        /* 缓冲区不足时，进行额外的添加 */
+        /* 缓冲区不足时，进行额外的添加，会自动存放到栈空间中，再添加到buffer中，保证一次读取完， */
         append(extrabuf, n - writable);
     }
     // if (n == writable + sizeof extrabuf)

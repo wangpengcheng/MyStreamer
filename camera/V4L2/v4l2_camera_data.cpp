@@ -74,6 +74,7 @@ bool V4L2CameraData::IsRunning( )
 };
 
 // Set video source listener
+/* 注意这里只是更新了成员变量，减小锁的粒度 */
 VideoSourceListenerInterface* V4L2CameraData::SetListener( VideoSourceListenerInterface* listener )
 {
     lock_guard<recursive_mutex> lock( Sync );
