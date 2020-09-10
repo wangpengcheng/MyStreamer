@@ -17,60 +17,61 @@
 #include <vector>
 
 NAMESPACE_START
-
+/**
+ * 异步日志线程类
+ * 主要用于异步的线程日志操作
+ * **/
 class AsyncLogging : noncopyable
 {
- public:
+public:
+    AsyncLogging(const string &basename,
+                 off_t rollSize,
+                 int flushInterval = 3);
 
-  AsyncLogging(const string& basename,
-               off_t rollSize,
-               int flushInterval = 3);
-
-  ~AsyncLogging()
-  {
-    if (running_)
+    ~AsyncLogging()
     {
-      stop();
+        if (running_)
+        {
+            stop();
+        }
     }
-  }
 
-  void append(const char* logline, int len);
+    void append(const char *logline, int len);
 
-  void start()
-  {
-    running_ = true;
-    thread_.start();
-    latch_.wait();
-  }
+    void start()
+    {
+        running_ = true;
+        thread_.start();
+        latch_.wait();
+    }
 
-  void stop() NO_THREAD_SAFETY_ANALYSIS
-  {
-    running_ = false;
-    cond_.notify();
-    thread_.join();
-  }
+    void stop() NO_THREAD_SAFETY_ANALYSIS
+    {
+        running_ = false;
+        cond_.notify();
+        thread_.join();
+    }
 
- private:
+private:
+    void threadFunc();
 
-  void threadFunc();
+    typedef detail::FixedBuffer<detail::kLargeBuffer> Buffer;       /* 缓冲区 */
+    typedef std::vector<std::unique_ptr<Buffer>> BufferVector;      /*  缓冲区队列 */
+    typedef BufferVector::value_type BufferPtr;                     /* 缓冲区指针 */
 
-  typedef detail::FixedBuffer<detail::kLargeBuffer> Buffer;
-  typedef std::vector<std::unique_ptr<Buffer>> BufferVector;
-  typedef BufferVector::value_type BufferPtr;
-
-  const int flushInterval_;
-  std::atomic<bool> running_;
-  const string basename_;
-  const off_t rollSize_;
-  Thread thread_;
-  CountDownLatch latch_;
-  MutexLock mutex_;
-  Condition cond_ GUARDED_BY(mutex_);
-  BufferPtr currentBuffer_ GUARDED_BY(mutex_);
-  BufferPtr nextBuffer_ GUARDED_BY(mutex_);
-  BufferVector buffers_ GUARDED_BY(mutex_);
+    const int flushInterval_;                                       /* 刷新的时间周期 */
+    std::atomic<bool> running_;                                     /* 是否正在运行 */
+    const string basename_;                                         /* 名称 */
+    const off_t rollSize_;
+    Thread thread_;
+    CountDownLatch latch_;
+    MutexLock mutex_;
+    Condition cond_ GUARDED_BY(mutex_);
+    BufferPtr currentBuffer_ GUARDED_BY(mutex_);
+    BufferPtr nextBuffer_ GUARDED_BY(mutex_);
+    BufferVector buffers_ GUARDED_BY(mutex_);
 };
 
 NAMESPACE_END
 
-#endif  // BASE_ASYNCLOGGING_H
+#endif // BASE_ASYNCLOGGING_H

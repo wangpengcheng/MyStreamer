@@ -23,7 +23,7 @@ namespace detail
 
     const int kSmallBuffer = 4000;
     const int kLargeBuffer = 4000 * 1000;
-
+    // buffer模板类
     template <int SIZE>
     class FixedBuffer : noncopyable
     {
@@ -56,6 +56,7 @@ namespace detail
         char *current() { return cur_; }
         // 检测剩余的容量空间
         int avail() const { return static_cast<int>(end() - cur_); }
+        // 添加
         void add(size_t len) { cur_ += len; }
         // 重置标志位
         void reset() { cur_ = data_; }
