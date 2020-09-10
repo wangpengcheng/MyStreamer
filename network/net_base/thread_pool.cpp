@@ -52,6 +52,7 @@ void ThreadPool::start(int numThreads)
 void ThreadPool::stop()
 {
     {
+        // 注意这里的代码块锁
         MutexLockGuard lock(mutex_);
         running_ = false;
         notEmpty_.notifyAll();
