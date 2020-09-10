@@ -80,6 +80,7 @@ int sockets::createNonblockingOrDie(sa_family_t family)
 
   setNonBlockAndCloseOnExec(sockfd);
 #else
+  // 这里设置为非阻塞IO
   int sockfd = ::socket(family, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
   if (sockfd < 0)
   {
@@ -120,6 +121,7 @@ int sockets::accept(int sockfd, struct sockaddr_in6* addr)
 #endif
   if (connfd < 0)
   {
+    // 获取全局error变量
     int savedErrno = errno;
     LOG_SYSERR << "Socket::accept";
     /* 错误处理 */

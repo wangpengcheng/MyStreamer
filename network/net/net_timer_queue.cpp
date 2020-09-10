@@ -36,14 +36,16 @@ struct timespec howMuchTimeFromNow(Timestamp when)
     /* 毫秒统计 */
     int64_t microseconds = when.microSecondsSinceEpoch()
                             - Timestamp::now().microSecondsSinceEpoch();
-    /*  */
+    /* 设置最小时间间隔为100毫秒 */
     if (microseconds < 100)
     {
         microseconds = 100;
     }
     struct timespec ts;
+    // 获取秒
     ts.tv_sec = static_cast<time_t>(
         microseconds / Timestamp::kMicroSecondsPerSecond);
+    // 获取纳秒
     ts.tv_nsec = static_cast<long>(
         (microseconds % Timestamp::kMicroSecondsPerSecond) * 1000);
     return ts;
@@ -52,7 +54,7 @@ struct timespec howMuchTimeFromNow(Timestamp when)
 void readTimerfd(int timerfd, Timestamp now)
 {
     uint64_t howmany;
-    ssize_t n = ::read(timerfd, &howmany, sizeof howmany);
+    ssize_t n = ::read(timerfd, &howmany, sizeof(howmany));
     LOG_TRACE << "TimerQueue::handleRead() " << howmany << " at " << now.toString();
     if (n != sizeof howmany)
     {
@@ -69,7 +71,7 @@ void resetTimerfd(int timerfd, Timestamp expiration)
     /* 将结构体设置为0 */
     memZero(&newValue, sizeof newValue);
     memZero(&oldValue, sizeof oldValue);
-    newValue.it_value = howMuchTimeFromNow(expiration);/* 设置第第一次到时时间 */
+    newValue.it_value = howMuchTimeFromNow(expiration);/* 设置第一次到时时间 */
     /* 设置定时器 */
     int ret = ::timerfd_settime(timerfd, 0, &newValue, &oldValue);
     if (ret)

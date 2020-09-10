@@ -80,7 +80,6 @@ void Socket::setTcpNoDelay(bool on)
     int optval = on ? 1 : 0;
     ::setsockopt(sockfd_, IPPROTO_TCP, TCP_NODELAY,
                 &optval, static_cast<socklen_t>(sizeof optval));
-    // FIXME CHECK
 }
 
 void Socket::setReuseAddr(bool on)

@@ -30,7 +30,7 @@ public:
 
     Channel(EventLoop* loop, int fd);
     ~Channel();
-    /* 设置 */
+    /* 设置回调时间 */
     void handleEvent(Timestamp receiveTime);
     /* 设置读回调函数 */
     void setReadCallback(ReadEventCallback cb)
@@ -38,10 +38,10 @@ public:
     /* 设置写回调函数 */
     void setWriteCallback(EventCallback cb)
     { writeCallback_ = std::move(cb); }
-    /* 设置关闭回调 */
+    /* 设置关闭回调函数 */
     void setCloseCallback(EventCallback cb)
     { closeCallback_ = std::move(cb); }
-    /* 设置错误回调 */
+    /* 设置错误回调函数 */
     void setErrorCallback(EventCallback cb)
     { errorCallback_ = std::move(cb); }
 

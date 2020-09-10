@@ -13,7 +13,10 @@
 using namespace MY_NAME_SPACE;
 using namespace MY_NAME_SPACE::net;
 
-Acceptor::Acceptor(EventLoop* loop, const InetAddress& listenAddr, bool reuseport)
+Acceptor::Acceptor( EventLoop* loop, 
+                    const InetAddress& listenAddr, 
+                    bool reuseport /* 是否允许端口复用 */
+                    )
     : loop_(loop),
         acceptSocket_(sockets::createNonblockingOrDie(listenAddr.family())),
         acceptChannel_(loop, acceptSocket_.fd()),   /*  */

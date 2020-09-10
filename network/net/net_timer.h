@@ -11,7 +11,13 @@ NAMESPACE_START
 
 namespace net
 {
-/* 超时类事件 */
+/* 超时类事件
+主要对定时器进行抽象
+包含定时时间
+回调函数
+定时器编号
+时钟是否可以重复
+ */
 class Timer : noncopyable
 {
 public:

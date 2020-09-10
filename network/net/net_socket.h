@@ -43,7 +43,7 @@ public:
   
     /* 进行监听状态，返回生成的socket文件描述符，错误返回-1 */
     int accept(InetAddress* peeraddr);
-      /* 关闭写入 */
+    /* 关闭写入 */
     void shutdownWrite();
 
     /**
