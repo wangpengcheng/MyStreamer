@@ -1,5 +1,7 @@
 /**
- * 将摄像头camera转换为web的关键函数;主要用于存储数据
+ * 将摄像头camera转换为web的关键函数;
+ * 主要用于存储数据，连接摄像头和网络服务器
+ * 创建buffer进行网络服务器的图片暂存封装
  * 
 */
 
@@ -62,12 +64,12 @@ public:
     /* 图片类 */
     uint32_t           JpegSize;
     VideoListener      VideoSourceListener;                 /* 视频监听者 */
-    /* 图片那指向source的img */
-    std::shared_ptr<Image>  CameraImage;                 
+    
+    std::shared_ptr<Image>  CameraImage;                    /* 图片指向source的img */                 
     std::string             VideoSourceErrorMessage;
     std::mutex              ImageGuard;                     /* 图片锁 */
     std::mutex              BufferGuard;                    /* buffer锁 */
-    JpegEncoder             jpeg_encoder;                    /* jpeg编码器 */
+    JpegEncoder             jpeg_encoder;                   /* jpeg编码器 */
 };
 
 NAMESPACE_END

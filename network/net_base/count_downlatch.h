@@ -10,25 +10,28 @@
 #include "base_mutex.h"
 
 NAMESPACE_START
-/* 倒计时器；CountDownLatch是一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。 */
+/* 
+倒计时器；CountDownLatch是一个同步辅助类，
+在完成一组正在其他线程中执行的操作之前，
+它允许一个或多个线程一直等待。
+*/
 class CountDownLatch : noncopyable
 {
- public:
+public:
+    explicit CountDownLatch(int count);
 
-  explicit CountDownLatch(int count);
+    void wait();
 
-  void wait();
+    void countDown();
 
-  void countDown();
+    int getCount() const;
 
-  int getCount() const;
-
- private:
-  mutable MutexLock mutex_;
-  Condition condition_ GUARDED_BY(mutex_);
-  int count_ GUARDED_BY(mutex_);
+private:
+    mutable MutexLock mutex_;
+    Condition condition_ GUARDED_BY(mutex_);
+    int count_ GUARDED_BY(mutex_);
 };
 
 NAMESPACE_END
 
-#endif  // MUDUO_BASE_COUNTDOWNLATCH_H
+#endif // MUDUO_BASE_COUNTDOWNLATCH_H

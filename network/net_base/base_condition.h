@@ -9,7 +9,12 @@
 #include <pthread.h>
 
 NAMESPACE_START
-
+/**
+ * 条件变量通知类
+ * 封装pthread 的condition
+ * 进行进一步的封装
+ * 
+ * **/
 class Condition : Uncopyable
 {
 public:

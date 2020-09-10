@@ -1,6 +1,6 @@
 /**
- * VideoToWeb类，主要是进行，camera到web的基本转换，含有http server
- * 主要的videolistener以及jpeg缓冲区
+ * VideoToWeb类，基本处理工具的转换
+ * VideoSourceToWebData 的简单适配封装
 */
 
 #ifndef VIDEO_SOURCE_TO_WEB_H
@@ -22,7 +22,7 @@ public:
     // Get video source listener, which could be fed to some video source
     VideoSourceListenerInterface* VideoSourceListener( ) const;
 
-    // Create web request handler to provide camera images as JPEGs
+    // 创建image句柄
     std::shared_ptr<WebRequestHandlerInterface> CreateJpegHandler( const std::string& uri ) const;
 
     /* 创建控制句柄 */ 

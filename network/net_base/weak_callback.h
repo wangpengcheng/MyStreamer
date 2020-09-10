@@ -16,53 +16,52 @@ https://blog.csdn.net/fengbingchun/article/details/78006735
 https://www.cnblogs.com/jerry-fuyi/p/11248665.html
 https://zh.cppreference.com/w/cpp/header/functional
 */
-template<typename CLASS, typename... ARGS>
+template <typename CLASS, typename... ARGS>
 class WeakCallback
 {
- public:
-
-  WeakCallback(const std::weak_ptr<CLASS>& object,
-               const std::function<void (CLASS*, ARGS...)>& function)
-    : object_(object), function_(function)
-  {
-  }
-
-  // 设置默认操作函数；将对象和回调函数输入function_中
-
-  void operator()(ARGS&&... args) const
-  {
-    std::shared_ptr<CLASS> ptr(object_.lock());
-    if (ptr)
+public:
+    WeakCallback(const std::weak_ptr<CLASS> &object,
+                 const std::function<void(CLASS *, ARGS...)> &function)
+        : object_(object), function_(function)
     {
-        /* 这里将左值转发为右值 ；注意引用折叠；实现完美转发
-            https://blog.csdn.net/theonegis/article/details/86568427
-        */
-      function_(ptr.get(), std::forward<ARGS>(args)...);
     }
-    // else
-    // {
-    //   LOG_TRACE << "expired";
-    // }
-  }
 
- private:
+    // 设置默认操作函数；将对象和回调函数输入function_中；创建
 
-  std::weak_ptr<CLASS> object_;                         /* 独占对象指针 */
-  std::function<void (CLASS*, ARGS...)> function_;      /* 回调函数 */
+    void operator()(ARGS &&... args) const
+    {
+        // 检测原指针是否存在
+        std::shared_ptr<CLASS> ptr(object_.lock());
+        if (ptr)
+        {
+            /* 这里将左值转发为右值 ；注意引用折叠；实现完美转发
+            https://blog.csdn.net/theonegis/article/details/86568427
+            */
+            function_(ptr.get(), std::forward<ARGS>(args)...);
+        }
+        // else
+        // {
+        //   LOG_TRACE << "expired";
+        // }
+    }
+
+private:
+    std::weak_ptr<CLASS> object_;                    /* 对象弱引用指针 */
+    std::function<void(CLASS *, ARGS...)> function_; /* 回调函数 */
 };
 /* 创建函数对象 */
-template<typename CLASS, typename... ARGS>
-WeakCallback<CLASS, ARGS...> makeWeakCallback(const std::shared_ptr<CLASS>& object,
+template <typename CLASS, typename... ARGS>
+WeakCallback<CLASS, ARGS...> makeWeakCallback(const std::shared_ptr<CLASS> &object,
                                               void (CLASS::*function)(ARGS...))
 {
-  return WeakCallback<CLASS, ARGS...>(object, function);
+    return WeakCallback<CLASS, ARGS...>(object, function);
 }
 
-template<typename CLASS, typename... ARGS>
-WeakCallback<CLASS, ARGS...> makeWeakCallback(const std::shared_ptr<CLASS>& object,
+template <typename CLASS, typename... ARGS>
+WeakCallback<CLASS, ARGS...> makeWeakCallback(const std::shared_ptr<CLASS> &object,
                                               void (CLASS::*function)(ARGS...) const)
 {
-  return WeakCallback<CLASS, ARGS...>(object, function);
+    return WeakCallback<CLASS, ARGS...>(object, function);
 }
 
 NAMESPACE_END

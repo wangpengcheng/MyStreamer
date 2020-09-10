@@ -13,63 +13,72 @@
 #include <stdlib.h> // atexit
 
 NAMESPACE_START
+
 namespace detail
 {
-// This doesn't detect inherited member functions!
-// http://stackoverflow.com/questions/1966362/sfinae-to-check-for-inherited-member-functions
-template<typename T>
-struct has_no_destroy
-{
-  template <typename C> static char test(decltype(&C::no_destroy));
-  template <typename C> static int32_t test(...);
-  const static bool value = sizeof(test<T>(0)) == 1;
-};
-}  // namespace detail
-
-template<typename T>
+    // This doesn't detect inherited member functions!
+    // http://stackoverflow.com/questions/1966362/sfinae-to-check-for-inherited-member-functions
+    template <typename T>
+    struct has_no_destroy
+    {
+        template <typename C>
+        static char test(decltype(&C::no_destroy));
+        template <typename C>
+        static int32_t test(...);
+        const static bool value = sizeof(test<T>(0)) == 1;
+    };
+} // namespace detail
+/**
+ * 创建多线程单例模板
+ * 
+ * 
+ * **/
+template <typename T>
 class Singleton : noncopyable
 {
- public:
-  Singleton() = delete;
-  ~Singleton() = delete;
+public:
+    Singleton() = delete;
+    ~Singleton() = delete;
 
-  static T& instance()
-  {
-    pthread_once(&ponce_, &Singleton::init);
-    assert(value_ != NULL);
-    return *value_;
-  }
-
- private:
-  static void init()
-  {
-    value_ = new T();
-    if (!detail::has_no_destroy<T>::value)
+    static T &instance()
     {
-      ::atexit(destroy);
+        // 线程对应函数只会执行一次
+        pthread_once(&ponce_, &Singleton::init);
+        assert(value_ != NULL);
+        return *value_;
     }
-  }
 
-  static void destroy()
-  {
-    typedef char T_must_be_complete_type[sizeof(T) == 0 ? -1 : 1];
-    T_must_be_complete_type dummy; (void) dummy;
+private:
+    static void init()
+    {
+        value_ = new T();
+        if (!detail::has_no_destroy<T>::value)
+        {
+            ::atexit(destroy);
+        }
+    }
 
-    delete value_;
-    value_ = NULL;
-  }
+    static void destroy()
+    {
+        typedef char T_must_be_complete_type[sizeof(T) == 0 ? -1 : 1];
+        T_must_be_complete_type dummy;
+        (void)dummy;
 
- private:
-  static pthread_once_t ponce_;
-  static T*             value_;
+        delete value_;
+        value_ = NULL;
+    }
+
+private:
+    static pthread_once_t ponce_;
+    static T *value_;
 };
 
-template<typename T>
+template <typename T>
 pthread_once_t Singleton<T>::ponce_ = PTHREAD_ONCE_INIT;
 
-template<typename T>
-T* Singleton<T>::value_ = NULL;
+template <typename T>
+T *Singleton<T>::value_ = NULL;
 
 NAMESPACE_END
 
-#endif  // MUDUO_BASE_SINGLETON_H
+#endif // MUDUO_BASE_SINGLETON_H

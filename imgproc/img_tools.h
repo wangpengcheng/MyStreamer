@@ -20,7 +20,6 @@ enum class PixelFormat
     Grayscale8,             //灰度
     RGB24,                  //RGB
     RGBA32,                 //RGBA
-
     JPEG,                   //JPEG
     // Enough for this project
 };

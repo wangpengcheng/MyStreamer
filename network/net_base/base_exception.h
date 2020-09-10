@@ -11,32 +11,33 @@
 #include <exception>
 
 NAMESPACE_START
-
+/**
+ * 模仿Java的异常，输出堆栈信息
+ * **/
 class Exception : public std::exception
 {
- public:
-  Exception(string what);
-  /* 禁止函数重载 */
-  ~Exception() noexcept override = default;
+public:
+    Exception(string what);
+    /* 禁止函数重载 */
+    ~Exception() noexcept override = default;
 
-  // default copy-ctor and operator= are okay.
+    // default copy-ctor and operator= are okay.
 
-  const char* what() const noexcept override
-  {
-    return message_.c_str();
-  }
+    const char *what() const noexcept override
+    {
+        return message_.c_str();
+    }
 
-  const char* stackTrace() const noexcept
-  {
-    return stack_.c_str();
-  }
+    const char *stackTrace() const noexcept
+    {
+        return stack_.c_str();
+    }
 
- private:
-  std::string message_;
-  std::string stack_;
+private:
+    std::string message_;
+    std::string stack_;
 };
-
 
 NAMESPACE_END
 
-#endif  // BASE_EXCEPTION_H
+#endif // BASE_EXCEPTION_H

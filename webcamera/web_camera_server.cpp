@@ -15,7 +15,7 @@ WebCameraServer::WebCameraServer(
     /* 创建http sever */
     http_sever_=std::make_shared<net::HttpServer>(&loop_,net::InetAddress(port),server_name);
     http_sever_->setThreadNum(thread_num_);
-    /* 绑定关键函数 */
+    /* 设置http主回调函数 */
     http_sever_->setHttpCallback(
         std::bind(&WebCameraServer::onRequest,this,_1,_2)
         );
@@ -27,7 +27,9 @@ WebCameraServer::~WebCameraServer()
 }
 void WebCameraServer::Start()
 {
+    // 开始服务
     http_sever_->start();
+    // 主事件开始循环
     loop_.loop();
 
 }
@@ -57,6 +59,7 @@ void WebCameraServer::onRequest(const WebRequest& req, WebResponse* resp)
             auto func=search->second;
             func->HandleHttpRequest(req,(*resp));
         }else{
+            // 关闭连接
             resp->SendFast(WebResponse::k404NotFound,"Not found request service ");
             resp->setCloseConnection(true);
         }

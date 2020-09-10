@@ -26,7 +26,7 @@ public:
     virtual void OnError( const std::string& errorMessage, bool fatal ) = 0;
 };
 
-// 图片缓冲队列
+// 设置监听者链类，执行多个线程的监听
 class VideoSourceListenerChain : public VideoSourceListenerInterface
 {
 public:

@@ -31,7 +31,9 @@ void VideoSourceToWebData::EncodeCameraImage( )
 {
     if ( NewImageAvailable )
     {
+        // 图片加锁
         std::lock_guard<std::mutex> imageLock( ImageGuard );
+        // 缓冲区加锁
         std::lock_guard<std::mutex> bufferLock( BufferGuard );
 
         if ( JpegBuffer == nullptr )
@@ -71,6 +73,7 @@ void VideoSourceToWebData::EncodeCameraImage( )
             {
                 // encode image as JPEG (buffer is re-allocated if too small by encoder)
                 JpegSize      = JpegBufferSize;
+                // 将图片压缩之后拷贝到JpegBuffer中
                 InternalError = jpeg_encoder.EncodeToMemory( CameraImage, &JpegBuffer, &JpegSize );
             }
         }

@@ -23,7 +23,7 @@ Image::~Image( )
     }
 }
 
-// 根据格式来进行数据分配
+// 根据格式来进行数据分配，在这里进行了内存的分配
 std::shared_ptr<Image> Image::Allocate( int32_t width, int32_t height, PixelFormat format, bool zeroInitialize )
 {
     int32_t  stride = (int32_t) ImageBytesPerStride( width * ImageBitsPerPixel( format ) );
@@ -146,7 +146,11 @@ Error Image::CopyDataOrClone(std::shared_ptr<Image>& copyTo ) const
 
     return ret;
 }
-
+/**
+ * 
+ * 严格参数校验快速
+ * 数据拷贝
+*/
 Error Image::CopyDataStrict(std::shared_ptr<Image>& copyTo) const
 {
     Error ret = Error::Success;
@@ -166,7 +170,10 @@ Error Image::CopyDataStrict(std::shared_ptr<Image>& copyTo) const
     }
     return ret;
 };
-Error Image::CopyDataFast( uint8_t* dst_buffer,uint32_t buffer_size) const{
+/**
+ * 快速进行数据拷贝
+ * **/
+Error Image::CopyDataFast( uint8_t* dst_buffer,uint32_t buffer_size) const {
     buffer_size=buffer_size?((buffer_size<mSize)?buffer_size:mSize):mSize;
     memcpy(dst_buffer,mData,buffer_size);
 }
