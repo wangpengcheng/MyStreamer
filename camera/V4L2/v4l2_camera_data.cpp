@@ -88,7 +88,7 @@ VideoSourceListenerInterface* V4L2CameraData::SetListener( VideoSourceListenerIn
 void V4L2CameraData::NotifyNewImage( const std::shared_ptr<const Image>& image )
 {
     VideoSourceListenerInterface* myListener;
-    
+    // 注意这里的代码块，减少锁的粒度
     {
         lock_guard<recursive_mutex> lock( Sync );
         myListener = Listener;
@@ -189,11 +189,13 @@ bool V4L2CameraData::Init( )
         {
             NotifyError(string( "The camera does not support requested format: " ) + ( ( JpegEncoding ) ? "MJPEG" : "YUYV" )+("\n")+("Please Use:")+(V4L2pixelFormatToStr(videoFormat.fmt.pix.pixelformat)), true );
             std::string result="";
+            // 显式支持的格式
             V4L2GetSuportFormat(VideoFd,result);
             ret = false;
         }
         FrameWidth  = videoFormat.fmt.pix.width;
         FrameHeight = videoFormat.fmt.pix.height;
+        // 输出最终的大小
         std::cout<<FrameWidth<<";"<<FrameHeight<<std::endl;
     }
 
@@ -201,7 +203,7 @@ bool V4L2CameraData::Init( )
     if ( ret )
     {
         v4l2_requestbuffers requestBuffers = { 0 };
-
+        // 设置缓冲统计区
         requestBuffers.count  = BUFFER_COUNT;
         requestBuffers.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         /* 设置内存格式为内存映射 */
