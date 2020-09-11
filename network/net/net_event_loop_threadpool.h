@@ -16,8 +16,8 @@ namespace net
     class EventLoop;
     class EventLoopThread;
     /**
- * Eventloop线程池；主要还是对多个eventloop进行调度
-*/
+     * Eventloop线程池；主要还是对多个eventloop进行调度
+    */
     class EventLoopThreadPool : noncopyable
     {
     public:

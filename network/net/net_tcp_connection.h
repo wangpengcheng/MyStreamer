@@ -129,7 +129,7 @@ private:
     // we don't expose those classes to client.
     /* 用于tcp连接的套接字，以及用于监听套接字的Channel */
     std::unique_ptr<Socket> socket_;
-    std::unique_ptr<Channel> channel_;
+    std::unique_ptr<Channel> channel_;  /* channel独占指针 */
     /* 本地<地址，端口>，客户端<地址，端口>，由TcpServer传入 */
     const InetAddress localAddr_;
     const InetAddress peerAddr_;

@@ -3,7 +3,7 @@
 #include "net_event_loop.h"
 #include "net_sockets_ops.h"
 
-#include <stdio.h>  // snprintf
+#include <stdio.h> // snprintf
 
 using namespace MY_NAME_SPACE;
 using namespace MY_NAME_SPACE::net;
@@ -12,47 +12,46 @@ NAMESPACE_START
 
 namespace net
 {
-namespace detail
-{
+    namespace detail
+    {
 
-void removeConnection(EventLoop* loop, const TcpConnectionPtr& conn)
-{
-  loop->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
-}
+        void removeConnection(EventLoop *loop, const TcpConnectionPtr &conn)
+        {
+            loop->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
+        }
 
-void removeConnector(const ConnectorPtr& connector)
-{
-  //connector->
-}
+        void removeConnector(const ConnectorPtr &connector)
+        {
+            //connector->
+        }
 
-}  // namespace detail
-}  // namespace net
+    } // namespace detail
+} // namespace net
 NAMESPACE_END
 
-
-TcpClient::TcpClient(EventLoop* loop,
-                     const InetAddress& serverAddr,
-                     const string& nameArg)
-  : loop_(CHECK_NOTNULL(loop)),
-    connector_(new Connector(loop, serverAddr)),
-    name_(nameArg),
-    connectionCallback_(defaultConnectionCallback),
-    messageCallback_(defaultMessageCallback),
-    retry_(false),
-    connect_(true),
-    nextConnId_(1)
+TcpClient::TcpClient(EventLoop *loop,
+                     const InetAddress &serverAddr,
+                     const string &nameArg)
+    : loop_(CHECK_NOTNULL(loop)),
+      connector_(new Connector(loop, serverAddr)),
+      name_(nameArg),
+      connectionCallback_(defaultConnectionCallback),
+      messageCallback_(defaultMessageCallback),
+      retry_(false),
+      connect_(true),
+      nextConnId_(1)
 {
     connector_->setNewConnectionCallback(
         std::bind(&TcpClient::newConnection, this, _1));
     // FIXME setConnectFailedCallback
     LOG_INFO << "TcpClient::TcpClient[" << name_
-            << "] - connector " << get_pointer(connector_);
+             << "] - connector " << get_pointer(connector_);
 }
 
 TcpClient::~TcpClient()
 {
     LOG_INFO << "TcpClient::~TcpClient[" << name_
-            << "] - connector " << get_pointer(connector_);
+             << "] - connector " << get_pointer(connector_);
     TcpConnectionPtr conn;
     bool unique = false;
     {
@@ -82,9 +81,9 @@ TcpClient::~TcpClient()
 
 void TcpClient::connect()
 {
-  // FIXME: check state
+    // FIXME: check state
     LOG_INFO << "TcpClient::connect[" << name_ << "] - connecting to "
-            << connector_->serverAddress().toIpPort();
+             << connector_->serverAddress().toIpPort();
     connect_ = true;
     connector_->start();
 }
@@ -138,7 +137,7 @@ void TcpClient::newConnection(int sockfd)
     conn->connectEstablished();
 }
 
-void TcpClient::removeConnection(const TcpConnectionPtr& conn)
+void TcpClient::removeConnection(const TcpConnectionPtr &conn)
 {
     loop_->assertInLoopThread();
     assert(loop_ == conn->getLoop());
@@ -153,8 +152,7 @@ void TcpClient::removeConnection(const TcpConnectionPtr& conn)
     if (retry_ && connect_)
     {
         LOG_INFO << "TcpClient::connect[" << name_ << "] - Reconnecting to "
-                << connector_->serverAddress().toIpPort();
+                 << connector_->serverAddress().toIpPort();
         connector_->restart();
     }
 }
-

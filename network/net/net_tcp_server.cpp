@@ -147,7 +147,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
         这里的 newConnection 一般由TCPsever 主线程，也就是Acceptorz执行，
         所以注入的函数，不会马上执行
         而是调用event_loop thread的queueInLoop将函数添加到执行队列中，在下一次循环中运行；保证线程的独立性
-        因此
+        
     */
     ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
 }

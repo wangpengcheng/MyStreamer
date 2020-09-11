@@ -25,10 +25,11 @@ namespace net
 ///
 /// This is an interface class, so don't expose too much details.
 /**
+ * 反应分发类，基本每一个线程一个
  * 每个线程的响应类，这个是一个接口类，没有太多细节
  * 1.首先我们应该调用updateChannel来添加一些事件(内部调用poller->updateChannel()来添加注册事件)
-2.接着调用loop函数来执行事件循环，在执行事件循环的过程中，会则色在poller->poll调用处，Poller类会把活跃的事件放在activeChannel集合中
-3.然后调用Channel中的handleEvent来处理事件发生时对应的回调函数，处理完事件函数后还会处理必须由I/O线程来完成的doPendingFunctors函数
+ * 2.接着调用loop函数来执行事件循环，在执行事件循环的过程中，会阻塞在poller->poll调用处，Poller类会把活跃的事件放在activeChannel集合中
+ * 3.然后调用Channel中的handleEvent来处理事件发生时对应的回调函数，处理完事件函数后还会处理必须由I/O线程来完成的doPendingFunctors(额外操作函数)函数
 */
 class EventLoop : noncopyable
 {

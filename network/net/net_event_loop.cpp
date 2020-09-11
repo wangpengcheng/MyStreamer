@@ -16,64 +16,64 @@ using namespace MY_NAME_SPACE::net;
 
 namespace
 {
-__thread EventLoop* t_loopInThisThread = 0; /* 记录当前loop的线程id指针 */
-/* 设置超时事件为10s */
-const int kPollTimeMs = 10000;
-/* 创建事件描述符 */
-int createEventfd()
-{
-    int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-    if (evtfd < 0)
+    __thread EventLoop *t_loopInThisThread = 0; /* 记录当前loop的线程id指针 */
+    /* 设置超时事件为10s */
+    const int kPollTimeMs = 10000;
+    /* 创建事件描述符 */
+    int createEventfd()
     {
-        LOG_SYSERR << "Failed in eventfd";
-        abort();
+        int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+        if (evtfd < 0)
+        {
+            LOG_SYSERR << "Failed in eventfd";
+            abort();
+        }
+        return evtfd;
     }
-    return evtfd;
-}
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-class IgnoreSigPipe
-{
-    public:
-    IgnoreSigPipe()
+    class IgnoreSigPipe
     {
-        ::signal(SIGPIPE, SIG_IGN);
-        // LOG_TRACE << "Ignore SIGPIPE";
-    }
-};
+    public:
+        IgnoreSigPipe()
+        {
+            ::signal(SIGPIPE, SIG_IGN);
+            // LOG_TRACE << "Ignore SIGPIPE";
+        }
+    };
 #pragma GCC diagnostic error "-Wold-style-cast"
 
-IgnoreSigPipe initObj;
-}  // namespace
+    IgnoreSigPipe initObj;
+} // namespace
 
-EventLoop* EventLoop::getEventLoopOfCurrentThread()
+EventLoop *EventLoop::getEventLoopOfCurrentThread()
 {
-  return t_loopInThisThread;
+    return t_loopInThisThread;
 }
 
 EventLoop::EventLoop()
     : looping_(false),
-        quit_(false),
-        eventHandling_(false),
-        callingPendingFunctors_(false),
-        iteration_(0),
-        threadId_(CurrentThread::tid()),
-        poller_(Poller::newDefaultPoller(this)),//初始化poll;虽然每个线程都有poll但是只有accpter回正式调用
-        timerQueue_(new TimerQueue(this)),
-        wakeupFd_(createEventfd()), //创建唤醒事件描述符
-        wakeupChannel_(new Channel(this, wakeupFd_)), /*  每个事件循环会有一个唤醒Channel ；主要还是给Acceptor使用*/
-        currentActiveChannel_(NULL)
+      quit_(false),
+      eventHandling_(false),
+      callingPendingFunctors_(false),
+      iteration_(0),
+      threadId_(CurrentThread::tid()),
+      poller_(Poller::newDefaultPoller(this)), //初始化poll;虽然每个线程都有poll但是只有accpter回正式调用
+      timerQueue_(new TimerQueue(this)),
+      wakeupFd_(createEventfd()),                   //创建唤醒事件描述符
+      wakeupChannel_(new Channel(this, wakeupFd_)), /*  每个事件循环会有一个唤醒Channel ；主要还是给Acceptor使用*/
+      currentActiveChannel_(NULL)
 {
     LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
     /* 检查当前线程是否含有其它线程 */
     if (t_loopInThisThread)
     {
         LOG_FATAL << "Another EventLoop " << t_loopInThisThread
-                << " exists in this thread " << threadId_;
+                  << " exists in this thread " << threadId_;
     }
     else
     {
-        t_loopInThisThread = this;/*  设置当前线程的eventloop */
+        t_loopInThisThread = this; /*  设置当前线程的eventloop */
     }
     /* 添加唤醒事件,读取8个字节的值 */
     wakeupChannel_->setReadCallback(
@@ -86,7 +86,7 @@ EventLoop::EventLoop()
 EventLoop::~EventLoop()
 {
     LOG_DEBUG << "EventLoop " << this << " of thread " << threadId_
-                << " destructs in thread " << CurrentThread::tid();
+              << " destructs in thread " << CurrentThread::tid();
     wakeupChannel_->disableAll();
     wakeupChannel_->remove();
     ::close(wakeupFd_);
@@ -112,17 +112,17 @@ void EventLoop::loop()
     /* 进行断言防止递归调用 */
     assertInLoopThread();
     looping_ = true;
-    quit_ = false;  // FIXME: what if someone calls quit() before loop() ?
+    quit_ = false; // FIXME: what if someone calls quit() before loop() ?
     LOG_TRACE << "EventLoop " << this << " start looping";
 
     while (!quit_)
     {
         /* 清除时间循环中的活动事件 */
         activeChannels_.clear();
-         /* epoll_wait返回后会将所有就绪的Channel添加到激活队列activeChannel中 */
-         /* 循环检测是否可读写 */
-         /* 获取可操作的事件，并返回事件集合 */
-        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);/*  注意这里不会阻塞，而是会直接执行 */
+        /* epoll_wait返回后会将所有就绪的Channel添加到激活队列activeChannel中 */
+        /* 循环检测是否可读写 */
+        /* 获取可操作的事件，并返回事件集合 */
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_); /*  注意这里不会阻塞，而是会直接执行 */
         ++iteration_;
         /* 输出激活的事件 */
         if (Logger::logLevel() <= Logger::TRACE)
@@ -131,7 +131,7 @@ void EventLoop::loop()
         }
         /* 执行所有在激活队列中的Channel的回调函数 */
         eventHandling_ = true;
-        for (Channel* channel : activeChannels_)
+        for (Channel *channel : activeChannels_)
         {
             currentActiveChannel_ = channel;
             currentActiveChannel_->handleEvent(pollReturnTime_);
@@ -152,6 +152,7 @@ void EventLoop::quit()
     // There is a chance that loop() just executes while(!quit_) and exits,
     // then EventLoop destructs, then we are accessing an invalid object.
     // Can be fixed using mutex_ in both places.
+    // 没有在循环线程中，就唤醒，再由其它的进行关闭
     if (!isInLoopThread())
     {
         wakeup();
@@ -161,15 +162,15 @@ void EventLoop::quit()
 void EventLoop::runInLoop(Functor cb)
 {
     /* 事件正在线程中，直接执行 */
-  if (isInLoopThread())
-  {
-    cb();
-  }
-  else
-  {
-      /* 否则排序等待 */
-    queueInLoop(std::move(cb));
-  }
+    if (isInLoopThread())
+    {
+        cb();
+    }
+    else
+    {
+        /* 否则排序等待 */
+        queueInLoop(std::move(cb));
+    }
 }
 /* 将函数插入执行队列 */
 /*
@@ -184,7 +185,7 @@ void EventLoop::queueInLoop(Functor cb)
         pendingFunctors_.push_back(std::move(cb));
     }
     /* 如果没有在运行，就唤醒线程 */
-    if(!isInLoopThread() || callingPendingFunctors_)
+    if (!isInLoopThread() || callingPendingFunctors_)
     {
         wakeup();
     }
@@ -219,26 +220,26 @@ void EventLoop::cancel(TimerId timerId)
     return timerQueue_->cancel(timerId);
 }
 /* 更新channel */
-void EventLoop::updateChannel(Channel* channel)
+void EventLoop::updateChannel(Channel *channel)
 {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     poller_->updateChannel(channel);
 }
 /* 移除channel */
-void EventLoop::removeChannel(Channel* channel)
+void EventLoop::removeChannel(Channel *channel)
 {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     if (eventHandling_)
     {
         assert(currentActiveChannel_ == channel ||
-            std::find(activeChannels_.begin(), activeChannels_.end(), channel) == activeChannels_.end());
+               std::find(activeChannels_.begin(), activeChannels_.end(), channel) == activeChannels_.end());
     }
     poller_->removeChannel(channel);
 }
 
-bool EventLoop::hasChannel(Channel* channel)
+bool EventLoop::hasChannel(Channel *channel)
 {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
@@ -248,18 +249,18 @@ bool EventLoop::hasChannel(Channel* channel)
 void EventLoop::abortNotInLoopThread()
 {
     LOG_FATAL << "EventLoop::abortNotInLoopThread - EventLoop " << this
-                << " was created in threadId_ = " << threadId_
-                << ", current thread id = " <<  CurrentThread::tid();
+              << " was created in threadId_ = " << threadId_
+              << ", current thread id = " << CurrentThread::tid();
 }
 /* 执行唤醒函数 */
 void EventLoop::wakeup()
 {
-  uint64_t one = 1;
-  ssize_t n = sockets::write(wakeupFd_, &one, sizeof one);
-  if (n != sizeof one)
-  {
-    LOG_ERROR << "EventLoop::wakeup() writes " << n << " bytes instead of 8";
-  }
+    uint64_t one = 1;
+    ssize_t n = sockets::write(wakeupFd_, &one, sizeof one);
+    if (n != sizeof one)
+    {
+        LOG_ERROR << "EventLoop::wakeup() writes " << n << " bytes instead of 8";
+    }
 }
 
 void EventLoop::handleRead()
@@ -281,10 +282,10 @@ void EventLoop::doPendingFunctors()
         MutexLockGuard lock(mutex_);
         functors.swap(pendingFunctors_);
     }
-     /* 执行集合中的所有函数 */
-    for (const Functor& functor : functors)
+    /* 执行集合中的所有函数 */
+    for (const Functor &functor : functors)
     {
-       
+
         functor();
     }
     callingPendingFunctors_ = false;
@@ -292,7 +293,7 @@ void EventLoop::doPendingFunctors()
 /* 输出激活的事件 */
 void EventLoop::printActiveChannels() const
 {
-    for (const Channel* channel : activeChannels_)
+    for (const Channel *channel : activeChannels_)
     {
         LOG_TRACE << "{" << channel->reventsToString() << "} ";
     }

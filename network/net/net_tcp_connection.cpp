@@ -43,7 +43,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
     channel_(new Channel(loop, sockfd)),/*  每个TCPconnet都会由自己的监听事件管理 */
     localAddr_(localAddr),
     peerAddr_(peerAddr),
-    highWaterMark_(64*1024*1024)
+    highWaterMark_(64*1024*1024) /* 设置高水位临界值 */
 {
     /* 设置各种回调函数 */
     channel_->setReadCallback(
@@ -89,7 +89,7 @@ void TcpConnection::send(const void* data, int len)
 {
     send(StringPiece(static_cast<const char*>(data), len));
 }
-
+/* 发送数据 */
 void TcpConnection::send(const StringPiece& message)
 {
     if (state_ == kConnected)
@@ -199,7 +199,7 @@ void TcpConnection::sendInLoop(const void* data, size_t len)
         {
             loop_->queueInLoop(std::bind(highWaterMarkCallback_, shared_from_this(), oldLen + remaining));
         }
-            outputBuffer_.append(static_cast<const char*>(data)+nwrote, remaining);
+        outputBuffer_.append(static_cast<const char*>(data)+nwrote, remaining);
         if (!channel_->isWriting())
         {
             channel_->enableWriting();
@@ -405,6 +405,7 @@ void TcpConnection::handleRead(Timestamp receiveTime)
 void TcpConnection::handleWrite()
 {
     loop_->assertInLoopThread();
+    // 如果为可写事件
     if (channel_->isWriting())
     {
         /* 尝试写入写缓冲区的所有数据，返回实际写入的字节数（tcp缓冲区很有可能仍然不能容纳所有数据） */
@@ -414,7 +415,7 @@ void TcpConnection::handleWrite()
         if (n > 0)
         {
             outputBuffer_.retrieve(n);
-            
+            // 缓冲区中已经完全写入
             if (outputBuffer_.readableBytes() == 0)
             {
                 /* 全部写到tcp缓冲区中，关闭对可写事件的监听 */
@@ -431,17 +432,18 @@ void TcpConnection::handleWrite()
                 */
                 if (state_ == kDisconnecting)
                 {
+                    // 软关闭
                     shutdownInLoop();
                 }
             }
         }
         else
         {
-        LOG_SYSERR << "TcpConnection::handleWrite";
-        // if (state_ == kDisconnecting)
-        // {
-        //   shutdownInLoop();
-        // }
+            LOG_SYSERR << "TcpConnection::handleWrite";
+            // if (state_ == kDisconnecting)
+            // {
+            //   shutdownInLoop();
+            // }
         }
     }
     else

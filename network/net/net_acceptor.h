@@ -15,12 +15,12 @@ namespace net
     class InetAddress;
 
     /**
- * 网络连接管理类，供TCP server使用，声明周期由Tcpserver决定
-*/
+     * 网络连接管理类，供TCP server使用，声明周期由Tcpserver决定
+    */
     /* 
- * 对TCP socket, bind, listen, accept的封装 
- * 将sockfd以Channel的形式注册到EventLoop的Poller中，检测到sockfd可读时，接收客户端
- */
+    * 对TCP socket, bind, listen, accept的封装 
+    * 将sockfd以Channel的形式注册到EventLoop的Poller中，检测到sockfd可读时，接收客户端
+    */
     class Acceptor : noncopyable
     {
     public:
@@ -45,9 +45,9 @@ namespace net
         Socket acceptSocket_;   /* 封装了socket文件描述符分生命周期，指向server的监听socket */
         Channel acceptChannel_; /* Channel，保存着sockfd，被添加到Poller中，等待被激活 */
         /* 
-   * 当有客户端连接时首先内部接收连接，然后调用的用户提供的回调函数
-   * 客户端套接字和地址作为参数传入
-   */
+        * 当有客户端连接时首先内部接收连接，然后调用的用户提供的回调函数
+        * 客户端套接字和地址作为参数传入
+        */
         NewConnectionCallback newConnectionCallback_;
         bool listenning_;
         int idleFd_;

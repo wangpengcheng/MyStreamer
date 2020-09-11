@@ -99,7 +99,7 @@ private:
     EventLoop* loop_;                               //channel所属的loop
     const int  fd_;                                 //channel负责的文件描述符；主要用于时间计时器
     int        events_;                             //注册的事件
-    int        revents_;                            //poller设置的就绪的事件
+    int        revents_;                            //poller设置的就绪的事件，即目前活动的事件
     /* 
     * 保存fd在epoll/poll中的状态，有：
     *    还没有添加到epoll中

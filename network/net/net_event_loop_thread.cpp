@@ -51,6 +51,7 @@ EventLoop* EventLoopThread::startLoop()
         /* 开启事件循环前，需要保证线程和event已经就绪 */
         while (loop_ == NULL)
         {
+            // 在这里阻塞等待event_loop已经准备好
             cond_.wait();
         }
         loop = loop_;

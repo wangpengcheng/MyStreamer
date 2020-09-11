@@ -91,25 +91,26 @@ void Channel::handleEvent(Timestamp receiveTime)
     }
 }
 /**
- * handleEventWithGuard其实就是根据不同的激活原因滴啊用不同的回调函数，
+ * handleEventWithGuard其实就是根据不同的激活原因调用不同的回调函数，
  * 这些回调函数都在TcpConnection中，也是通过上面std::function/std::bind设置的，
  * 所以在调用前必须判断Channel所在的TcpConnection是否还存在
+ * https://blog.csdn.net/djinglan/article/details/8302938
 */
 void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
     eventHandling_ = true;
     /* 输出注册的事件 */
     LOG_TRACE << reventsToString();
-    /* 关闭事件 */
+    /* 发生挂起且无可读数据 */
     if ((revents_ & POLLHUP) && !(revents_ & POLLIN))
     {
         if (logHup_)
         {
-        LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLHUP";
+            LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLHUP";
         }
         if (closeCallback_) closeCallback_();
     }
-
+    // 如果是
     if (revents_ & POLLNVAL)
     {
         LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLNVAL";
@@ -141,23 +142,47 @@ string Channel::eventsToString() const
 {
     return eventsToString(fd_, events_);
 }
+/*
+POLLHUP表示套接字不再连接.在TCP中,这意味着FIN已被接收和发送.
 
+POLLERR表示套接字出现异步错误.在TCP中,这通常意味着已经接收或发送了RST.如果文件描述符不是套接字,则POLLERR可能意味着设备不支持轮询.
+
+对于上述两个条件,套接字文件描述符仍处于打开状态,尚未关闭(但可能已经调用了shutdown()).文件描述符上的close()将释放仍代表套接字保留的资源.理论上,应该可以立即重用套接字(例如,使用另一个connect()调用).
+
+POLLNVAL表示套接字文件描述符未打开.关闭()它会是一个错误.
+https://www.cnblogs.com/nathan-1988/archive/2012/07/01/2571786.html
+
+注意:可读并不代表有数据
+当某个socket接受缓冲区有新数据分节到达,然后select报告这个socket描述符可读,但随后,协议栈检查到这个新分节检验和错误,然后丢弃这个分节,这时候调用read()则无数据可读epoll也一样这也是为什么 
+要使用非阻塞IO的原因,就算是select和epoll
+
+作者：知乎用户
+链接：https://www.zhihu.com/question/54439925/answer/298579368
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+*/
 string Channel::eventsToString(int fd, int ev)
 {
     std::ostringstream oss;
     oss << fd << ": ";
+    // 普通优先级数据可读
     if (ev & POLLIN)
         oss << "IN ";
+    // 高右下级数据可读
     if (ev & POLLPRI)
         oss << "PRI ";
     if (ev & POLLOUT)
         oss << "OUT ";
+    // 已经发生读挂起
     if (ev & POLLHUP)
         oss << "HUP ";
+    // 发生挂起
     if (ev & POLLRDHUP)
         oss << "RDHUP ";
+    // 发生错误
     if (ev & POLLERR)
         oss << "ERR ";
+    // 不是一个打开的文件
     if (ev & POLLNVAL)
         oss << "NVAL ";
 

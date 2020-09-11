@@ -209,7 +209,7 @@ public:
         std::copy(data, data+len, beginWrite());
         hasWritten(len);
     }
-
+    // 添加数据
     void append(const void* /*restrict*/ data, size_t len)
     {
         append(static_cast<const char*>(data), len);
@@ -419,7 +419,7 @@ public:
     { 
         return &*buffer_.begin();
     }
-    /* 调整空间大小 */
+    /* 调整空间大小，进行空间分配 */
     void makeSpace(size_t len)
     {
         /* 

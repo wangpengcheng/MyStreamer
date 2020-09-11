@@ -12,12 +12,12 @@ using namespace MY_NAME_SPACE::net;
 /* 初始化最大尝试数量 */
 const int Connector::kMaxRetryDelayMs;
 
-Connector::Connector(EventLoop* loop, const InetAddress& serverAddr)
-    : loop_(loop),
-        serverAddr_(serverAddr),
-        connect_(false),
-        state_(kDisconnected),
-        retryDelayMs_(kInitRetryDelayMs)
+Connector::Connector(EventLoop *loop, const InetAddress &serverAddr)
+    : loop_(loop),/* 事件循环指针 */
+      serverAddr_(serverAddr),/* 服务器地址 */
+      connect_(false), /* 是否连接 */
+      state_(kDisconnected),/* 没有链接 */
+      retryDelayMs_(kInitRetryDelayMs) /* 最大延迟时间 */
 {
     LOG_DEBUG << "ctor[" << this << "]";
 }
@@ -78,19 +78,19 @@ void Connector::connect()
     switch (savedErrno)
     {
         case 0:
-        case EINPROGRESS:
-        case EINTR:
-        case EISCONN:
-            connecting(sockfd);/* 执行连接函数 */
-        break;
+        case EINPROGRESS:/* 连接正在处理，网卡忙 */
+        case EINTR:/* 陷入系统中断 */
+        case EISCONN: /* 已经建立连接 */
+            connecting(sockfd); /* 执行连接函数 */
+            break;
 
-        case EAGAIN:
+        case EAGAIN:   /* 需要重试 */
         case EADDRINUSE:
         case EADDRNOTAVAIL:
         case ECONNREFUSED:
-        case ENETUNREACH:/* 没有到达网络的可用路由 */
-            retry(sockfd);/* 重新尝试 */  
-        break;
+        case ENETUNREACH:  /* 没有到达网络的可用路由 */
+            retry(sockfd); /* 重新尝试 */
+            break;
 
         case EACCES:
         case EPERM:
@@ -98,16 +98,16 @@ void Connector::connect()
         case EALREADY:
         case EBADF:
         case EFAULT:
-        case ENOTSOCK:/* 非socket上执行socket操作 */
+        case ENOTSOCK: /* 非socket上执行socket操作，不是socket文件描述符 */
             LOG_SYSERR << "connect error in Connector::startInLoop " << savedErrno;
             sockets::close(sockfd);
-        break;
+            break;
 
         default:
             LOG_SYSERR << "Unexpected error in Connector::startInLoop " << savedErrno;
             sockets::close(sockfd);
-        // connectErrorCallback_();
-        break;
+            // connectErrorCallback_();
+            break;
     }
 }
 /* 开启事件循环 */
@@ -135,7 +135,7 @@ void Connector::connecting(int sockfd)
 
     // channel_->tie(shared_from_this()); is not working,
     // as channel_ is not managed by shared_ptr
-    /* 设置事件为可写事件 */
+    /* 设置监听事件为可写事件 */
     channel_->enableWriting();
 }
 /* 重新设置监听事件 */
@@ -154,7 +154,7 @@ void Connector::resetChannel()
 {
     channel_.reset();
 }
-
+// 执行写入
 void Connector::handleWrite()
 {
     LOG_TRACE << "Connector::handleWrite " << state_;
@@ -166,9 +166,10 @@ void Connector::handleWrite()
         if (err)
         {
             LOG_WARN << "Connector::handleWrite - SO_ERROR = "
-                    << err << " " << strerror_tl(err);
+                     << err << " " << strerror_tl(err);
             retry(sockfd);
         }
+        /* 是否为本地回环连接 */
         else if (sockets::isSelfConnect(sockfd))
         {
             LOG_WARN << "Connector::handleWrite - Self connect";
@@ -177,13 +178,15 @@ void Connector::handleWrite()
         else
         {
             setState(kConnected);
-        /* 执行写入回调 */
-        if (connect_)
-        {
-            newConnectionCallback_(sockfd);
-        }else{
-            sockets::close(sockfd);
-        }
+            /* 执行连接建立回调 */
+            if (connect_)
+            {
+                newConnectionCallback_(sockfd);
+            }
+            else
+            {
+                sockets::close(sockfd);
+            }
         }
     }
     else
@@ -213,9 +216,9 @@ void Connector::retry(int sockfd)
     if (connect_)
     {
         LOG_INFO << "Connector::retry - Retry connecting to " << serverAddr_.toIpPort()
-                << " in " << retryDelayMs_ << " milliseconds. ";
+                 << " in " << retryDelayMs_ << " milliseconds. ";
         /* 一段时间后重新执行 */
-        loop_->runAfter(retryDelayMs_/1000.0,
+        loop_->runAfter(retryDelayMs_ / 1000.0,
                         std::bind(&Connector::startInLoop, shared_from_this()));
         /* 更新重新连接的时间 */
         retryDelayMs_ = std::min(retryDelayMs_ * 2, kMaxRetryDelayMs);
