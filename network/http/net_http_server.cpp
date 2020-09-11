@@ -11,50 +11,50 @@ NAMESPACE_START
 
 namespace net
 {
-namespace detail
-{
-/* 设置默认的回调函数 */
-void defaultHttpCallback(const HttpRequest&, HttpResponse* resp)
-{
-    resp->setStatusCode(HttpResponse::k404NotFound);
-    resp->setStatusMessage("Not Found");
-    resp->setCloseConnection(true);
-}
+    namespace detail
+    {
+        /* 设置默认的回调函数 */
+        void defaultHttpCallback(const HttpRequest &, HttpResponse *resp)
+        {
+            resp->setStatusCode(HttpResponse::k404NotFound);
+            resp->setStatusMessage("Not Found");
+            resp->setCloseConnection(true);
+        }
 
-}  // namespace detail
-}  // namespace net
+    } // namespace detail
+} // namespace net
 
 NAMESPACE_END
 
-HttpServer::HttpServer(EventLoop* loop,
-                       const InetAddress& listenAddr,
-                       const string& name,
+HttpServer::HttpServer(EventLoop *loop,
+                       const InetAddress &listenAddr,
+                       const string &name,
                        TcpServer::Option option)
-  : server_(loop, listenAddr, name, option),
-    httpCallback_(detail::defaultHttpCallback)
+    : server_(loop, listenAddr, name, option),
+      httpCallback_(detail::defaultHttpCallback)
 {
     /* 设置连接回调函数 */
-  server_.setConnectionCallback(
-      std::bind(&HttpServer::onConnection, this, _1));
-  /* 设置消息回调函数 */
-  server_.setMessageCallback(
-      std::bind(&HttpServer::onMessage, this, _1, _2, _3));
+    server_.setConnectionCallback(
+        std::bind(&HttpServer::onConnection, this, _1));
+    /* 设置消息回调函数 */
+    server_.setMessageCallback(
+        std::bind(&HttpServer::onMessage, this, _1, _2, _3));
 }
 
 void HttpServer::start()
 {
     LOG_WARN << "HttpServer[" << server_.name()
-        << "] starts listenning on " << server_.ipPort();
+             << "] starts listenning on " << server_.ipPort();
     server_.start();
 }
 void HttpServer::stop()
 {
-     LOG_WARN << "HttpServer[" << server_.name()
-        << "] Stop Not complate" << server_.ipPort();
+    LOG_WARN << "HttpServer[" << server_.name()
+             << "] Stop Not complate" << server_.ipPort();
     //TODO 完成安全的销毁
 }
 /* 设置连接结构体 */
-void HttpServer::onConnection(const TcpConnectionPtr& conn)
+void HttpServer::onConnection(const TcpConnectionPtr &conn)
 {
     /* 设置上下文 */
     if (conn->connected())
@@ -63,12 +63,12 @@ void HttpServer::onConnection(const TcpConnectionPtr& conn)
     }
 }
 /* 设置连接响应函数 */
-void HttpServer::onMessage(const TcpConnectionPtr& conn,
-                           Buffer* buf,
+void HttpServer::onMessage(const TcpConnectionPtr &conn,
+                           Buffer *buf,
                            Timestamp receiveTime)
 {
     /* 获取上下文 */
-    HttpContext* context = boost::any_cast<HttpContext>(conn->getMutableContext());
+    HttpContext *context = boost::any_cast<HttpContext>(conn->getMutableContext());
     /* 使用context解析连接 */
     if (!context->parseRequest(buf, receiveTime))
     {
@@ -84,11 +84,11 @@ void HttpServer::onMessage(const TcpConnectionPtr& conn,
     }
 }
 /* 执行请求的相关函数 */
-void HttpServer::onRequest(const TcpConnectionPtr& conn, const HttpRequest& req)
+void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
 {
-    const string& connection = req.getHeader("Connection");
+    const string &connection = req.getHeader("Connection");
     bool close = connection == "close" ||
-        (req.getVersion() == HttpRequest::kHttp10 && connection != "Keep-Alive");
+                 (req.getVersion() == HttpRequest::kHttp10 && connection != "Keep-Alive");
     /* 创建响应结构体 */
     HttpResponse response(close);
     /* 执行绑定的请求处理函数相关函数 */
