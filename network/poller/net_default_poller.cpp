@@ -12,7 +12,7 @@ Poller* Poller::newDefaultPoller(EventLoop* loop)
 	{
 		return new PollPoller(loop);
 	}
-	else
+	else //注意这里的默认poller是epoll
 	{
 		return new EPollPoller(loop);
 	}

@@ -465,13 +465,13 @@ void TcpConnection::handleClose()
     TcpConnectionPtr guardThis(shared_from_this());
     /*  连接回调 */
     connectionCallback_(guardThis);
-      /* 
-   * closeCallback返回后，TcpServer的connections_(tcp连接map）已经将TcpConnection删除，引用计数变为1
-   * 此时如果函数返回，guardThis也会被销毁，引用计数变为0，这个TcpConnection就会被销毁
-   * 所以在TcpServer::removeConnectionInLoop使用bind将TcpConnection生命期延长，引用计数加一，变为2
-   * 就算guardThis销毁，引用计数仍然有1个
-   * 等到调用完connectDestroyed后，bind绑定的TcpConnection也会被销毁，引用计数为0，TcpConnection析构
-   */
+    /* 
+    * closeCallback返回后，TcpServer的connections_(tcp连接map）已经将TcpConnection删除，引用计数变为1
+    * 此时如果函数返回，guardThis也会被销毁，引用计数变为0，这个TcpConnection就会被销毁
+    * 所以在TcpServer::removeConnectionInLoop使用bind将TcpConnection生命期延长，引用计数加一，变为2
+    * 就算guardThis销毁，引用计数仍然有1个
+    * 等到调用完connectDestroyed后，bind绑定的TcpConnection也会被销毁，引用计数为0，TcpConnection析构
+    */
     closeCallback_(guardThis);
 }
 

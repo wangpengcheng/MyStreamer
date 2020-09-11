@@ -30,7 +30,7 @@ uint32_t BaseSingleRingBufferData::GetDataLen()
 	/* 获取外部指针注意这里的 */
 	register uint32_t out;
 	out=out_ptr_;
-	return (out_ptr_<in_ptr_)?(in_ptr_-out_ptr_):(size_-out_ptr_+in_ptr_));
+	return (out_ptr_<in_ptr_)?(in_ptr_-out_ptr_):(size_-out_ptr_+in_ptr_);
 }
 uint32_t BaseSingleRingBufferData::MoveOut(const uint32_t len)
 {

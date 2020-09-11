@@ -132,6 +132,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
     * 当poll返回后，发现被激活的原因是EPOLLHUP，此时需要关闭tcp连接
     * 调用Channel的CloseCallback，进而调用TcpConnection的handleClose，进而调用removeConnection
     */
+    // 关闭回调函数
     conn->setCloseCallback(
         std::bind(&TcpServer::removeConnection, this, _1)); // FIXME: unsafe
     /* 

@@ -1,0 +1,48 @@
+20200911 08:52:06.555977Z 21708 WARN  HttpServer[mystreamer] starts listenning on 0.0.0.0:8000 - net_http_server.cpp:46
+640;480
+20200911 08:52:07.007008Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#1] from 127.0.0.1:58524 - net_tcp_server.cpp:108
+20200911 08:52:07.015631Z 21710 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#1] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 08:52:07.015800Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#1 - net_tcp_server.cpp:164
+20200911 08:52:08.023704Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#2] from 127.0.0.1:58534 - net_tcp_server.cpp:108
+20200911 08:52:08.030336Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#2 - net_tcp_server.cpp:164
+20200911 08:52:09.044850Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#3] from 127.0.0.1:58538 - net_tcp_server.cpp:108
+20200911 08:52:18.635042Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#4] from 127.0.0.1:58546 - net_tcp_server.cpp:108
+20200911 08:52:18.641485Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#3 - net_tcp_server.cpp:164
+20200911 08:52:19.169809Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#5] from 127.0.0.1:58558 - net_tcp_server.cpp:108
+20200911 08:52:19.236626Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#6] from 127.0.0.1:58562 - net_tcp_server.cpp:108
+20200911 08:52:19.524934Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#7] from 127.0.0.1:58566 - net_tcp_server.cpp:108
+20200911 08:52:19.526280Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#8] from 127.0.0.1:58570 - net_tcp_server.cpp:108
+20200911 08:52:19.526563Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#9] from 127.0.0.1:58574 - net_tcp_server.cpp:108
+20200911 08:54:39.206324Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#10] from 192.168.62.236:14809 - net_tcp_server.cpp:108
+20200911 08:54:42.293374Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#11] from 192.168.62.236:14810 - net_tcp_server.cpp:108
+20200911 08:54:43.394903Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#10 - net_tcp_server.cpp:164
+20200911 08:54:48.459561Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#11 - net_tcp_server.cpp:164
+20200911 08:55:01.571676Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#12] from 192.168.62.236:14819 - net_tcp_server.cpp:108
+20200911 08:55:01.571849Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#13] from 192.168.62.236:14820 - net_tcp_server.cpp:108
+20200911 08:55:01.680512Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#14] from 192.168.62.236:14821 - net_tcp_server.cpp:108
+20200911 08:55:01.681395Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#15] from 192.168.62.236:14822 - net_tcp_server.cpp:108
+20200911 08:55:01.682424Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#16] from 192.168.62.236:14823 - net_tcp_server.cpp:108
+20200911 08:55:01.683486Z 21708 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#17] from 192.168.62.236:14824 - net_tcp_server.cpp:108
+20200911 08:55:02.440539Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#17 - net_tcp_server.cpp:164
+20200911 08:55:02.445149Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#13 - net_tcp_server.cpp:164
+20200911 08:55:30.482996Z 21708 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#16 - net_tcp_server.cpp:164
+^C
+wangpengcheng@wangpengcheng-Inspiron-3650:/media/wangpengcheng/文档/GitHub/MyStreamer$ ./install/bin/Debug/MyStreamer 
+20200911 08:59:12.204330Z 21968 WARN  HttpServer[mystreamer] starts listenning on 0.0.0.0:8000 - net_http_server.cpp:46
+640;480
+20200911 08:59:13.042749Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#1] from 127.0.0.1:60704 - net_tcp_server.cpp:108
+20200911 08:59:13.323464Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#2] from 127.0.0.1:60708 - net_tcp_server.cpp:108
+20200911 08:59:13.358747Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#3] from 127.0.0.1:60712 - net_tcp_server.cpp:108
+20200911 08:59:13.393135Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#4] from 127.0.0.1:60716 - net_tcp_server.cpp:108
+20200911 08:59:26.991823Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#5] from 127.0.0.1:60824 - net_tcp_server.cpp:108
+20200911 08:59:28.358557Z 21968 INFO  TcpServer::newConnection [mystreamer] - new connection [mystreamer-0.0.0.0:8000#6] from 127.0.0.1:60844 - net_tcp_server.cpp:108
+20200911 09:01:38.202086Z 21970 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#1] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 09:01:38.202086Z 21971 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#2] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 09:01:38.202186Z 21972 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#3] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 09:01:38.202086Z 21973 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#4] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 09:01:38.224123Z 21971 ERROR TcpConnection::handleError [mystreamer-0.0.0.0:8000#6] - SO_ERROR = 104 Connection reset by peer - net_tcp_connection.cpp:481
+20200911 09:01:38.224143Z 21968 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#2 - net_tcp_server.cpp:164
+20200911 09:01:38.252800Z 21968 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#4 - net_tcp_server.cpp:164
+20200911 09:01:38.252860Z 21968 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#6 - net_tcp_server.cpp:164
+20200911 09:01:38.252877Z 21968 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#3 - net_tcp_server.cpp:164
+20200911 09:01:38.252893Z 21968 INFO  TcpServer::removeConnectionInLoop [mystreamer] - connection mystreamer-0.0.0.0:8000#1 - net_tcp_server.cpp:164
