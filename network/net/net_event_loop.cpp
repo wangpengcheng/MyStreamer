@@ -65,6 +65,7 @@ EventLoop::EventLoop()
       currentActiveChannel_(NULL)
 {
     LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
+    LOG_INFO << "EventLoop created " << this <<" in thread " << threadId_<<"poller "<<poller_.get()<<"loop:";
     /* 检查当前线程是否含有其它线程 */
     if (t_loopInThisThread)
     {
