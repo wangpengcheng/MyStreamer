@@ -25,10 +25,10 @@ Acceptor::Acceptor( EventLoop* loop,
 {
     assert(idleFd_ >= 0);
      /* 
-   * setsockopt设置套接字选项SO_REUSEADDR；地址重用，对于端口bind，如果这个地址/端口处于TIME_WAIT，也可bind成功
-   * int flag = 1;
-   * setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
-   */
+    * setsockopt设置套接字选项SO_REUSEADDR；地址重用，对于端口bind，如果这个地址/端口处于TIME_WAIT，也可bind成功
+    * int flag = 1;
+    * setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
+    */
     acceptSocket_.setReuseAddr(true);
     /*
    * setsockopt设置套接字选项SO_REUSEPORT；端口重用，作用是对于多核cpu，允许在同一个<ip, port>对上运行多个相同服务器
@@ -68,7 +68,7 @@ void Acceptor::handleRead()
 {
     loop_->assertInLoopThread();
     InetAddress peerAddr;
-    /* 执行accept监听文件描述符 */
+    /* 执行accept监听获取socket文件描述符 */
     int connfd = acceptSocket_.accept(&peerAddr);
     if (connfd >= 0)
     {

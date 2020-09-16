@@ -112,7 +112,7 @@ namespace net
         const string ipPort_;
         /* 服务器名字，创建时传入 */
         const string name_;
-        /* Acceptor对象，负责监听客户端连接请求，运行在主线程的EventLoop中 */
+        /* Acceptor对象，负责监听客户端连接请求，运行在主线程的EventLoop中,只有一个acceptor */
         std::unique_ptr<Acceptor> acceptor_; // avoid revealing Acceptor
         /* 事件驱动线程池，池中每个线程运行一个EventLoop */
         std::shared_ptr<EventLoopThreadPool> threadPool_;
