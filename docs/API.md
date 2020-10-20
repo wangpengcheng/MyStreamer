@@ -17,6 +17,17 @@ Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7
 响应图片原始数据:
 
 ```json
+HTTP/1.1 200 OK
+Content-Length: 0
+Connection: Keep-Alive
+Cache-Control: no-store, must-revalidate
+Content-Type: image/png
+Timesmap: 1603207683013 /* 注意这里的自定时间戳 */
+NodeName: car1 /* 自定义节点名称 */
+Expires: 0
+Pragma: no-cache
+body:
+....../* 返回jpeg压缩图像 */
 ```
 
 ## 注意事项
@@ -88,3 +99,6 @@ var Camera = (function ()
 camera.start(20);
 
 ```
+
+## 使用示例代码
+[camera.js](https://github.com/wangpengcheng/MyStreamer/blob/master/web/camera.js)
