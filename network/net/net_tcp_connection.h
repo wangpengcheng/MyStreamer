@@ -105,7 +105,10 @@ namespace net
             highWaterMarkCallback_ = cb;
             highWaterMark_ = highWaterMark;
         }
-
+        void setTimerCallback(const TimerCallback timerCallback) 
+        {
+            timerCallback_ = timerCallback;
+        }
         /// Advanced interface
         Buffer *inputBuffer()
         {
