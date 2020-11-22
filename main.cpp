@@ -23,6 +23,8 @@ int main(int argc,char* argv[])
     my_camera->SetListener(video_web.VideoSourceListener());
     // 创建图片handler 
     auto jpeg_handler=video_web.CreateJpegHandler("jpeg");
+    // 设置图片质量
+    video_web.SetJpegQuality(90);
     // 创建
     MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",8);
     my_camera->Start();
