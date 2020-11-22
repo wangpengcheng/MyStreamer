@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.md": "markdown",
+        "*.cu": "cpp",
         "*.tcc": "cpp",
         "deque": "cpp",
         "list": "cpp",
@@ -72,6 +74,10 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp"
     }
 }

@@ -133,6 +133,13 @@ void TcpConnection::send(Buffer* buf)
         }
     }
 }
+void TcpConnection::setTimer(Timestamp& nextTime) 
+{
+    // 设置时钟回调，便于切片
+    if(this->timerCallback_) {
+        timeCallBack(nextTime,std::bind(&TcpConnection::handleTimer,this));
+    }
+}
 /* 发送消息 */
 void TcpConnection::sendInLoop(const StringPiece& message)
 {
@@ -484,4 +491,10 @@ void TcpConnection::handleError()
     int err = sockets::getSocketError(channel_->fd());
     LOG_ERROR << "TcpConnection::handleError [" << name_
                 << "] - SO_ERROR = " << err << " " << strerror_tl(err);
+}
+// 时钟定时回调切片
+void TcpConnection::handleTimer() 
+{
+    // 在这里执行回调函数
+    timerCallback_();
 }
