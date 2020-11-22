@@ -50,11 +50,18 @@ namespace net
         void onMessage(const TcpConnectionPtr &conn,
                        Buffer *buf,
                        Timestamp receiveTime);
+
         /* 注意谨慎使用 */
         void onRequest(const TcpConnectionPtr &, const HttpRequest &);
+        /**
+         * @brief 主动写入函数，主要用来，由服务器端，进行主动的写入
+         * @param  conn     已连接的TCP连接
+         */
+        void onRespone(const TcpConnectionPtr &conn);
 
         TcpServer server_;          /* tcp server */
         HttpCallback httpCallback_; /* 响应回调函数 */
+        
     };
 
 } // namespace net

@@ -109,3 +109,7 @@ void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
         conn->shutdown();
     }
 }
+void HttpServer::onRespone(const TcpConnectionPtr &conn)
+{
+    
+}

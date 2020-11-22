@@ -65,6 +65,7 @@ void MjpegRequestHandler::HandleHttpRequest( const WebRequest& request, WebRespo
 void MjpegRequestHandler::HandleTimer( WebResponse& response )
 {
     //TODO;设置TCP间隔的连续写入
+    
 }
 
 

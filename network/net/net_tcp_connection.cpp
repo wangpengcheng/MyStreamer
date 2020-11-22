@@ -206,7 +206,11 @@ void TcpConnection::sendInLoop(const void* data, size_t len)
         }
     }
 }
-
+void TcpConnection::timeCallBack(Timestamp nextTime,TimerCallback sendCallBack) 
+{
+    //loop_->runAt(nextTime,std::bind());
+    loop_->runAt(nextTime,sendCallBack);
+}
 void TcpConnection::shutdown()
 {
     // FIXME: use compare and swap

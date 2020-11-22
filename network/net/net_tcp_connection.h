@@ -56,6 +56,7 @@ public:
     void send(const StringPiece& message);
     // void send(Buffer&& message); // C++11
     void send(Buffer* message);  // this one will swap data
+
     void shutdown(); // NOT thread safe, no simultaneous calling
     // void shutdownAndForceCloseAfter(double seconds); // NOT thread safe, no simultaneous calling
     void forceClose();
@@ -112,6 +113,12 @@ private:
     // void sendInLoop(string&& message);
     void sendInLoop(const StringPiece& message);
     void sendInLoop(const void* message, size_t len);
+    /**
+     * @brief 定时写入回调函数，指定时间进行回调,是对eventloop的简单方创
+     * @param  nextSendTime     调用写入回调的时间
+     * @param  sendCallBack     写入回调的指定调用函数
+     */
+    void timeCallBack(Timestamp nextTime,TimerCallback sendCallBack);
     void shutdownInLoop();
     // void shutdownAndForceCloseInLoop(double seconds);
     void forceCloseInLoop();
