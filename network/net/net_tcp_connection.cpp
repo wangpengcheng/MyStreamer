@@ -40,7 +40,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
     state_(kConnecting),
     reading_(true),
     socket_(new Socket(sockfd)),
-    channel_(new Channel(loop, sockfd)),/*  每个TCPconnet都会由自己的监听事件管理 */
+    channel_(new Channel(loop, sockfd)),/* 每个TCPconnet都会由自己的监听事件管理 */
     localAddr_(localAddr),
     peerAddr_(peerAddr),
     highWaterMark_(64*1024*1024) /* 设置高水位临界值 */

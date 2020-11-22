@@ -18,7 +18,7 @@ int main(int argc,char* argv[])
     my_camera->EnableJpegEncoding(false);
     // 设置帧率
     my_camera->SetFrameRate(20);
-    my_camera->SetVideoSize(320,240);
+    my_camera->SetVideoSize(640,480);
     // 设置监听者
     my_camera->SetListener(video_web.VideoSourceListener());
     // 创建图片handler 

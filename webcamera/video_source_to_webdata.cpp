@@ -71,10 +71,18 @@ void VideoSourceToWebData::EncodeCameraImage( )
             }
             else
             {
+                // 获取旧数据指针，因为libjpeg会主动分配内存，需要更新buffer
+                uint8_t* oldJpegBuffer = JpegBuffer;
                 // encode image as JPEG (buffer is re-allocated if too small by encoder)
                 JpegSize      = JpegBufferSize;
                 // 将图片压缩之后拷贝到JpegBuffer中
                 InternalError = jpeg_encoder.EncodeToMemory( CameraImage, &JpegBuffer, &JpegSize );
+                // 检查是否需要扩展内存
+                if ( JpegSize > JpegBufferSize )
+                {
+                    JpegBufferSize = JpegSize;
+                    free( oldJpegBuffer );
+                }
             }
         }
 

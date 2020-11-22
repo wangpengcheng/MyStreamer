@@ -47,7 +47,7 @@ JpegEncoderData::~JpegEncoderData()
 Error JpegEncoderData::EncodeToMemory(   
                         const std::shared_ptr<const Image>& image, /* 源图片地址 */
                         uint8_t** buffer, /* 压缩后的目标地址 */
-                        uint32_t* bufferSize /* 每一个buffer的长度 */
+                        uint32_t* bufferSize /* buffer的长度 */
                     )
 {
     /* 编码的行指针 */

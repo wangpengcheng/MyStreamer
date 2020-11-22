@@ -83,7 +83,7 @@ void HttpServer::onMessage(const TcpConnectionPtr &conn,
         context->reset();
     }
 }
-/* 执行请求的相关函数 */
+/* 请求回调函数 */
 void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
 {
     const string &connection = req.getHeader("Connection");

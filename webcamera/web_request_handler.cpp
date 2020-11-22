@@ -1,4 +1,5 @@
 #include "web_request_handler.h"
+#include "logging.h"
 #include <mutex>
 
 
@@ -50,7 +51,7 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
             response.addHeader("Cache-Control","no-store, must-revalidate");
             response.addHeader("Pragma","no-cache");
             response.addHeader("Expires","0");
-            response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegBufferSize));
+            response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
         }
     }
 
