@@ -14,7 +14,7 @@ namespace net
     namespace detail
     {
         /* 设置默认的回调函数 */
-        void defaultHttpCallback(const HttpRequest &, HttpResponse *resp)
+        void defaultHttpCallback(const TcpConnectionPtr &conn,const HttpRequest &, HttpResponse *resp)
         {
             resp->setStatusCode(HttpResponse::k404NotFound);
             resp->setStatusMessage("Not Found");

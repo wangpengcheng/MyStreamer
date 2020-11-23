@@ -26,7 +26,33 @@ using namespace MY_NAME_SPACE::net;
 extern char favicon[555];
 bool benchmark = false;
 
-void onRequest(const HttpRequest& req, HttpResponse* resp)
+void timerCallback(const TcpConnectionPtr &conn) 
+{
+    
+    std::cout<<"callback connect name:"<<conn->name()<<std::endl;
+    HttpResponse resp(false);
+    resp.setStatusCode(HttpResponse::k200Ok);
+    resp.setStatusMessage("OK");
+    resp.setContentType("text/html");
+    resp.addHeader("Server", "Muduo");
+    string now = Timestamp::now().toFormattedString();
+    resp.setBody("<html><head><title>This is title</title></head>"
+            "<body><h1>Hello</h1>Now is " + now +
+            "</body></html>");
+    Buffer buf;
+    resp.appendToBuffer(&buf);
+    conn->send(&buf);
+    
+    if(conn->connected()) {
+        Timestamp next_time = Timestamp::timeAdd(Timestamp::now(),1);
+        conn->setTimer(next_time);
+    }else {
+        LOG_INFO<<conn->name()<<"is closed";
+    }
+
+}
+
+void onRequest(const TcpConnectionPtr &conn,const HttpRequest& req, HttpResponse* resp)
 {
 
     /* 获取线程id */
@@ -69,6 +95,20 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
         resp->addHeader("Server", "Muduo");
         resp->setBody("hello, world!\n"+body);
     }
+    else if(req.path() == "/video") {
+        std::cout<<"connecttion name"<<conn->name()<<std::endl;
+        resp->setStatusCode(HttpResponse::k200Ok);
+        std::string body=req.query();
+        resp->setStatusMessage("OK");
+        resp->setContentType("text/plain");
+        resp->addHeader("Server", "Muduo");
+        resp->addHeader("keep-alive","true");
+        resp->setBody("/video?stream!\n"+body);
+        conn->setTimerCallback(std::bind(timerCallback,conn));
+
+        Timestamp next_time = Timestamp::timeAdd(Timestamp::now(),0.5);
+        conn->setTimer(next_time);
+    }
     else
     {
         resp->setStatusCode(HttpResponse::k404NotFound);
@@ -76,6 +116,7 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
         resp->setCloseConnection(true);
     }
 }
+
 
 int main(int argc, char* argv[])
 {

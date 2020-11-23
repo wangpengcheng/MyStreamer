@@ -28,7 +28,7 @@ WebRequestHandlerInterface::~WebRequestHandlerInterface()
 
 }
 //
-void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebResponse& response)
+void JpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn,const WebRequest& request, WebResponse& response)
 {
     if(!Owner->IsError())
     {
@@ -58,9 +58,30 @@ void JpegRequestHandler::HandleHttpRequest(const WebRequest& request, WebRespons
 }
 
 
-void MjpegRequestHandler::HandleHttpRequest( const WebRequest& request, WebResponse& response )
+void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request, WebResponse& response )
 {
-    //TODO:实现流的连续传输。tcp连续写入
+    // 丛集处理时间
+    uint32_t handlingTime = 0;
+    if(!Owner->IsError()) {
+        Timestamp startTime = Timestamp::now();
+        Owner->EncodeCameraImage();
+        Timestamp endTime  = Timestamp::now();
+        handlingTime = static_cast<uint32_t>(endTime.microSecondsSinceEpoch()-startTime.microSecondsSinceEpoch());
+    }
+    if(Owner==nullptr||Owner->IsError()) {
+        Owner->ReportError(response);
+    }else {
+        std::lock_guard<std::mutex> lock(Owner->BufferGuard);
+        response.setStatusCode(WebResponse::k200Ok);
+        response.setStatusMessage("OK");
+        response.setContentType("image/png");
+        /* 注意这里取消缓存 */
+        response.addHeader("Cache-Control","no-store, must-revalidate");
+        response.addHeader("Pragma","no-cache");
+        response.addHeader("Expires","0");
+        response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
+        response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+    }
 }
 void MjpegRequestHandler::HandleTimer( WebResponse& response )
 {

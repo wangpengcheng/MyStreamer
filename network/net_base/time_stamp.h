@@ -72,7 +72,11 @@ public:
 		return Timestamp(static_cast<int64_t>(t) * kMicroSecondsPerSecond + microseconds);
 	}
 	/* 定义每毫秒的时间 */
-
+	static Timestamp timeAdd(Timestamp timestamp, double seconds) 
+	{
+		int64_t delta = static_cast<int64_t>(seconds * Timestamp::kMicroSecondsPerSecond);
+		return Timestamp(timestamp.microSecondsSinceEpoch() + delta);
+	}
 	static const int kMicroSecondsPerSecond = 1000 * 1000;
 
 private:

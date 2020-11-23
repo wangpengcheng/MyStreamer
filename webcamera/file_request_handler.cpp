@@ -12,7 +12,7 @@ FileRequestHandler::FileRequestHandler(const std::string& new_path_):
 {
 
 };
-void FileRequestHandler::HandleHttpRequest( const WebRequest& request,WebResponse&  response  )
+void FileRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request,WebResponse&  response  )
 {
     string req_path=request.path();
     std::string full_name=root_path_+req_path;

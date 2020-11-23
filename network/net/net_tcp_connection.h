@@ -105,7 +105,7 @@ namespace net
             highWaterMarkCallback_ = cb;
             highWaterMark_ = highWaterMark;
         }
-        void setTimerCallback(const TimerCallback timerCallback) 
+        void setTimerCallback(const ConnectedTimerCallback timerCallback) 
         {
             timerCallback_ = timerCallback;
         }
