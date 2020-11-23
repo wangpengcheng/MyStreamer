@@ -55,6 +55,8 @@ namespace net
     typedef std::shared_ptr<TcpConnection> TcpConnectionPtr;
     /* 时钟函数 */
     typedef std::function<void()> TimerCallback;
+    /* 已连接时钟函数，主要用于主动发送 */
+    typedef std::function<void(const TcpConnectionPtr &)> ConnectedTimerCallback;      
     /* 连接函数 */
     typedef std::function<void(const TcpConnectionPtr &)> ConnectionCallback;
     /* 关闭函数 */

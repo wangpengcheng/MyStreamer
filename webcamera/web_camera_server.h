@@ -7,9 +7,12 @@
 #include "net_http_server.h"
 #include "net_event_loop.h"
 #include "file_request_handler.h"
+#include "net_tcp_connection.h"
 #include <memory>
 
 NAMESPACE_START
+
+using net::TcpConnectionPtr;
 /**
  * 摄像头服务关键封装类
  * 
@@ -35,7 +38,7 @@ public:
     void  AddHandler(const string & hander_name,const std::shared_ptr<WebRequestHandlerInterface> handler);
 private:
     /* 执行函数 */
-    void onRequest(const WebRequest& req, WebResponse* resp);
+    void onRequest(const TcpConnectionPtr &conn,const WebRequest& req, WebResponse* resp);
     /* data */
     
     /* 函数句柄映射 */

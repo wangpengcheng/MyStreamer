@@ -195,7 +195,7 @@ namespace net
         */
         CloseCallback closeCallback_;
         ///< 指定时间的回调函数，主要是对已经建立的进行操作
-        TimerCallback timerCallback_;
+        ConnectedTimerCallback timerCallback_;
         /* 高水位值 */
         size_t highWaterMark_;
         Buffer inputBuffer_;

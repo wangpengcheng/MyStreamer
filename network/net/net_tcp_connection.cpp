@@ -495,6 +495,11 @@ void TcpConnection::handleError()
 // 时钟定时回调切片
 void TcpConnection::handleTimer() 
 {
+    if(this->state_!=StateE::kConnected) {
+        LOG_ERROR<<"TCPConnection::handleError ["<<name_
+        <<"] Connect is not connected";
+    }
+    TcpConnectionPtr guardThis(shared_from_this());
     // 在这里执行回调函数
-    timerCallback_();
+    timerCallback_(guardThis);
 }

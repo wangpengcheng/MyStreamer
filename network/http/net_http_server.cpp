@@ -39,6 +39,7 @@ HttpServer::HttpServer(EventLoop *loop,
     /* 设置消息回调函数 */
     server_.setMessageCallback(
         std::bind(&HttpServer::onMessage, this, _1, _2, _3));
+    
 }
 
 void HttpServer::start()
@@ -92,7 +93,7 @@ void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
     /* 创建响应结构体 */
     HttpResponse response(close);
     /* 执行绑定的请求处理函数相关函数 */
-    httpCallback_(req, &response);
+    httpCallback_(conn,req, &response);
     /* 
         TODO 根据参数的不同，
         绑定不同的Thread
@@ -108,8 +109,4 @@ void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
     {
         conn->shutdown();
     }
-}
-void HttpServer::onRespone(const TcpConnectionPtr &conn)
-{
-    
 }

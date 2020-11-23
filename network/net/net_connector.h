@@ -75,9 +75,6 @@ namespace net
         /* 移除或者重设事件 */
         int removeAndResetChannel();
         void resetChannel();
-        
-        void callAtTime();
-
         /* 绑定的loop */
         EventLoop *loop_;
         /* 服务器地址 */
@@ -89,6 +86,7 @@ namespace net
         std::unique_ptr<Channel> channel_;
         /* 连接回调 */
         NewConnectionCallback newConnectionCallback_;
+
         /* 延迟时间 */
         int retryDelayMs_;
     };

@@ -5,9 +5,10 @@
 #include "net_http_response.h"
 #include "net_http_request.h"
 #include "video_source_to_webdata.h"
-
+#include "net_tcp_connection.h"
 NAMESPACE_START
 
+using net::TcpConnectionPtr;
 /**
  * 请求响应控制句柄函数，主要是方便添加reposens函数;对于不同的reques和Response进行处理
 */
@@ -18,7 +19,7 @@ public:
     WebRequestHandlerInterface(const std::string& uri, bool canHandleSubContent);
     virtual ~WebRequestHandlerInterface();
     // 处理的关键函数
-    virtual void HandleHttpRequest( const WebRequest& request, WebResponse&  response  ) = 0;
+    virtual void HandleHttpRequest( const TcpConnectionPtr &conn,const WebRequest& request, WebResponse&  response  ) = 0;
     inline std::string Uri( ) const { return mUri;  }
     inline bool CanHandleSubContent( ) const { return mCanHandleSubContent; }
 private:
@@ -41,7 +42,7 @@ public:
     {
     }
 
-    void HandleHttpRequest( const WebRequest& request,WebResponse&  response  );
+    void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request,WebResponse&  response  );
 };
 
 //MJPEG stream 流发送,暂未实现
@@ -62,7 +63,7 @@ public:
     {
     }
 
-    void HandleHttpRequest( const WebRequest& request,WebResponse&  response  );
+    void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request,WebResponse&  response  );
     void HandleTimer(WebResponse&  response  );
 };
 
