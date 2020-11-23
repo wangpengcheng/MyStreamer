@@ -45,7 +45,9 @@ namespace net
         {
             statusCode_ = code;
         }
-
+        void setExternalHeader(const string &externalHeader) {
+            externalHeader_ = externalHeader;
+        }
         void setStatusMessage(const string &message)
         {
             statusMessage_ = message;
@@ -92,6 +94,7 @@ namespace net
         string statusMessage_; /* 对应的状态回应信息 */
         bool closeConnection_; /* 关闭连接 */
         string body_;          /* http主体信息 */
+        string externalHeader_;/* 额外的header 信息，主要是为了mjpeg信息 */
     };
 } // namespace net
 typedef net::HttpResponse WebResponse;
