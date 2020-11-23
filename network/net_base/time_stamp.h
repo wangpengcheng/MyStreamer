@@ -118,6 +118,10 @@ inline Timestamp addTime(Timestamp timestamp, double seconds)
 	return Timestamp(timestamp.microSecondsSinceEpoch() + delta);
 }
 
+inline Timestamp addTime(Timestamp timestamp, uint32_t millisecond) 
+{
+	return Timestamp(timestamp.microSecondsSinceEpoch() + millisecond);
+}
 NAMESPACE_END
 
 #endif

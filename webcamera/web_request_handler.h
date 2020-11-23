@@ -41,7 +41,6 @@ public:
         Owner( owner )
     {
     }
-
     void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request,WebResponse&  response  );
 };
 
@@ -62,9 +61,9 @@ public:
         FrameInterval( 1000 / frameRate )
     {
     }
-
+    
     void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request,WebResponse&  response  );
-    void HandleTimer(WebResponse&  response  );
+    void HandleTimer(const TcpConnectionPtr &conn);
 };
 
 

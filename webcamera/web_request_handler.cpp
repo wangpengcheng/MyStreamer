@@ -1,5 +1,7 @@
 #include "web_request_handler.h"
 #include "logging.h"
+#include "time_stamp.h"
+#include <functional>
 #include <mutex>
 
 
@@ -80,12 +82,57 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         response.addHeader("Pragma","no-cache");
         response.addHeader("Expires","0");
         response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
+        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
+        response.setExternalHeader(extenHeader);
         response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+        // 设置
+        conn->setTimerCallback(std::bind(&MjpegRequestHandler::HandleTimer,this,_1));
+        Timestamp nextTime = Timestamp(Timestamp::now().microSecondsSinceEpoch()+FrameInterval);
+        conn->setTimer(nextTime);
     }
 }
-void MjpegRequestHandler::HandleTimer( WebResponse& response )
+void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
 {
-    //TODO;设置TCP间隔的连续写入
+    uint32_t handlingTime = 0;
+    // 创建数据
+    WebResponse response(false);
+    if(!Owner->IsError()) {
+        Timestamp startTime = Timestamp::now();
+        Owner->EncodeCameraImage();
+        Timestamp endTime  = Timestamp::now();
+        handlingTime = static_cast<uint32_t>(endTime.microSecondsSinceEpoch()-startTime.microSecondsSinceEpoch());
+    }
+
+    if ((Owner==nullptr)|| ( Owner->IsError( ) ) || ( Owner->JpegSize == 0 ) )
+    {
+        conn->shutdown();
+        LOG_INFO<<conn->name()<<"is closed";
+    }
+    else
+    {
+        Timestamp startTime = Timestamp::now();
+        std::lock_guard<std::mutex> lock(Owner->BufferGuard);
+    
+        // don't try sending too much on slow connections - it will only create video lag
+        if ( conn->outputBuffer()->readableBytes() < 2 * Owner->JpegSize )
+        {
+            // provide subsequent images of the MJPEG stream
+            string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
+            response.setExternalHeader(extenHeader);
+            response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+        }
+        Timestamp endTime = Timestamp::now();
+        // get final request handling time
+        handlingTime = static_cast<uint32_t>(endTime.microSecondsSinceEpoch()-startTime.microSecondsSinceEpoch());
+        uint32_t nextTimespace = (( handlingTime >= FrameInterval ) ? 1 : FrameInterval - handlingTime );
+        // set new timer for further images
+        if(conn->connected()) {
+            Timestamp next_time = addTime(Timestamp::now(),nextTimespace);
+            conn->setTimer(next_time);
+        }else {
+            LOG_INFO<<conn->name()<<"is closed,No Next Frame";
+        }
+    }
     
 }
 
