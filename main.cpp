@@ -29,7 +29,7 @@ int main(int argc,char* argv[])
     // 设置图片质量
     video_web.SetJpegQuality(90);
     // 创建
-    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",8);
+    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",1);
     my_camera->Start();
     /* 添加图像服务 */
     camera_server.AddHandler("/camera/jpeg",jpeg_handler);

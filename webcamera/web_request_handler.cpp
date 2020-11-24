@@ -82,6 +82,7 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         response.addHeader("Cache-Control","no-store, must-revalidate");
         response.addHeader("Pragma","no-cache");
         response.addHeader("Expires","0");
+        response.addHeader("Connection","close");
         response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
         string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
         response.setExternalHeader(extenHeader);
@@ -118,23 +119,20 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
         // don't try sending too much on slow connections - it will only create video lag
         if ( conn->outputBuffer()->readableBytes() < 2 * Owner->JpegSize )
         {
-            response.setStatusCode(WebResponse::k200Ok);
-            response.setStatusMessage("OK");
-            response.setContentType("image/png");
-            /* 注意这里取消缓存 */
-            response.addHeader("Cache-Control","no-store, must-revalidate");
-            response.addHeader("Pragma","no-cache");
-            response.addHeader("Expires","0");
-            response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
+            // response.setStatusCode(WebResponse::k200Ok);
+            // response.setStatusMessage("OK");
+            // response.setContentType("image/png");
+            // /* 注意这里取消缓存 */
+            // response.addHeader("Cache-Control","no-store, must-revalidate");
+            // response.addHeader("Pragma","no-cache");
+            // response.addHeader("Expires","0");
+            // response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
             // provide subsequent images of the MJPEG stream
             string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
-            response.setExternalHeader(extenHeader);
-            response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
             net::Buffer buf;
-            /* 将结构体，添加到buffer中 */
-            response.appendToBuffer(&buf);
+            buf.append(extenHeader);
+            buf.append(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
             conn->send(&buf);
-            
         }
 
         // 检查是否需要设置下一个
