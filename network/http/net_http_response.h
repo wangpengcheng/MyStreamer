@@ -4,7 +4,7 @@
 #include "uncopyable.h"
 #include "base_types.h"
 #include "net_tcp_connection.h"
-
+#include "logging.h"
 #include <map>
 #include <unordered_map>
 NAMESPACE_START
@@ -73,6 +73,14 @@ namespace net
         {
             headers_[key] = value;
         }
+        // 移除多余的header 
+        void removeHeader(const string &key) {
+            if(headers_.count(key)>0) {
+                headers_.erase(key);
+            }else {
+                LOG_TRACE<<"Header Map no this key";
+            }
+        };
         inline std::map<std::string, std::string> getHeaders() const
         {
             return headers_;
@@ -82,8 +90,12 @@ namespace net
         {
             body_ = body;
         }
+        inline string& getBody() 
+        {
+            return body_;
+        };
         /* 添加到buffer中 */
-        void appendToBuffer(Buffer *output) const;
+        void appendToBuffer(Buffer *output);
         /* 添加快速发送函数 */
         void SendFast(HttpStatusCode send_code, const string &body);
 

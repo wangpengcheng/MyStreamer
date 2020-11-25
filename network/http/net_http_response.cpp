@@ -38,7 +38,7 @@ std::unordered_map<std::string, std::string> HttpResponse::file_type = {
     {"default", "text/html"}
 };
 /* 将头部信息写入到buffer中，在server中调用，使用send进行发送 */
-void HttpResponse::appendToBuffer(Buffer *output) const
+void HttpResponse::appendToBuffer(Buffer *output)
 {
     char buf[32];
     /* 添加头部信息,默认使用http1.1 */
@@ -50,16 +50,12 @@ void HttpResponse::appendToBuffer(Buffer *output) const
 
     if (closeConnection_)
     {
-        output->append("Connection: close\r\n");
+        addHeader("Connection","close");
     }
     else
     {
-        /* 输入主体长度 */
-        snprintf(buf, sizeof buf, "Content-Length: %zd\r\n", body_.size());
-        /* 添加主体 */
-        output->append(buf);
         /* 添加连接状态 */
-        output->append("Connection: Keep-Alive\r\n");
+        addHeader("Connection","Keep-Alive");
     }
     /* 逐步添加header */
     for (const auto &header : headers_)
@@ -82,4 +78,5 @@ void HttpResponse::SendFast(HttpStatusCode send_code, const string &body)
     setStatusCode(send_code);
     setStatusMessage(state_map[send_code]);
     setBody(body);
+    this->addHeader("Content-Length",std::to_string(body.size()));
 }

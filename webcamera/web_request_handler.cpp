@@ -55,6 +55,9 @@ void JpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn,const We
             response.addHeader("Pragma","no-cache");
             response.addHeader("Expires","0");
             response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+            /* 输入主体长度 */
+            response.addHeader("Content-Length",std::to_string(Owner->JpegSize));
+
         }
     }
 
@@ -77,21 +80,19 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         std::lock_guard<std::mutex> lock(Owner->BufferGuard);
         response.setStatusCode(WebResponse::k200Ok);
         response.setStatusMessage("OK");
-        response.setContentType("image/png");
         /* 注意这里取消缓存 */
         response.addHeader("Cache-Control","no-store, must-revalidate");
         response.addHeader("Pragma","no-cache");
         response.addHeader("Expires","0");
-        response.addHeader("Connection","close");
         response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
-        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
-        response.setExternalHeader(extenHeader);
         response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(response.getBody().size())+"\r\n\r\n";
+        response.setExternalHeader(extenHeader);
         // 设置
         conn->setTimerCallback(std::bind(&MjpegRequestHandler::HandleTimer,this,conn));
-        Timestamp nextTime = Timestamp(Timestamp::now().microSecondsSinceEpoch()+FrameInterval);
+        Timestamp nextTime = addTime(Timestamp::now(),FrameInterval*1000);
         conn->setTimer(nextTime);
-        LOG_INFO<<"Mjpeg Stream connect name is "<<conn->name();
+        LOG_INFO<<"Mjpeg Stream connect name is "<<conn->name()<<"handle next time:"<<nextTime.toFormattedString();
     }
 }
 
@@ -99,6 +100,7 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
 {
     uint32_t handlingTime = 0;
     Timestamp startTime = Timestamp::now();
+     
     // 创建数据
     WebResponse response(false);
     if(!Owner->IsError()) {
@@ -109,7 +111,8 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
     if ((Owner==nullptr)|| ( Owner->IsError( ) ) || ( Owner->JpegSize == 0 ) )
     {
         response.setCloseConnection(true);
-        //conn->shutdown();
+        // 注意这里是直接执行函数，需要主动关闭连接
+        conn->shutdown();
         LOG_INFO<<conn->name()<<"is closed";
     }
     else
@@ -128,26 +131,31 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
             // response.addHeader("Expires","0");
             // response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
             // provide subsequent images of the MJPEG stream
-            string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length:"+std::to_string(Owner->JpegSize)+"\r\n";
+            
             net::Buffer buf;
-            buf.append(extenHeader);
             buf.append(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
+            string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize+1)+"\r\n\r\n";
+            buf.append(extenHeader);
             conn->send(&buf);
+        } else {
+            LOG_INFO<<conn->name()<<"buffer is full";
         }
 
         // 检查是否需要设置下一个
-        // if(conn->connected()&&(!response.closeConnection())) {
+        if(conn->connected()&&(!response.closeConnection())) {
             // 获取现在时间
             Timestamp endTime = Timestamp::now();
             // get final request handling time
             handlingTime = static_cast<uint32_t>(endTime.microSecondsSinceEpoch()-startTime.microSecondsSinceEpoch());
-            uint32_t nextTimespace = (( handlingTime >= FrameInterval ) ? 1 : FrameInterval - handlingTime );
+            uint32_t nextTimespace = (( handlingTime >= FrameInterval*1000 ) ? 1000 : FrameInterval*1000 - handlingTime );
+            LOG_INFO<<"nextTimespace: "<<conn->name()<<"handlingTime:"<<handlingTime<<"FrameInterval: "<<FrameInterval*1000<<" nextTimespace:"<<nextTimespace;
             // set new timer for further images
             Timestamp next_time = addTime(Timestamp::now(),nextTimespace);
             conn->setTimer(next_time);
-        // }else {
-        //     LOG_INFO<<conn->name()<<"is closed,No Next Frame";
-        // }
+            LOG_INFO<<"HandleTimer Stream connect name is "<<conn->name()<<"handle next time:"<<next_time.toFormattedString();
+        }else {
+            LOG_INFO<<conn->name()<<"is closed,No Next Frame";
+        }
     }
     if (response.closeConnection())
     {

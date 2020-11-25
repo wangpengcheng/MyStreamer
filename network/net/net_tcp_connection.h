@@ -203,6 +203,7 @@ namespace net
         boost::any context_;  /* 处理上下文消息的任意指针 */
         // FIXME: creationTime_, lastReceiveTime_
         //        bytesReceived_, bytesSent_
+        
     };
 
     typedef std::shared_ptr<TcpConnection> TcpConnectionPtr;

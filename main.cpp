@@ -10,6 +10,7 @@ using namespace std;
 int main(int argc,char* argv[])
 {
 
+    MyStreamer::Logger::setLogLevel(MyStreamer::Logger::DEBUG);
     unsigned int camera_frame= 20;
     /* 创建视频数据转换器 */
     MyStreamer::VideoSourceToWeb video_web;
@@ -29,7 +30,7 @@ int main(int argc,char* argv[])
     // 设置图片质量
     video_web.SetJpegQuality(90);
     // 创建
-    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",1);
+    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",0);
     my_camera->Start();
     /* 添加图像服务 */
     camera_server.AddHandler("/camera/jpeg",jpeg_handler);

@@ -34,6 +34,7 @@ void FileRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const W
                 response.setStatusMessage("OK");
                 response.setContentType(type);
                 response.setBody(file_string);
+                response.addHeader("Content-Length",std::to_string(file_string.size()));
                 return ;
             }else{
                 std::cout<<"read file:"<<full_name<<"error"<<std::endl;

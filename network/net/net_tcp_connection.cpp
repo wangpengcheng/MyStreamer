@@ -131,6 +131,8 @@ void TcpConnection::send(Buffer* buf)
                             buf->retrieveAllAsString()));
                             //std::forward<string>(message)));
         }
+    }else {
+        LOG_INFO<<this->name()<<": state is" << stateToString()<<"can not send data!";
     }
 }
 void TcpConnection::setTimer(Timestamp& nextTime) 
@@ -396,13 +398,14 @@ void TcpConnection::handleRead(Timestamp receiveTime)
     int savedErrno = 0;
     /* 使用inputBuffer进行读取 */
     ssize_t n = inputBuffer_.readFd(channel_->fd(), &savedErrno);
+    // 如果大于0就执行读取函数
     if (n > 0)
     {
         messageCallback_(shared_from_this(), &inputBuffer_, receiveTime);
     }
     else if (n == 0)/* 如果为0就关闭连接 */
     {
-        handleClose();
+        //handleClose();
     }
     else
     {
@@ -483,7 +486,7 @@ void TcpConnection::handleClose()
     * 就算guardThis销毁，引用计数仍然有1个
     * 等到调用完connectDestroyed后，bind绑定的TcpConnection也会被销毁，引用计数为0，TcpConnection析构
     */
-    closeCallback_(guardThis);
+    //closeCallback_(guardThis);
 }
 
 void TcpConnection::handleError()
