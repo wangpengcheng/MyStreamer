@@ -405,7 +405,7 @@ void TcpConnection::handleRead(Timestamp receiveTime)
     }
     else if (n == 0)/* 如果为0就关闭连接 */
     {
-        //handleClose();
+        handleClose();
     }
     else
     {

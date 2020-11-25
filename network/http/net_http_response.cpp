@@ -65,7 +65,7 @@ void HttpResponse::appendToBuffer(Buffer *output)
         output->append(header.second);
         output->append("\r\n");
     }
-    output->append("\r\n");
+    //output->append("\r\n");
     output->append(externalHeader_);
     /* 添加相关信息 */
     output->append("\r\n");

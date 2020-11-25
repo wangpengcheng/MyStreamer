@@ -85,9 +85,11 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         response.addHeader("Pragma","no-cache");
         response.addHeader("Expires","0");
         response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
-        response.setBody(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
-        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(response.getBody().size())+"\r\n\r\n";
-        response.setExternalHeader(extenHeader);
+        
+        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize)+"\r\n";
+        extenHeader += std::string((char*)Owner->JpegBuffer,Owner->JpegSize);
+        response.setBody(extenHeader);
+        //response.setExternalHeader(extenHeader);
         // 设置
         conn->setTimerCallback(std::bind(&MjpegRequestHandler::HandleTimer,this,conn));
         Timestamp nextTime = addTime(Timestamp::now(),FrameInterval*1000);
@@ -122,20 +124,11 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
         // don't try sending too much on slow connections - it will only create video lag
         if ( conn->outputBuffer()->readableBytes() < 2 * Owner->JpegSize )
         {
-            // response.setStatusCode(WebResponse::k200Ok);
-            // response.setStatusMessage("OK");
-            // response.setContentType("image/png");
-            // /* 注意这里取消缓存 */
-            // response.addHeader("Cache-Control","no-store, must-revalidate");
-            // response.addHeader("Pragma","no-cache");
-            // response.addHeader("Expires","0");
-            // response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
-            // provide subsequent images of the MJPEG stream
-            
             net::Buffer buf;
-            buf.append(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
-            string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize+1)+"\r\n\r\n";
+            // 注意这里的开头和结尾界定符号
+            string extenHeader = "\r\n--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize)+"\r\n\r\n";
             buf.append(extenHeader);
+            buf.append(std::string((char*)Owner->JpegBuffer,Owner->JpegSize));
             conn->send(&buf);
         } else {
             LOG_INFO<<conn->name()<<"buffer is full";
@@ -148,11 +141,9 @@ void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
             // get final request handling time
             handlingTime = static_cast<uint32_t>(endTime.microSecondsSinceEpoch()-startTime.microSecondsSinceEpoch());
             uint32_t nextTimespace = (( handlingTime >= FrameInterval*1000 ) ? 1000 : FrameInterval*1000 - handlingTime );
-            LOG_INFO<<"nextTimespace: "<<conn->name()<<"handlingTime:"<<handlingTime<<"FrameInterval: "<<FrameInterval*1000<<" nextTimespace:"<<nextTimespace;
             // set new timer for further images
             Timestamp next_time = addTime(Timestamp::now(),nextTimespace);
             conn->setTimer(next_time);
-            LOG_INFO<<"HandleTimer Stream connect name is "<<conn->name()<<"handle next time:"<<next_time.toFormattedString();
         }else {
             LOG_INFO<<conn->name()<<"is closed,No Next Frame";
         }
