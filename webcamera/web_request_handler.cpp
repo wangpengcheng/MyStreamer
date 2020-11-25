@@ -94,7 +94,7 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         conn->setTimerCallback(std::bind(&MjpegRequestHandler::HandleTimer,this,conn));
         Timestamp nextTime = addTime(Timestamp::now(),FrameInterval*1000);
         conn->setTimer(nextTime);
-        LOG_INFO<<"Mjpeg Stream connect name is "<<conn->name()<<"handle next time:"<<nextTime.toFormattedString();
+        LOG_DEBUG<<"Mjpeg Stream connect name is "<<conn->name()<<"handle next time:"<<nextTime.toFormattedString();
     }
 }
 

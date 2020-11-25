@@ -10,7 +10,7 @@ using namespace std;
 int main(int argc,char* argv[])
 {
 
-    MyStreamer::Logger::setLogLevel(MyStreamer::Logger::DEBUG);
+    MyStreamer::Logger::setLogLevel(MyStreamer::Logger::INFO);
     unsigned int camera_frame= 20;
     /* 创建视频数据转换器 */
     MyStreamer::VideoSourceToWeb video_web;
