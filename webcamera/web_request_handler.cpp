@@ -86,7 +86,7 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
         response.addHeader("Expires","0");
         response.addHeader("Content-Type","multipart/x-mixed-replace; boundary=--myboundary");
         
-        string extenHeader = "--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize)+"\r\n";
+        string extenHeader = "\r\n--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize)+"\r\n\r\n";
         extenHeader += std::string((char*)Owner->JpegBuffer,Owner->JpegSize);
         response.setBody(extenHeader);
         //response.setExternalHeader(extenHeader);
