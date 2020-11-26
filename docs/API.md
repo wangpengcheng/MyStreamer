@@ -1,5 +1,6 @@
 # API 使用说明
 ## 1.jpeg图片循环请求
+
 ### 1.1 主要请求数据
 图像请求主要协议是HTTP协议
 请求path:`/camera/jpeg`
@@ -32,7 +33,7 @@ body:
 ```
 
 
-### 1.1 注意事项
+### 1.2 注意事项
 
 图像传输请求是请求单张图片，因此需要客户端自定义刷新频率和方法。可以通过自定义刷新频率的方式来进行视频显示的更新
 
@@ -86,7 +87,7 @@ Content-Length: 23545
 
 - 响应mjpeg流是一个不断写入的流式文件，除非主动关闭，否则会一直接收流文件，注意浏览器缓存。
 - 视频刷新频率主要由视频输入端决定，不能客户端控制。
-- `boundary=--myboundary`中定义边界，由浏览器进行数据分割，但是注意每个自定义头部必须含有数据类型和长度大小，并以自定义分割符`boundary=--myboundary`为开头。自定义头部和数据体之间必须空行；例如:`\r\n--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: "+std::to_string(Owner->JpegSize)+"\r\n\r\n`
+- `boundary=--myboundary`中定义边界，由浏览器进行数据分割，但是注意每个自定义头部必须含有数据类型和长度大小，并以自定义分割符`boundary=--myboundary`为开头。自定义头部和数据体之间必须空行；例如:`\r\n--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: xxxx \r\n\r\n`
 - 默认模式为;`/camera/jpeg`请求。
 
 ## 3 示例代码
