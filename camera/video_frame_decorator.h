@@ -1,6 +1,26 @@
-/*
-frame修饰器，主要添加水印信息
-*/
+/**
+ * @file video_frame_decorator.h
+ * @brief frame修饰器，主要添加水印信息
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2020-12-16 00:21:58
+ * @copyright Copyright (c) 2020  IRLSCU
+ * 
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th> Commit date</th>
+ *    <th> Version </th> 
+ *    <th> Author </th>  
+ *    <th> Description </th>
+ * <tr>
+ *    <td> 2020-12-16 00:21:58 </td>
+ *    <td> 1.0 </td>
+ *    <td> wangpengcheng </td>
+ *    <td>添加文档注释</td>
+ * </tr>
+ * </table>
+ */
 #ifndef VIDEO_FRAME_DECORATOR_H
 #define VIDEO_FRAME_DECORATOR_H
 
@@ -9,8 +29,8 @@ frame修饰器，主要添加水印信息
 
 NAMESPACE_START
 /**
- *  图片帧装饰器，主要用来进行图片添加水印
-*/
+ * @brief 图片帧装饰器类，主要用来进行图片添加水印
+ */
 class VideoFrameDecorator : public VideoSourceListenerInterface
 {
 public:
@@ -42,11 +62,11 @@ public:
     void SetOverlayBackgroundColor( Argb color );
 
 private:
-    std::string cameraTitle;                    /* 摄像机标题 */
-    bool        addTimestampOverlay;            /* 是否添加时间戳 */
-    bool        addCameraTitleOverlay;          /* 是否添加标题 */
-    Argb       overlayTextColor;                /* 设置色彩颜色 */
-    Argb       overlayBackgroundColor;          /* 设置背景颜色 */
+    std::string cameraTitle;                    ///< 摄像机标题
+    bool        addTimestampOverlay;            ///< 是否添加时间戳
+    bool        addCameraTitleOverlay;          ///< 是否添加标题
+    Argb       overlayTextColor;                ///< 设置色彩颜色
+    Argb       overlayBackgroundColor;          ///< 设置背景颜色
 };
 
 NAMESPACE_END
