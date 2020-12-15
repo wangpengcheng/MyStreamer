@@ -303,7 +303,7 @@ public:
         retrieveInt16();
         return result;
     }
-
+    
     int8_t readInt8()
     {
         int8_t result = peekInt8();

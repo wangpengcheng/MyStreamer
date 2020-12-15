@@ -3,7 +3,9 @@
 
 NAMESPACE_START 
 
-/* 预定于错误提示信息 */
+/**
+ * @brief 预定义的错误信息提示
+ */
 static const char* ErrorMessages[] =
 {
     "Success",

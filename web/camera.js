@@ -54,8 +54,8 @@ var Camera = (function ()
         }
         
         // always try capturing in MJPEG mode
-        //mjpegMode = true;
-        mjpegMode = false;
+        mjpegMode = true;
+        //mjpegMode = false;
         refreshImage( );
     };
 
