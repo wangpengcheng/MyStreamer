@@ -1,3 +1,26 @@
+/**
+ * @file base_error.h
+ * @brief 
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2020-12-15 00:44:38
+ * @copyright Copyright (c) 2020  IRLSCU
+ * 
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th>Date</th>
+ *    <th>Version</th> 
+ *    <th>Author</th>  
+ *    <th>Description</th>
+ * <tr>
+ *    <td>2020-12-15 00:44:38 </td>
+ *    <td>1.0 </td>
+ *    <td>wangpengcheng    </td>
+ *    <td>定义基础的错误类和相关字段</td>
+ * </tr>
+ * </table>
+ */
 #ifndef BASE_ERROR_H
 #define BASE_ERROR_H
 
