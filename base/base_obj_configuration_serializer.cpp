@@ -3,81 +3,78 @@
 #include "base_obj_configuration_serializer.h"
 
 #ifdef WIN32
-    #include <windows.h>
+#include <windows.h>
 #endif
 
 NAMESPACE_START
 
-ObjectConfigurationSerializer::ObjectConfigurationSerializer( ) :
-    FileName( ),
-    ObjectToConfigure( )
+ObjectConfigurationSerializer::ObjectConfigurationSerializer() : FileName(),
+                                                                 ObjectToConfigure()
 {
-
 }
 
-ObjectConfigurationSerializer::ObjectConfigurationSerializer( const std::string& fileName,
-                                                                const std::shared_ptr<BaseObjectConfigurator>& objectToConfigure ) :
-    FileName( fileName ),
-    ObjectToConfigure( objectToConfigure )
+ObjectConfigurationSerializer::ObjectConfigurationSerializer(const std::string &fileName,
+                                                             const std::shared_ptr<BaseObjectConfigurator> &objectToConfigure) : FileName(fileName),
+                                                                                                                                 ObjectToConfigure(objectToConfigure)
 {
 }
 
 // 将属性存储到文件中
-Error ObjectConfigurationSerializer::SaveConfiguration( ) const
+Error ObjectConfigurationSerializer::SaveConfiguration() const
 {
-    Error ret  = Error::Success;
+    Error ret = Error::Success;
 
-    if ( ( FileName.empty( ) ) || ( !ObjectToConfigure ) )
+    if ((FileName.empty()) || (!ObjectToConfigure))
     {
         ret = Error::Failed;
     }
     else
     {
-        FILE* file = nullptr;
+        FILE *file = nullptr;
 
 #ifdef WIN32
         {
-            int charsRequired = MultiByteToWideChar( CP_UTF8, 0, FileName.c_str( ), -1, NULL, 0 );
+            int charsRequired = MultiByteToWideChar(CP_UTF8, 0, FileName.c_str(), -1, NULL, 0);
 
-            if ( charsRequired > 0 )
+            if (charsRequired > 0)
             {
-                WCHAR* filenameUtf16 = (WCHAR*) malloc( sizeof( WCHAR ) * charsRequired );
+                WCHAR *filenameUtf16 = (WCHAR *)malloc(sizeof(WCHAR) * charsRequired);
 
-                if ( MultiByteToWideChar( CP_UTF8, 0, FileName.c_str( ), -1, filenameUtf16, charsRequired ) > 0 )
+                if (MultiByteToWideChar(CP_UTF8, 0, FileName.c_str(), -1, filenameUtf16, charsRequired) > 0)
                 {
-                    file = _wfopen( filenameUtf16, L"w" );
+                    file = _wfopen(filenameUtf16, L"w");
                 }
 
-                free( filenameUtf16 );
+                free(filenameUtf16);
             }
         }
 #else
-        file = fopen( FileName.c_str( ), "w" );
+        file = fopen(FileName.c_str(), "w");
 #endif
 
-        if ( file == nullptr )
+        if (file == nullptr)
         {
             ret = Error::IOError;
         }
         else
         {
-            std::map<std::string, std::string> properties = ObjectToConfigure->GetAllProperties( );
-            bool                first = true;
+            std::map<std::string, std::string> properties = ObjectToConfigure->GetAllProperties();
+            bool first = true;
 
             // write a simple file, where property name and value go separate lines
-            for ( auto property : properties )
+            for (auto property : properties)
             {
-                if ( !first )
+                if (!first)
                 {
-                    fprintf( file, "\n" );
+                    fprintf(file, "\n");
                 }
 
-                fprintf( file, "%s\n%s\n", property.first.c_str( ), property.second.c_str( ) );
+                fprintf(file, "%s\n%s\n", property.first.c_str(), property.second.c_str());
 
                 first = false;
             }
 
-            fclose( file );
+            fclose(file);
         }
     }
 
@@ -85,71 +82,71 @@ Error ObjectConfigurationSerializer::SaveConfiguration( ) const
 }
 
 // 从配置文件中加载属性
-Error ObjectConfigurationSerializer::LoadConfiguration( ) const
+Error ObjectConfigurationSerializer::LoadConfiguration() const
 {
-    Error ret  = Error::Success;
+    Error ret = Error::Success;
 
-    if ( ( FileName.empty( ) ) || ( !ObjectToConfigure ) )
+    if ((FileName.empty()) || (!ObjectToConfigure))
     {
         ret = Error::Failed;
     }
     else
     {
-        FILE* file = nullptr;
-        
+        FILE *file = nullptr;
+
 #ifdef WIN32
         {
-            int charsRequired = MultiByteToWideChar( CP_UTF8, 0, FileName.c_str( ), -1, NULL, 0 );
+            int charsRequired = MultiByteToWideChar(CP_UTF8, 0, FileName.c_str(), -1, NULL, 0);
 
-            if ( charsRequired > 0 )
+            if (charsRequired > 0)
             {
-                WCHAR* filenameUtf16 = (WCHAR*) malloc( sizeof( WCHAR ) * charsRequired );
+                WCHAR *filenameUtf16 = (WCHAR *)malloc(sizeof(WCHAR) * charsRequired);
 
-                if ( MultiByteToWideChar( CP_UTF8, 0, FileName.c_str( ), -1, filenameUtf16, charsRequired ) > 0 )
+                if (MultiByteToWideChar(CP_UTF8, 0, FileName.c_str(), -1, filenameUtf16, charsRequired) > 0)
                 {
-                    file = _wfopen( filenameUtf16, L"r" );
+                    file = _wfopen(filenameUtf16, L"r");
                 }
 
-                free( filenameUtf16 );
+                free(filenameUtf16);
             }
         }
-#else        
-        file = fopen( FileName.c_str( ), "r" );
+#else
+        file = fopen(FileName.c_str(), "r");
 #endif
 
-        if ( file == nullptr )
+        if (file == nullptr)
         {
             ret = Error::IOError;
         }
         else
         {
-            char   buffer[256];
+            char buffer[256];
             std::string name;
             std::string line;
-            bool   gotName = false;
+            bool gotName = false;
 
-            while ( fgets( buffer, sizeof( buffer ) - 1, file ) )
+            while (fgets(buffer, sizeof(buffer) - 1, file))
             {
-                line = std::string( buffer );
-                //获取
-                while ( ( !line.empty( ) ) &&
-                        ( ( line.back( ) == ' ' )  || ( line.back( ) == '\t' ) ||
-                          ( line.back( ) == '\n' ) || ( line.back( ) == '\r' ) ) )
+                line = std::string(buffer);
+                // 按行读取函数
+                while ((!line.empty()) &&
+                       ((line.back() == ' ') || (line.back() == '\t') ||
+                        (line.back() == '\n') || (line.back() == '\r')))
                 {
-                    line.pop_back( );
+                    line.pop_back();
                 }
 
                 // allow blank lines between configuration options, but not between option and its value
-                if ( ( !line.empty( ) ) || ( gotName ) )
+                if ((!line.empty()) || (gotName))
                 {
-                    if ( !gotName )
+                    if (!gotName)
                     {
-                        name    = line;
+                        name = line;
                         gotName = true;
                     }
                     else
                     {
-                        ObjectToConfigure->SetProperty( name, line );
+                        ObjectToConfigure->SetProperty(name, line);
                         gotName = false;
                     }
                 }
