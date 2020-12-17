@@ -26,9 +26,9 @@
 #define VIDEO_SOURCE_INTERFACE_H
 
 #include "video_source_listener_interface.h"
-#include "base_tool.h"
 
 NAMESPACE_START
+
 /**
  * @brief 视频源接口类
  */
@@ -69,7 +69,6 @@ public:
      * @param  listener         监听者
      * @return VideoSourceListenerInterface* 监听结果
      */
-    //
     virtual VideoSourceListenerInterface *SetListener(VideoSourceListenerInterface *listener) = 0;
 };
 

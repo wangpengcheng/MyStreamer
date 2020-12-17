@@ -39,19 +39,19 @@ NAMESPACE_START
 /**
  * @brief 基础数据BaseManualResetEventData 基础数据类
  */
-class BaseManualResetEventData {
+class BaseManualResetEventData
+{
 public:
-        BaseManualResetEventData( ) :
-            Counter( 0 ), Triggered( false ),
-            Mutex( ), CondVariable( )
-        {
+    BaseManualResetEventData() : Counter(0), Triggered(false),
+                                 Mutex(), CondVariable()
+    {
+    }
 
-        }
 public:
-    uint32_t                Counter;                ///< 线程操作数目统计
-    bool                    Triggered;              ///< 是否发射信号变量
-    std::mutex              Mutex;                  ///< 变量访问互斥变量
-    std::condition_variable CondVariable;           ///< 统一信号变量
+    uint32_t Counter;                     ///< 线程操作数目统计
+    bool Triggered;                       ///< 是否发射信号变量
+    std::mutex Mutex;                     ///< 变量访问互斥变量
+    std::condition_variable CondVariable; ///< 统一信号变量
 };
 
 /**
@@ -60,49 +60,47 @@ public:
 class BaseManualResetEvent
 {
 private:
-    BaseManualResetEvent( const BaseManualResetEvent& );
-    BaseManualResetEvent& operator= ( const BaseManualResetEvent& );
+    BaseManualResetEvent(const BaseManualResetEvent &);
+    BaseManualResetEvent &operator=(const BaseManualResetEvent &);
 
 public:
     /**
      * @brief Construct a new Base Manual Reset Event object
      */
-    BaseManualResetEvent( );
+    BaseManualResetEvent();
     /**
      * @brief Destroy the Base Manual Reset Event object
      */
-    ~BaseManualResetEvent( );
+    ~BaseManualResetEvent();
 
     /**
      * @brief 重设信号状态
      */
-    void Reset( );
+    void Reset();
     /**
      * @brief 设置信号事件
      */
-    void Signal( );
+    void Signal();
     /**
      * @brief 等待信号
      */
-    void Wait( );
+    void Wait();
     /**
      * @brief 等待指定的时间（毫秒），直到事件得到通知
      * @param  msec            毫秒数
      * @return true            设置成功
      * @return false            设置失败
      */
-    bool Wait( uint32_t msec );
-    // 
+    bool Wait(uint32_t msec);
     /**
      * @brief 检查事件的当前状态，确认信号是否已经收到 
      * @return true     信号已经收到
      * @return false    信号还未收到
      */
-    bool IsSignaled( );
+    bool IsSignaled();
 
 private:
-    
-    BaseManualResetEventData* mData;   ///< 基础数据操作类
+    BaseManualResetEventData *mData; ///< 基础数据操作类
 };
 
 typedef BaseManualResetEvent ManualResetEvent;
