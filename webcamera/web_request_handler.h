@@ -30,7 +30,6 @@
 #include "net_tcp_connection.h"
 NAMESPACE_START
 
-using net::TcpConnectionPtr;
 /**
  * @brief 请求响应控制句柄函数，主要是方便添加reposens函数;对于不同的reques和Response进行处理
  */
@@ -53,7 +52,7 @@ public:
      * @param  request          解析的请求
      * @param  response         请求的响应
      */
-    virtual void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response) = 0;
+    virtual void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response) = 0;
     /**
      * @brief  获取方法对应的URL
      * @return std::string 
@@ -83,7 +82,7 @@ public:
                                        Owner(owner)
     {
     }
-    void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
+    void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
 
 private:
     VideoSourceToWebData *Owner; ///< 关键操作处理函数
@@ -115,12 +114,12 @@ public:
      * @param  request          请求对象
      * @param  response         处理对象
      */
-    void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
+    void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
     /**
      * @brief  定义唤醒处理函数，用来定时主动请求 
      * @param  conn             TCP连接对象
      */
-    void HandleTimer(const TcpConnectionPtr &conn);
+    void HandleTimer(const net::TcpConnectionPtr &conn);
 
 private:
     VideoSourceToWebData *Owner; ///< 数据函数封装类
