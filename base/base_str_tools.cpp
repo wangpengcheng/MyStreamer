@@ -22,7 +22,7 @@ std::string& StringTrim( std::string& s )
 {
     return StringLTrimg( StringRTrim( s ) );
 }
-//空字符串的代替
+
 // Replace sub-string within a string
 std::string& StringReplace(std::string& s, const std::string& lookFor, const std::string& replaceWith )
 {

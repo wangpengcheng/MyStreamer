@@ -1,3 +1,26 @@
+/**
+ * @file v4l2_camrea_test.h
+ * @brief v4l2的基础类
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2020-12-18 22:55:43
+ * @copyright Copyright (c) 2020  IRLSCU
+ * 
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th> Commit date</th>
+ *    <th> Version </th> 
+ *    <th> Author </th>  
+ *    <th> Description </th>
+ * <tr>
+ *    <td> 2020-12-18 22:55:43 </td>
+ *    <td> 1.0 </td>
+ *    <td> wangpengcheng </td>
+ *    <td> 添加文件内容 </td>
+ * </tr>
+ * </table>
+ */
 #ifndef V4L2_CAMERA_TEST_H
 #define V4L2_CAMERA_TEST_H
 
@@ -17,7 +40,9 @@
 NAMESPACE_START
 
 
-
+/**
+ * @brief opencv监听类，监听处理显示图像
+ */
 class OpenCVListener: public VideoSourceListenerInterface{
 public :
     OpenCVListener();
