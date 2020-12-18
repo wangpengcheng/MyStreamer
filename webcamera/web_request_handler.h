@@ -84,8 +84,9 @@ public:
     {
     }
     void HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
+
 private:
-    VideoSourceToWebData *Owner;///< 关键操作处理函数
+    VideoSourceToWebData *Owner; ///< 关键操作处理函数
 };
 
 /**
@@ -120,9 +121,10 @@ public:
      * @param  conn             TCP连接对象
      */
     void HandleTimer(const TcpConnectionPtr &conn);
+
 private:
-    VideoSourceToWebData *Owner;        ///< 数据函数封装类
-    uint32_t FrameInterval;             ///< 图像的帧率
+    VideoSourceToWebData *Owner; ///< 数据函数封装类
+    uint32_t FrameInterval;      ///< 图像的帧率
 };
 
 NAMESPACE_END
