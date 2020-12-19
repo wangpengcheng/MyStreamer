@@ -31,7 +31,7 @@ WebRequestHandlerInterface::~WebRequestHandlerInterface()
 
 }
 //
-void JpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn,const WebRequest& request, WebResponse& response)
+void JpegRequestHandler::HandleHttpRequest(const net::TcpConnectionPtr &conn,const WebRequest& request, WebResponse& response)
 {
     if(!Owner->IsError())
     {
@@ -64,7 +64,7 @@ void JpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn,const We
 }
 
 
-void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const WebRequest& request, WebResponse& response )
+void MjpegRequestHandler::HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest& request, WebResponse& response )
 {
     // 丛集处理时间
     uint32_t handlingTime = 0;
@@ -98,7 +98,7 @@ void MjpegRequestHandler::HandleHttpRequest(const TcpConnectionPtr &conn, const 
     }
 }
 
-void MjpegRequestHandler::HandleTimer(const TcpConnectionPtr &conn)
+void MjpegRequestHandler::HandleTimer(const net::TcpConnectionPtr &conn)
 {
     uint32_t handlingTime = 0;
     Timestamp startTime = Timestamp::now();

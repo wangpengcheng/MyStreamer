@@ -17,15 +17,13 @@
  *    <td> 2020-12-18 15:01:11 </td>
  *    <td> 1.0 </td>
  *    <td> wangpengcheng </td>
- *    <td>内容</td>
+ *    <td> 添加文件内容 </td>
  * </tr>
  * </table>
  */
 #ifndef V4L2_CAMERA_TEST_H
 #define V4L2_CAMERA_TEST_H
 
-
-/* 创建一个opencv的listener测试类 */
 
 #include "video_source_listener_interface.h"
 #include "image.h"
@@ -40,7 +38,9 @@
 NAMESPACE_START
 
 
-
+/**
+ * @brief opencv监听类，监听处理显示图像 \n 创建一个opencv的listener测试类
+ */
 class OpenCVListener: public VideoSourceListenerInterface{
 public :
     OpenCVListener();
