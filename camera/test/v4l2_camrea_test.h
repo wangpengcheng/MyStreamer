@@ -1,3 +1,26 @@
+/**
+ * @file v4l2_camrea_test.h
+ * @brief opencv的相机测试类
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2020-12-18 15:01:11
+ * @copyright Copyright (c) 2020  IRLSCU
+ * 
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th> Commit date</th>
+ *    <th> Version </th> 
+ *    <th> Author </th>  
+ *    <th> Description </th>
+ * <tr>
+ *    <td> 2020-12-18 15:01:11 </td>
+ *    <td> 1.0 </td>
+ *    <td> wangpengcheng </td>
+ *    <td>内容</td>
+ * </tr>
+ * </table>
+ */
 #ifndef V4L2_CAMERA_TEST_H
 #define V4L2_CAMERA_TEST_H
 
