@@ -21,33 +21,71 @@ namespace net
     class Channel;
     class EventLoop;
     class Socket;
-
-    ///
-    /// TCP connection, for both client and server usage.
-    ///
-    /// This is an interface class, so don't expose too much details.
+    /**
+     * @brief TCP connection, for both client and server usage.
+     * @details This is an interface class, so don't expose too much details.
+     */
     class TcpConnection : noncopyable,
                           public std::enable_shared_from_this<TcpConnection>
     {
     public:
-        /// Constructs a TcpConnection with a connected sockfd
-        ///
-        /// User should not create this object.
+        /**
+         * @brief Constructs a TcpConnection with a connected sockfd
+         * @note User should not create this object.
+         * @param  loop             loop 事件循环
+         * @param  name             链接名称
+         * @param  sockfd           sockfd文件描述符编号
+         * @param  localAddr        本地地址
+         * @param  peerAddr         远端地址
+         */
         TcpConnection(EventLoop *loop,
                       const string &name,
                       int sockfd,
                       const InetAddress &localAddr,
                       const InetAddress &peerAddr);
         ~TcpConnection();
-
+        /**
+         * @brief Get the Loop object
+         * @return EventLoop* 
+         */
         EventLoop *getLoop() const { return loop_; }
+        /**
+         * @brief  获取TCP naoe
+         * @return const string& 
+         */
         const string &name() const { return name_; }
+        /**
+         * @brief  获取本地地址
+         * @return const InetAddress& 
+         */
         const InetAddress &localAddress() const { return localAddr_; }
+        /**
+         * @brief  获取远端地址
+         * @return const InetAddress& 
+         */
         const InetAddress &peerAddress() const { return peerAddr_; }
+        /**
+         * @brief  是否以连接
+         * @return true     已经连接
+         * @return false    没有连接
+         */
         bool connected() const { return state_ == kConnected; }
+        /**
+         * @brief  是否处于未连接状态
+         * @return true 
+         * @return false 
+         */
         bool disconnected() const { return state_ == kDisconnected; }
-        // return true if success.
+        /**
+         * @brief Get the Tcp Info object
+         * @return true  成功
+         * @return false 失败
+         */
         bool getTcpInfo(struct tcp_info *) const;
+        /**
+         * @brief Get the Tcp Info String object
+         * @return string 
+         */
         string getTcpInfoString() const;
 
         // void send(string&& message); // C++11
