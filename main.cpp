@@ -28,9 +28,9 @@ int main(int argc,char* argv[])
     auto jpeg_handler = video_web.CreateJpegHandler("jpeg");
     auto mjpeg_handler = video_web.CreateMjpegHandler("mjpeg",camera_frame);
     // 设置图片质量
-    video_web.SetJpegQuality(90);
+    video_web.SetJpegQuality(70);
     // 创建
-    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",0);
+    MyStreamer::WebCameraServer camera_server(string("web"),8000,"mystreamer",2);
     my_camera->Start();
     /* 添加图像服务 */
     camera_server.AddHandler("/camera/jpeg",jpeg_handler);
