@@ -23,10 +23,6 @@
  * </tr>
  * </table>
  */
-/**
- * 
- * 
-*/
 
 #ifndef BASE_MANUAL_RESET_EVENT_H
 #define BASE_MANUAL_RESET_EVENT_H

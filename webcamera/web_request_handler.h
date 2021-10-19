@@ -103,9 +103,10 @@ public:
     MjpegRequestHandler(
         const string &uri,
         uint32_t frameRate,
-        VideoSourceToWebData *owner) : WebRequestHandlerInterface(uri, false),
-                                       Owner(owner),
-                                       FrameInterval(1000 / frameRate)
+        VideoSourceToWebData *owner
+        ) : WebRequestHandlerInterface(uri, false),
+            Owner(owner),
+            FrameInterval(1000 / frameRate)
     {
     }
     /**

@@ -13,13 +13,13 @@
 #include <string>
 #include <sys/time.h>
 #include <sstream>
-#include <fstream>  
-#include <streambuf>  
+#include <fstream>
+#include <streambuf>
 
 /**
  * @brief  获取当前的时间 
  * @return std::time_t unix 时间结构体
- */ 
+ */
 std::time_t getTimeStamp();
 /**
  * @brief  写入文件 
@@ -27,7 +27,7 @@ std::time_t getTimeStamp();
  * @param  buffer           缓冲数据指针
  * @param  buffer_size      缓冲区大小
  */
-void WriteFile(std::string file_name ,uint8_t* buffer,uint32_t buffer_size );
+void WriteFile(std::string file_name, uint8_t *buffer, uint32_t buffer_size);
 /**
  * @brief  获取当前时间 
  * @return double      时间结果
@@ -39,7 +39,7 @@ double cs_time(void);
  * @return true             文件存在
  * @return false            文件不存在
  */
-bool FileExiting(const std::string& file_full_name);
+bool FileExiting(const std::string &file_full_name);
 /* 读取文件 */
 /**
  * @brief  读取文件成字符串
@@ -52,5 +52,5 @@ std::string ReadFile(std::string file_full_name);
  * @param  file_name        文件名称
  * @return std::string      最终结果
  */
-std::string GetFileType(const std::string& file_name);
+std::string GetFileType(const std::string &file_name);
 #endif //BASE_TOOL_H

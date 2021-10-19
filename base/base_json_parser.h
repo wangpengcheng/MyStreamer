@@ -37,8 +37,6 @@
  * @return false            解析失败
  * 
  */
-bool SimpleJsonParser( const std::string& jsonStr, std::map<std::string, std::string>& values );
-
-
+bool SimpleJsonParser(const std::string &jsonStr, std::map<std::string, std::string> &values);
 
 #endif

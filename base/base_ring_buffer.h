@@ -199,7 +199,10 @@ public:
      * @brief 基础构造函数
      * head和tail在开始时，初始化为0
      */
-    BaseSimpleRingBuffer() : head_(0), tail_(0) {}
+    BaseSimpleRingBuffer() : head_(0), tail_(0) 
+    {
+
+    }
     bool push(const T &value)
     {
         size_t head = head_.load(std::memory_order_relaxed);
@@ -347,7 +350,7 @@ public:
      * @brief  强制写入函数，只要总空间够，就强制进行写入
      * @param  new_data         新数据指向指针
      * @param  len              数据长度
-     * @return uint32_t         写入数据长度，可能小鱼
+     * @return uint32_t         写入数据长度，可能小于
      */
     uint32_t ForceWrite(const uint8_t *new_data, uint32_t len);
     /* 读写函数,当其空间不足时，直接返回失败 */
@@ -457,7 +460,7 @@ private:
     BaseData *buffer_data_;          ///< 数据存储基本对象；这里的主要数据对象在堆上进行分配，应该减少释放
     uint32_t block_data_size_;       ///< 存储每个数据的大小
     uint32_t buffer_length_;         ///< 其中存在的数据长度
-    bool isExtend_ = false;          ///<  是否需要进行扩充，当存在额外的数据时，需要考虑额外的数据扩充
+    bool isExtend_ = false;          ///< 是否需要进行扩充，当存在额外的数据时，需要考虑额外的数据扩充
     uint32_t block_reall_data_size_; ///< 用于记录真正的存储数据的长度，方便变长计算
 };
 

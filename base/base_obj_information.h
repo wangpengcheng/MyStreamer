@@ -45,19 +45,19 @@ public:
      * @brief Destroy the Base Object Information object
      * @attention 接口虚继承，需要将析构函数定义为虚函数，防止向下转换时的内存泄露
      */
-    virtual ~BaseObjectInformation( ) { }
+    virtual ~BaseObjectInformation() {}
     /**
      * @brief Get the Property object 获取属性接口名称
      * @param  propertyName     属性的名称
      * @param  value            返回的值
      * @return Error            错误信息 @see ::BaseError
      */
-    virtual Error GetProperty( const std::string& propertyName, std::string& value ) const = 0;
+    virtual Error GetProperty(const std::string &propertyName, std::string &value) const = 0;
     /**
      * @brief Get the All Properties object
      * @return PropertyMap 属性图 @see ::PropertyMap
      */
-    virtual PropertyMap GetAllProperties( ) const = 0;
+    virtual PropertyMap GetAllProperties() const = 0;
 };
 /**
  * @brief ObjectInformationMap 信息对象实现类，只要是对BaseObjectInformation的接口进行实现
@@ -69,23 +69,23 @@ public:
      * @brief Construct a new Object Information Map object
      * @param  infoMap          属性Map元素
      */
-    ObjectInformationMap( const PropertyMap& infoMap ) : InfoMap( infoMap ) { }
+    ObjectInformationMap(const PropertyMap &infoMap) : InfoMap(infoMap) {}
     /**
      * @brief Get the Property object
      * @param  propertyName     属性名称
      * @param  value            对应的值
      * @return Error            错误信息 @see ::BaseError
      */
-    virtual Error GetProperty( const std::string& propertyName, std::string& value ) const
+    virtual Error GetProperty(const std::string &propertyName, std::string &value) const
     {
         Error ret = Error::UnknownProperty;
 
-        PropertyMap::const_iterator itProperty = InfoMap.find( propertyName );
+        PropertyMap::const_iterator itProperty = InfoMap.find(propertyName);
 
-        if ( itProperty != InfoMap.end( ) )
+        if (itProperty != InfoMap.end())
         {
             value = itProperty->second;
-            ret   = Error::Success;
+            ret = Error::Success;
         }
 
         return ret;
@@ -94,15 +94,14 @@ public:
      * @brief Get the All Properties object
      * @return PropertyMap 
      */
-    virtual PropertyMap GetAllProperties( ) const
+    virtual PropertyMap GetAllProperties() const
     {
         return InfoMap;
     }
 
 private:
-    PropertyMap InfoMap;        ///< 属性数据表
+    PropertyMap InfoMap; ///< 属性数据表
 };
-
 
 NAMESPACE_END
 #endif //

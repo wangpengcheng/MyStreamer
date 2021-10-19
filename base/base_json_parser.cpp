@@ -1,13 +1,7 @@
 #include "base_json_parser.h"
 
-
 using namespace std;
 
-/*
-
-
-
-*/
 /* 声明函数 */
 /**
  * @brief  
@@ -16,68 +10,72 @@ using namespace std;
  * @return true             解析成功 
  * @return false            解析失败
  */
-static bool ExtractString( const char** ptr, string& str );
-static bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings );
-static bool ExtractArrayAsString( const char** ptr, string& str );
+static bool ExtractString(const char **ptr, string &str);
+static bool ExtractValue(const char **ptr, string &str, bool addQuotesToStrings);
+static bool ExtractArrayAsString(const char **ptr, string &str);
 /* 解析对象字符串 */
-static bool ExtractObjectAsString( const char** ptr, string& str );
+static bool ExtractObjectAsString(const char **ptr, string &str);
 /* 跳过空格的快速方法 */
 
-#define SKIP_SPACES(strptr) while ( ( *strptr != '\0' ) && ( *strptr == ' ' ) ) { strptr++; }
+#define SKIP_SPACES(strptr)                       \
+    while ((*strptr != '\0') && (*strptr == ' ')) \
+    {                                             \
+        strptr++;                                 \
+    }
 
-bool SimpleJsonParser( const string& jsonStr, map<string, string>& values )
+bool SimpleJsonParser(const string &jsonStr, map<string, string> &values)
 {
     /* 获取字符串指针 */
-    const char* ptr = jsonStr.c_str( );
+    const char *ptr = jsonStr.c_str();
     /* 定义键值属性对 */
-    string      strName, strValue;
+    string strName, strValue;
 
-    values.clear( );
+    values.clear();
     /* 跳过开头的空格 */
-    SKIP_SPACES( ptr );
+    SKIP_SPACES(ptr);
     //检查开头
-    if ( *ptr != '{' )
+    if (*ptr != '{')
     {
         return false;
     }
     /* 开始检查字符串内容 */
-    for ( ; ; )
+    for (;;)
     {
         ptr++;
         /* 获取第一个字符值 */
-        if ( !ExtractString( &ptr, strName ) )
+        if (!ExtractString(&ptr, strName))
         {
             break;
         }
         /* 检查中间是否为： */
-        if ( *ptr != ':' )
+        if (*ptr != ':')
         {
             return false;
         }
 
         ptr++;
         /* 获取值 */
-        if ( !ExtractValue( &ptr, strValue, false ) )
+        if (!ExtractValue(&ptr, strValue, false))
         {
             return false;
         }
         /* 将属性和值进行添加 */
-        values.insert( pair<string, string>( strName, strValue ) );
+        values.insert(pair<string, string>(strName, strValue));
         /* 如果遇到};直接结束*/
-        if ( *ptr == '}' )
+        if (*ptr == '}')
         {
             // all done
             break;
         }
         /* 检查是否有下一个属性值，有则继续，没有则返回false */
-        if ( *ptr != ',' )
+        if (*ptr != ',')
         {
             // broken JSON
             return false;
         }
     }
     /* 检查尾部 */
-    if ( *ptr != '}' )
+    if (*ptr != '}')
     {
         return false;
     }
@@ -86,13 +84,13 @@ bool SimpleJsonParser( const string& jsonStr, map<string, string>& values )
 }
 
 /* 获取连续的字符串，直到遇到 */
-bool ExtractString( const char** ptr, string& str )
+bool ExtractString(const char **ptr, string &str)
 {
-    const char* p = *ptr;
+    const char *p = *ptr;
 
-    SKIP_SPACES( p );
+    SKIP_SPACES(p);
 
-    if ( *p != '"' )
+    if (*p != '"')
     {
         return false;
     }
@@ -102,18 +100,18 @@ bool ExtractString( const char** ptr, string& str )
 
         p++;
         /* 检查字符串尾部 */
-        while ( ( *p != '\0' ) && ( *p != '"' ) )
+        while ((*p != '\0') && (*p != '"'))
         {
             /* 检查特殊字符 */
-            if ( *p != '\\' )
+            if (*p != '\\')
             {
-                s.push_back( *p );
+                s.push_back(*p);
                 p++;
             }
             else
             {
                 p++;
-                if ( *p == '\0' )
+                if (*p == '\0')
                 {
                     return false;
                 }
@@ -123,37 +121,37 @@ bool ExtractString( const char** ptr, string& str )
 
                     p++;
 
-                    switch ( esc )
+                    switch (esc)
                     {
                     case '"':
-                        s.push_back( '"' );
+                        s.push_back('"');
                         break;
                     case '\\':
-                        s.push_back( '\\' );
+                        s.push_back('\\');
                         break;
                     case '/':
-                        s.push_back( '/' );
+                        s.push_back('/');
                         break;
                     case 'b':
-                        s.push_back( '\b' );
+                        s.push_back('\b');
                         break;
                     case 'f':
-                        s.push_back( '\f' );
+                        s.push_back('\f');
                         break;
                     case 'n':
-                        s.push_back( '\n' );
+                        s.push_back('\n');
                         break;
                     case 'r':
-                        s.push_back( '\r' );
+                        s.push_back('\r');
                         break;
                     case 't':
-                        s.push_back( '\t' );
+                        s.push_back('\t');
                         break;
                     case 'u':
                         // unicode is not supported - just skip 4 hex digits
-                        for ( int i = 0; i < 4; i++ )
+                        for (int i = 0; i < 4; i++)
                         {
-                            if ( *p == '\0' )
+                            if (*p == '\0')
                             {
                                 return false;
                             }
@@ -167,80 +165,80 @@ bool ExtractString( const char** ptr, string& str )
             }
         }
 
-        if ( *p != '"' )
+        if (*p != '"')
         {
             return false;
         }
 
         // move to the next character after the string and spaces
         p++;
-        SKIP_SPACES( p );
+        SKIP_SPACES(p);
 
         *ptr = p;
-        str  = s;
+        str = s;
     }
 
     return true;
 }
 
 // 对json值的解析
-bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
+bool ExtractValue(const char **ptr, string &str, bool addQuotesToStrings)
 {
-    const char* p = *ptr;
-    string      s;
+    const char *p = *ptr;
+    string s;
 
-    SKIP_SPACES( p );
+    SKIP_SPACES(p);
 
-    switch ( *p )
+    switch (*p)
     {
-    case '"':   // string value
-        if ( !ExtractString( &p, s ) )
+    case '"': // string value
+        if (!ExtractString(&p, s))
         {
             return false;
         }
-        if ( addQuotesToStrings )
+        if (addQuotesToStrings)
         {
-            s.insert( 0, 1, '"' );
-            s.push_back( '"' );
+            s.insert(0, 1, '"');
+            s.push_back('"');
         }
         break;
 
-    case '{':   // 如果检测到{;表示是一个对象，进行对象值的解析
-        if ( !ExtractObjectAsString( &p, s ) )
+    case '{': // 如果检测到{;表示是一个对象，进行对象值的解析
+        if (!ExtractObjectAsString(&p, s))
         {
             return false;
         }
         break;
 
-    case '[':   // 对数组进行解析
-        if ( !ExtractArrayAsString( &p, s ) )
+    case '[': // 对数组进行解析
+        if (!ExtractArrayAsString(&p, s))
         {
             return false;
         }
         break;
         /* 默认情况下的解析 */
     default:
-        if ( ( *p == 't' ) || ( *p == 'f' ) || ( *p == 'n' ) || ( *p == '-' ) || ( ( *p >= '0' ) && ( *p <= '9' ) ) )
+        if ((*p == 't') || (*p == 'f') || (*p == 'n') || (*p == '-') || ((*p >= '0') && (*p <= '9')))
         {
             // number or true/false/null  - extract everything up to the next space or ,}] - no checking for valid numbers
-            while ( ( *p != '\0' ) )
+            while ((*p != '\0'))
             {
-                if ( ( *p == ' ' ) || ( *p == ',' ) || ( *p == '}' ) || ( *p == ']' ) )
+                if ((*p == ' ') || (*p == ',') || (*p == '}') || (*p == ']'))
                 {
                     break;
                 }
-                s.push_back( *p );
+                s.push_back(*p);
                 p++;
             }
             /* 检查是否为t,f,n */
-            if ( ( ( s[0] == 't' ) && ( s != "true"  ) ) ||
-                 ( ( s[0] == 'f' ) && ( s != "false" ) ) ||
-                 ( ( s[0] == 'n' ) && ( s != "null"  ) ) )
+            if (((s[0] == 't') && (s != "true")) ||
+                ((s[0] == 'f') && (s != "false")) ||
+                ((s[0] == 'n') && (s != "null")))
             {
                 return false;
             }
 
-            SKIP_SPACES( p );
+            SKIP_SPACES(p);
         }
         else
         {
@@ -250,19 +248,19 @@ bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings )
     }
 
     *ptr = p;
-    str  = s;
+    str = s;
 
     return true;
 }
 
 // Extract JSPN array as string；解析数组
-static bool ExtractArrayAsString( const char** ptr, string& str )
+static bool ExtractArrayAsString(const char **ptr, string &str)
 {
-    const char* p = *ptr;
+    const char *p = *ptr;
 
-    SKIP_SPACES( p );
+    SKIP_SPACES(p);
 
-    if ( *p != '[' )
+    if (*p != '[')
     {
         return false;
     }
@@ -270,58 +268,58 @@ static bool ExtractArrayAsString( const char** ptr, string& str )
     {
         string s, strValue;
 
-        for ( ; ; )
+        for (;;)
         {
             p++;
 
-            if ( !ExtractValue( &p, strValue, true ) )
+            if (!ExtractValue(&p, strValue, true))
             {
                 break;
             }
             //注意这里使用，进行分割
-            if ( !s.empty( ) )
+            if (!s.empty())
             {
-                s.append( "," );
+                s.append(",");
             }
-            s.append( strValue );
+            s.append(strValue);
 
-            if ( *p == ']' )
+            if (*p == ']')
             {
                 break;
             }
 
-            if ( *p != ',' )
+            if (*p != ',')
             {
                 return false;
             }
         }
 
-        if ( *p != ']' )
+        if (*p != ']')
         {
             return false;
         }
         //前后添加新值
-        s.insert( 0, 1, '[' );
-        s.push_back( ']' );
+        s.insert(0, 1, '[');
+        s.push_back(']');
 
         p++; // move to the next character after the array and spaces
-        SKIP_SPACES( p );
+        SKIP_SPACES(p);
 
         *ptr = p;
-        str  = s;
+        str = s;
     }
 
     return true;
 }
 
 // Extract JSON object as string
-static bool ExtractObjectAsString( const char** ptr, string& str )
+static bool ExtractObjectAsString(const char **ptr, string &str)
 {
-    const char* p = *ptr;
+    const char *p = *ptr;
 
-    SKIP_SPACES( p );
+    SKIP_SPACES(p);
 
-    if ( *p != '{' )
+    if (*p != '{')
     {
         return false;
     }
@@ -329,61 +327,61 @@ static bool ExtractObjectAsString( const char** ptr, string& str )
     {
         string s, strName, strValue;
 
-        for (  ;; )
+        for (;;)
         {
             p++;
             //检查属性
-            if ( !ExtractString( &p, strName ) )
+            if (!ExtractString(&p, strName))
             {
                 break;
             }
 
-            if ( *p != ':' )
+            if (*p != ':')
             {
                 return false;
             }
 
             p++;
             //检查，注意这里因为是对象，因此，需要在首位添加""作为序列化区分
-            if ( !ExtractValue( &p, strValue, true ) )
+            if (!ExtractValue(&p, strValue, true))
             {
                 return false;
             }
             //
-            if ( !s.empty( ) )
+            if (!s.empty())
             {
-                s.append( "," );
+                s.append(",");
             }
             //重新整合
-            s.append( strName );
-            s.push_back( ':' );
-            s.append( strValue );
+            s.append(strName);
+            s.push_back(':');
+            s.append(strValue);
 
-            if ( *p == '}' )
+            if (*p == '}')
             {
                 break;
             }
 
-            if ( *p != ',' )
+            if (*p != ',')
             {
                 return false;
             }
         }
 
-        if ( *p != '}' )
+        if (*p != '}')
         {
             return false;
         }
         /* 重新将对象值添加{} */
-        s.insert( 0, 1, '{' );
-        s.push_back( '}' );
+        s.insert(0, 1, '{');
+        s.push_back('}');
 
         // move to the next character after the object and spaces
         p++;
-        SKIP_SPACES( p );
+        SKIP_SPACES(p);
 
         *ptr = p;
-        str  = s;
+        str = s;
     }
 
     return true;
