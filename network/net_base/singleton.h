@@ -30,8 +30,8 @@ namespace detail
 } // namespace detail
 /**
  * 创建多线程单例模板
- * 
- * 
+ *
+ *
  * **/
 template <typename T>
 class Singleton : noncopyable

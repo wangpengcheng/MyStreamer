@@ -6,13 +6,13 @@
  * @version 1.0
  * @date 2020-12-15 23:57:25
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date </th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-15 23:57:25 </td>
@@ -47,7 +47,7 @@ std::string &StringRTrim(std::string &s);
  */
 std::string &StringTrim(std::string &s);
 /**
- * @brief  将字符串中的空字符串代替 
+ * @brief  将字符串中的空字符串代替
  * @param  s                原始字符
  * @param  lookFor          目标字符串
  * @param  replaceWith      替换字符串
@@ -56,4 +56,4 @@ std::string &StringTrim(std::string &s);
 // Replace sub-string within a string
 std::string &StringReplace(std::string &s, const std::string &lookFor, const std::string &replaceWith);
 
-#endif //BASE_STR_TOOLS_H
+#endif // BASE_STR_TOOLS_H

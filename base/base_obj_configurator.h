@@ -7,13 +7,13 @@
  * @version 1.0
  * @date 2020-12-15 19:10:43
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th>Commit date</th>
- *    <th>Version</th> 
- *    <th>Author</th>  
+ *    <th>Version</th>
+ *    <th>Author</th>
  *    <th>Description</th>
  * <tr>
  *    <td>2020-12-15 19:10:43 </td>
@@ -41,14 +41,14 @@ public:
      * @brief  设置属性设置方法
      * @param  propertyName     属性名称
      * @param  value            属性值
-     * @return Error            方法执行是否正确 @link ::BaseError 
+     * @return Error            方法执行是否正确 @link ::BaseError
      */
-    virtual Error SetProperty( const std::string& propertyName, const std::string& value ) = 0;
+    virtual Error SetProperty(const std::string &propertyName, const std::string &value) = 0;
 };
 /**
  * @brief 基础配置类的别名
  */
-typedef BaseObjectConfigurator  ObjectConfigurator;
+typedef BaseObjectConfigurator ObjectConfigurator;
 
 NAMESPACE_END
 

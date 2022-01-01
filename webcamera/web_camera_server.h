@@ -1,23 +1,23 @@
 /**
  * @file web_camera_server.h
- * @brief 摄像头服务关键封装类 
+ * @brief 摄像头服务关键封装类
  * @author wangpengcheng  (wangpengcheng2018@gmail.com)
  * @version 1.0
  * @date 2020-12-18 23:11:45
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date</th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-18 23:11:45 </td>
  *    <td> 1.0 </td>
  *    <td> wangpengcheng </td>
- *    <td>内容</td>
+ *    <td> 增加文档 </td>
  * </tr>
  * </table>
  */
@@ -43,7 +43,7 @@ class WebCameraServer : public Uncopyable
 {
 
 public:
-    typedef std::unordered_map<std::string, std::shared_ptr<WebRequestHandlerInterface>> RequestMap;
+    typedef std::unordered_map<std::string, std::shared_ptr<WebRequestHandlerInterface> > RequestMap;
     /**
      * @brief Construct a new Web Camera Server object
      * @param  path             根路径

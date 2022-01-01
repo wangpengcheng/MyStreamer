@@ -56,7 +56,6 @@ NAMESPACE_START
  * @param  height           图片高度
  * @param  rgbStride        裁剪边长
  */
-//
 inline void DecodeYuyvToRgb(const uint8_t *yuyvPtr,
                             uint8_t *rgbPtr, 
                             int32_t width, 
@@ -120,7 +119,7 @@ inline std::string V4L2pixelFormatToStr(__u32 fromat)
  * @param  pixfmt           格式数据
  * @param  width            宽度
  * @param  height           高度
- * @return int 
+ * @return int              错误具柄信息
  */
 inline int enum_frame_intervals(int dev, __u32 pixfmt, __u32 width, __u32 height)
 {

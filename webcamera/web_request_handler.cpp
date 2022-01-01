@@ -86,13 +86,14 @@ void MjpegRequestHandler::HandleHttpRequest(const net::TcpConnectionPtr &conn, c
         response.addHeader("Cache-Control", "no-store, must-revalidate");
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Expires", "0");
+        // 设置上下文类型
         response.addHeader("Content-Type", "multipart/x-mixed-replace; boundary=--myboundary");
 
         string extenHeader = "\r\n--myboundary\r\nContent-Type: image/jpeg\r\nContent-Length: " + std::to_string(Owner->JpegSize) + "\r\n\r\n";
         extenHeader += std::string((char *)Owner->JpegBuffer, Owner->JpegSize);
         response.setBody(extenHeader);
-        //response.setExternalHeader(extenHeader);
-        // 设置connect 主动时间回调用
+        // response.setExternalHeader(extenHeader);
+        //  设置connect 主动时间回调用
         conn->setTimerCallback(std::bind(&MjpegRequestHandler::HandleTimer, this, conn));
         Timestamp nextTime = addTime(Timestamp::now(), FrameInterval * 1000);
         conn->setTimer(nextTime);
@@ -125,6 +126,7 @@ void MjpegRequestHandler::HandleTimer(const net::TcpConnectionPtr &conn)
         std::lock_guard<std::mutex> lock(Owner->BufferGuard);
 
         // don't try sending too much on slow connections - it will only create video lag
+        // 限制缓冲队列大小
         if (conn->outputBuffer()->readableBytes() < 2 * Owner->JpegSize)
         {
             net::Buffer buf;

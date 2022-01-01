@@ -1,17 +1,17 @@
 /**
  * @file web_request_handler.h
- * @brief web请求处理handler 
+ * @brief web请求处理handler
  * @author wangpengcheng  (wangpengcheng2018@gmail.com)
  * @version 1.0
  * @date 2020-12-18 23:06:30
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date</th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-18 23:06:30 </td>
@@ -47,7 +47,7 @@ public:
      */
     virtual ~WebRequestHandlerInterface();
     /**
-     * @brief 处理的关键函数
+     * @brief 处理的关键函数，继承类必须实现
      * @param  conn             TCP 连接
      * @param  request          解析的请求
      * @param  response         请求的响应
@@ -55,7 +55,7 @@ public:
     virtual void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response) = 0;
     /**
      * @brief  获取方法对应的URL
-     * @return std::string 
+     * @return std::string
      */
     inline std::string Uri() const { return mUri; }
     /**
@@ -82,7 +82,10 @@ public:
                                        Owner(owner)
     {
     }
-    void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
+    void HandleHttpRequest(
+        const net::TcpConnectionPtr &conn,
+        const WebRequest &request,
+        WebResponse &response);
 
 private:
     VideoSourceToWebData *Owner; ///< 关键操作处理函数
@@ -103,21 +106,23 @@ public:
     MjpegRequestHandler(
         const string &uri,
         uint32_t frameRate,
-        VideoSourceToWebData *owner
-        ) : WebRequestHandlerInterface(uri, false),
-            Owner(owner),
-            FrameInterval(1000 / frameRate)
+        VideoSourceToWebData *owner) : WebRequestHandlerInterface(uri, false),
+                                       Owner(owner),
+                                       FrameInterval(1000 / frameRate)
     {
     }
     /**
      * @brief  请求处理函数
-     * @param  conn             TCP连接 
+     * @param  conn             TCP连接
      * @param  request          请求对象
      * @param  response         处理对象
      */
-    void HandleHttpRequest(const net::TcpConnectionPtr &conn, const WebRequest &request, WebResponse &response);
+    void HandleHttpRequest(
+        const net::TcpConnectionPtr &conn,
+        const WebRequest &request,
+        WebResponse &response);
     /**
-     * @brief  定义唤醒处理函数，用来定时主动请求 
+     * @brief  定义唤醒处理函数，用来定时主动请求
      * @param  conn             TCP连接对象
      */
     void HandleTimer(const net::TcpConnectionPtr &conn);

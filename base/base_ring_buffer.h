@@ -9,13 +9,13 @@
  * @version 1.0
  * @date 2020-12-15 19:18:50
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th>Commit date</th>
- *    <th>Version</th> 
- *    <th>Author</th>  
+ *    <th>Version</th>
+ *    <th>Author</th>
  *    <th>Description</th>
  * <tr>
  *    <td>2020-12-15 19:18:50 </td>
@@ -58,11 +58,11 @@ NAMESPACE_START
  *   +-------------------+------------------+------------------+
  *   |                   |                  |                  |
  *   0      <=      readerIndex   <=   writerIndex    <=     size
- * @endcode 
- * @attention 
+ * @endcode
+ * @attention
  * 这只是一个简单的环形缓冲区模板，不具有多线程安全性 \n
  * 需要多线程安全，请使用Buffer  \n
- * 单读单写安全请, 请使用SingleRingBuffer 
+ * 单读单写安全请, 请使用SingleRingBuffer
  * @see ::net::Buffer \n
  *      ::SingleRingBuffer
  * \n
@@ -83,7 +83,7 @@ public:
         buffer_ = new T[size_];
     }
     /**
-     * @brief 空值构造函数；默认缓冲区大小为 DEFAULT_SIZE 
+     * @brief 空值构造函数；默认缓冲区大小为 DEFAULT_SIZE
      * @see ::DEFAULT_SIZE
      */
     CircuBuffer() : size_(DEFAULT_SIZE)
@@ -101,7 +101,7 @@ public:
     }
     /**
      * @brief 获取当前readindex的位置，辅助式获取对应的剩余空间
-     * @return unsigned 
+     * @return unsigned
      */
     unsigned getReadIndex() const
     {
@@ -109,7 +109,7 @@ public:
     }
     /**
      * @brief 获取当前可写index的位置，辅助获取对应的可读或者可写空间
-     * @return unsigned 
+     * @return unsigned
      */
     unsigned getWriteIndex() const
     {
@@ -128,7 +128,7 @@ public:
     }
     /**
      * @brief 检查缓冲区是否已经满
-     * @attention 
+     * @attention
      * 当readIndex与writeIndex相邻时，表示缓冲区已满 \n
      * 因为两个index都是一直向前移动的，中间的差值才是 \n
      * 真正的数据存区域，移动方向相同，相邻表示缓冲区已满 \n
@@ -199,9 +199,8 @@ public:
      * @brief 基础构造函数
      * head和tail在开始时，初始化为0
      */
-    BaseSimpleRingBuffer() : head_(0), tail_(0) 
+    BaseSimpleRingBuffer() : head_(0), tail_(0)
     {
-
     }
     bool push(const T &value)
     {
@@ -253,7 +252,7 @@ private:
 };
 
 /**
- * @brief  判断n是否为2的幂 
+ * @brief  判断n是否为2的幂
  * @param  n                输入参数
  * @return true             是2的幂
  * @return false            不是2的幂
@@ -285,7 +284,7 @@ static uint32_t roundup_power_of_2(uint32_t a)
 /**
  * @brief 参考kfifo的basebufferdata基础数据管理类
  * @attention 这里的大小是2的整数倍大小，建议使用大小为2的整数倍，避免大量空间浪费
- * @details 
+ * @details
  * 仿照kbuffer实现一个一读一写的高速无锁ringbuffer,这里是组合模式; \n
  * <i>参考链接:</i> <a href="https://blog.csdn.net/linyt/article/details/53355355">巧夺天工的kfifo(修订版）</a>
  */
@@ -338,7 +337,7 @@ public:
     }
 
     /**
-     * @brief 重新设置指针，不清除数据 
+     * @brief 重新设置指针，不清除数据
      */
     inline void Reset()
     {
@@ -381,7 +380,7 @@ public:
      */
     uint32_t MoveOut(const uint32_t len);
     /**
-     * @brief  只移动in指针，不做任何操作，返回移动的值 
+     * @brief  只移动in指针，不做任何操作，返回移动的值
      * @param  len             移动长度
      * @return uint32_t         移动成功的长度
      */
@@ -533,4 +532,4 @@ uint32_t SingleRingBuffer<T>::push(T *buffer, uint8_t *extend_ptr)
 }
 NAMESPACE_END
 
-#endif //BASE_RING_BUFFER_H
+#endif // BASE_RING_BUFFER_H

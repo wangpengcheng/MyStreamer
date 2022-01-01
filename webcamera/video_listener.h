@@ -5,13 +5,13 @@
  * @version 1.0
  * @date 2020-12-18 22:58:52
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date</th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-18 22:58:52 </td>
@@ -42,7 +42,6 @@ public:
      * @brief Destroy the Video Listener object
      */
     ~VideoListener();
-    /*  */
     /**
      * @brief 重载接收函数
      * @param  image           图像共享指针

@@ -6,13 +6,13 @@
  * @version 1.0
  * @date 2020-12-15 17:32:28
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th>Commit date</th>
- *    <th>Version</th> 
- *    <th>Author</th>  
+ *    <th>Version</th>
+ *    <th>Author</th>
  *    <th>Description</th>
  * <tr>
  *    <td>2020-12-15 17:32:28 </td>
@@ -92,7 +92,7 @@ public:
     }
     /**
      * @brief Get the All Properties object
-     * @return PropertyMap 
+     * @return PropertyMap
      */
     virtual PropertyMap GetAllProperties() const
     {

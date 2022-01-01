@@ -5,13 +5,13 @@
  * @version 1.0
  * @date 2020-12-19 15:00:52
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date</th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-19 15:00:52 </td>
@@ -22,43 +22,57 @@
  * </table>
  */
 
-
 #ifndef VIDEO_SOURCE_TO_WEB_H
 #define VIDEO_SOURCE_TO_WEB_H
 #include "uncopyable.h"
 #include "video_source_listener_interface.h"
 
-
 NAMESPACE_START
 
 class VideoSourceToWebData;
 class WebRequestHandlerInterface;
+/**
+ * @brief 数据连接转换类
+ */
 class VideoSourceToWeb : private Uncopyable
 {
 public:
-    VideoSourceToWeb( uint16_t jpegQuality = 85 );
-    ~VideoSourceToWeb( );
-    
+    VideoSourceToWeb(uint16_t jpegQuality = 85);
+    ~VideoSourceToWeb();
+
     // Get video source listener, which could be fed to some video source
-    VideoSourceListenerInterface* VideoSourceListener( ) const;
+    VideoSourceListenerInterface *VideoSourceListener() const;
 
-    // 创建image句柄
-    std::shared_ptr<WebRequestHandlerInterface> CreateJpegHandler( const std::string& uri ) const;
+    /**
+     * @brief 创建image句柄
+     * @param  uri              句柄对应url
+     * @return std::shared_ptr<WebRequestHandlerInterface> 处理句柄函数对象
+     */
+    std::shared_ptr<WebRequestHandlerInterface> CreateJpegHandler(const std::string &uri) const;
 
-    /** 创建控制句柄 */ 
-    std::shared_ptr<WebRequestHandlerInterface> CreateMjpegHandler( const std::string& uri, uint32_t frameRate ) const;
+    /**
+     * @brief 创建MJPEG控制句柄
+     * @param  uri              句柄对应url
+     * @param  frameRate        帧率
+     * @return std::shared_ptr<WebRequestHandlerInterface> 处理句柄函数对象
+     */
+    std::shared_ptr<WebRequestHandlerInterface> CreateMjpegHandler(const std::string &uri, uint32_t frameRate) const;
 
-    /** 设置图片的压缩质量 */
-    uint16_t JpegQuality( ) const;
-    void SetJpegQuality( uint16_t quality );
+    /**
+     * @brief  获取JPEG编码质量
+     * @return uint16_t  质量参数
+     */
+    uint16_t JpegQuality() const;
+    /**
+     * @brief 设置图片的压缩质量
+     * @param  quality          目标质量
+     */
+    void SetJpegQuality(uint16_t quality);
 
 private:
-    VideoSourceToWebData* mData;            /** 视频转向web的关键数据结构 */
+    VideoSourceToWebData *mData; ///< 视频转向web的关键数据结构
 };
 
 NAMESPACE_END
-
-
-
 
 #endif

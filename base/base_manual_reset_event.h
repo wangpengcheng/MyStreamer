@@ -2,18 +2,18 @@
  * @file base_manual_reset_event.h
  * @brief 定义BaseManualSesetEvent类，方便管理信号和线程操作
  * @details 基础事件管理类，方便信号管理操作
- * @todo 将其和网络基础库中的 @link ::Condition合并功能  
+ * @todo 将其和网络基础库中的 @link ::Condition合并功能
  * @author wangpengcheng  (wangpengcheng2018@gmail.com)
  * @version 1.0
  * @date 2020-12-15 16:05:43
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th>Commit date</th>
- *    <th>Version</th> 
- *    <th>Author</th>  
+ *    <th>Version</th>
+ *    <th>Author</th>
  *    <th>Description</th>
  * <tr>
  *    <td> 2020-12-15 16:05:43 </td>
@@ -83,13 +83,13 @@ public:
     void Wait();
     /**
      * @brief 等待指定的时间（毫秒），直到事件得到通知
-     * @param  msec            毫秒数
-     * @return true            设置成功
+     * @param  msec             毫秒数
+     * @return true             设置成功
      * @return false            设置失败
      */
     bool Wait(uint32_t msec);
     /**
-     * @brief 检查事件的当前状态，确认信号是否已经收到 
+     * @brief 检查事件的当前状态，确认信号是否已经收到
      * @return true     信号已经收到
      * @return false    信号还未收到
      */

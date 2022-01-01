@@ -81,5 +81,9 @@
         "memory_resource": "cpp",
         "csignal": "cpp",
         "future": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "IRLSCU",
+        "wangpengcheng"
+    ]
 }

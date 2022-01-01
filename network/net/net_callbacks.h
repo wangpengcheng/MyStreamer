@@ -1,7 +1,27 @@
 /**
- * 主要定义loop的时间回调函数
+ * @file net_callbacks.h
+ * @brief 主要定义loop的时间回调函数
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2021-10-19 14:55:53
+ * @copyright Copyright (c) 2021  IRLSCU
  * 
-*/
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th> Commit date</th>
+ *    <th> Version </th> 
+ *    <th> Author </th>  
+ *    <th> Description </th>
+ * </tr>
+ * <tr>
+ *    <td> 2021-10-19 14:55:53 </td>
+ *    <td> 1.0 </td>
+ *    <td> wangpengcheng </td>
+ *    <td> 添加文档注释 </td>
+ * </tr>
+ * </table>
+ */
 
 #ifndef NET_CALLBACKS_H
 #define NET_CALLBACKS_H
