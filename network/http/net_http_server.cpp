@@ -14,7 +14,7 @@ namespace net
     namespace detail
     {
         /* 设置默认的回调函数 */
-        void defaultHttpCallback(const HttpRequest &, HttpResponse *resp)
+        void defaultHttpCallback(const TcpConnectionPtr &conn,const HttpRequest &, HttpResponse *resp)
         {
             resp->setStatusCode(HttpResponse::k404NotFound);
             resp->setStatusMessage("Not Found");
@@ -39,6 +39,7 @@ HttpServer::HttpServer(EventLoop *loop,
     /* 设置消息回调函数 */
     server_.setMessageCallback(
         std::bind(&HttpServer::onMessage, this, _1, _2, _3));
+    
 }
 
 void HttpServer::start()
@@ -83,7 +84,7 @@ void HttpServer::onMessage(const TcpConnectionPtr &conn,
         context->reset();
     }
 }
-/* 执行请求的相关函数 */
+/* 请求回调函数 */
 void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
 {
     const string &connection = req.getHeader("Connection");
@@ -92,7 +93,7 @@ void HttpServer::onRequest(const TcpConnectionPtr &conn, const HttpRequest &req)
     /* 创建响应结构体 */
     HttpResponse response(close);
     /* 执行绑定的请求处理函数相关函数 */
-    httpCallback_(req, &response);
+    httpCallback_(conn,req, &response);
     /* 
         TODO 根据参数的不同，
         绑定不同的Thread

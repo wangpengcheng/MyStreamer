@@ -18,7 +18,8 @@ namespace net
     class HttpServer : noncopyable
     {
     public:
-        typedef std::function<void(const HttpRequest &,
+        typedef std::function<void(const TcpConnectionPtr &conn,
+                                   const HttpRequest &,
                                    HttpResponse *)>
             HttpCallback;
 
@@ -50,11 +51,14 @@ namespace net
         void onMessage(const TcpConnectionPtr &conn,
                        Buffer *buf,
                        Timestamp receiveTime);
+
         /* 注意谨慎使用 */
         void onRequest(const TcpConnectionPtr &, const HttpRequest &);
 
         TcpServer server_;          /* tcp server */
         HttpCallback httpCallback_; /* 响应回调函数 */
+                                    /* server主动回调函数 */
+        
     };
 
 } // namespace net

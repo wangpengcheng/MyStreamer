@@ -4,13 +4,18 @@
 using namespace std;
 
 /*
-样例字符串：
-"{\"list\" : [{ \"camp\" : \"alliance\",\"occupation\" : \"paladin\",\"role_id\" : 1},\{\"camp\" : \"alliance\",\"occupation\" : \"Mage\",\"role_id\" : 2}],\"type\" : \"roles_msg\",\"valid\" : true}"
+
 
 
 */
 /* 声明函数 */
-
+/**
+ * @brief  
+ * @param  ptr              My Param doc
+ * @param  str              My Param doc
+ * @return true             解析成功 
+ * @return false            解析失败
+ */
 static bool ExtractString( const char** ptr, string& str );
 static bool ExtractValue( const char** ptr, string& str, bool addQuotesToStrings );
 static bool ExtractArrayAsString( const char** ptr, string& str );

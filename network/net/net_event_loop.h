@@ -71,7 +71,7 @@ public:
 
     size_t queueSize() const;
 
-    // timers
+    // 定时执行相关函数
 
     ///
     /// Runs callback at 'time'.

@@ -40,7 +40,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
     state_(kConnecting),
     reading_(true),
     socket_(new Socket(sockfd)),
-    channel_(new Channel(loop, sockfd)),/*  每个TCPconnet都会由自己的监听事件管理 */
+    channel_(new Channel(loop, sockfd)),/* 每个TCPconnet都会由自己的监听事件管理 */
     localAddr_(localAddr),
     peerAddr_(peerAddr),
     highWaterMark_(64*1024*1024) /* 设置高水位临界值 */
@@ -131,6 +131,15 @@ void TcpConnection::send(Buffer* buf)
                             buf->retrieveAllAsString()));
                             //std::forward<string>(message)));
         }
+    }else {
+        LOG_INFO<<this->name()<<": state is" << stateToString()<<"can not send data!";
+    }
+}
+void TcpConnection::setTimer(Timestamp& nextTime) 
+{
+    // 设置时钟回调，便于切片
+    if(this->timerCallback_) {
+        timeCallBack(nextTime,std::bind(&TcpConnection::handleTimer,this));
     }
 }
 /* 发送消息 */
@@ -206,7 +215,11 @@ void TcpConnection::sendInLoop(const void* data, size_t len)
         }
     }
 }
-
+void TcpConnection::timeCallBack(Timestamp nextTime,TimerCallback sendCallBack) 
+{
+    //loop_->runAt(nextTime,std::bind());
+    loop_->runAt(nextTime,sendCallBack);
+}
 void TcpConnection::shutdown()
 {
     // FIXME: use compare and swap
@@ -385,6 +398,7 @@ void TcpConnection::handleRead(Timestamp receiveTime)
     int savedErrno = 0;
     /* 使用inputBuffer进行读取 */
     ssize_t n = inputBuffer_.readFd(channel_->fd(), &savedErrno);
+    // 如果大于0就执行读取函数
     if (n > 0)
     {
         messageCallback_(shared_from_this(), &inputBuffer_, receiveTime);
@@ -472,7 +486,7 @@ void TcpConnection::handleClose()
     * 就算guardThis销毁，引用计数仍然有1个
     * 等到调用完connectDestroyed后，bind绑定的TcpConnection也会被销毁，引用计数为0，TcpConnection析构
     */
-    closeCallback_(guardThis);
+    //closeCallback_(guardThis);
 }
 
 void TcpConnection::handleError()
@@ -480,4 +494,11 @@ void TcpConnection::handleError()
     int err = sockets::getSocketError(channel_->fd());
     LOG_ERROR << "TcpConnection::handleError [" << name_
                 << "] - SO_ERROR = " << err << " " << strerror_tl(err);
+}
+// 时钟定时回调切片
+void TcpConnection::handleTimer() 
+{
+    TcpConnectionPtr guardThis(shared_from_this());
+    // 在这里执行回调函数
+    timerCallback_(guardThis);
 }

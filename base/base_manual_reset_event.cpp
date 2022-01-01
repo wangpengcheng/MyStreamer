@@ -19,20 +19,16 @@ void BaseManualResetEvent::Reset( )
     mData->Triggered = false;
 }
 
-// 设置事件，发送信号，
-/*
- * 注意这里使用unique_lock，因为只有它能和condition_variable搭配使用
-*/
 void BaseManualResetEvent::Signal( )
 {
-
+    // 注意这里使用unique_lock，因为只有它能和condition_variable搭配使用
     std::unique_lock<std::mutex> lock( mData->Mutex );
     mData->Triggered = true;
     mData->Counter++;
     mData->CondVariable.notify_all( );
 }
 
-// 等待直到信号到达，自旋
+// 等待直到信号到达之前自旋
 void BaseManualResetEvent::Wait( )
 {
     std::unique_lock<std::mutex> lock( mData->Mutex );

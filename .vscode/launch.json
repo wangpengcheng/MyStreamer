@@ -9,6 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/install/bin/Debug/MyStreamer",
+            //"program": "${workspaceFolder}/install/bin/Debug/http_server_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

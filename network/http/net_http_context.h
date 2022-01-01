@@ -8,18 +8,23 @@ NAMESPACE_START
 
 namespace net
 {
-
+    
     class Buffer;
-    /* http上下文信息，用来解析请求状态参数 */
+    /**
+     * @brief http上下文信息，用来解析请求状态参数 
+     */
     class HttpContext : public copyable
     {
     public:
+        /**
+         * @brief HTTP 请求参数枚举类
+         */
         enum HttpRequestParseState
         {
-            kExpectRequestLine,
-            kExpectHeaders,
-            kExpectBody,
-            kGotAll,
+            kExpectRequestLine,     /** 处理请求行 */
+            kExpectHeaders,         /** 处理HTTP头部 */
+            kExpectBody,            /** 处理Body信息 */
+            kGotAll,                /** 处理完成 */
         };
 
         HttpContext()
@@ -57,8 +62,8 @@ namespace net
     private:
         bool processRequestLine(const char *begin, const char *end);
 
-        HttpRequestParseState state_; /* 请求状态 */
-        HttpRequest request_;         /* 请求解析 */
+        HttpRequestParseState state_; /** 请求状态 */
+        HttpRequest request_;         /** 请求解析 */
     };
 
 } // namespace net

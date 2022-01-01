@@ -25,7 +25,11 @@ namespace net
     public:
         /* 连接回调处理函数，主要是处理socket fd */
         typedef std::function<void(int sockfd)> NewConnectionCallback;
-
+        /**
+         * @brief Construct a new Connector object
+         * @param  loop             绑定的事件循环
+         * @param  serverAddr       服务器地址
+         */
         Connector(EventLoop *loop, const InetAddress &serverAddr);
         ~Connector();
 
@@ -51,7 +55,11 @@ namespace net
         static const int kMaxRetryDelayMs = 30 * 1000;
         /* 最大初始化时间,连接最大等待时间 */
         static const int kInitRetryDelayMs = 500;
-
+        /**
+         * @brief Set the State object
+         * @param  s                当前的连接状态  
+         * 
+         */
         void setState(States s) { state_ = s; }
         /* 开启/停止事件循环 */
         void startInLoop();
@@ -78,6 +86,7 @@ namespace net
         std::unique_ptr<Channel> channel_;
         /* 连接回调 */
         NewConnectionCallback newConnectionCallback_;
+
         /* 延迟时间 */
         int retryDelayMs_;
     };

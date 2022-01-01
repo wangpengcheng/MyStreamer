@@ -58,7 +58,7 @@ public:
         assert(writableBytes() == initialSize);
         assert(prependableBytes() == kCheapPrepend);
     }
-
+    inline std::vector<char> getBuffer(){return buffer_;}
     // implicit copy-ctor, move-ctor, dtor and assignment are fine
     // NOTE: implicit move-ctor is added in g++ 4.6
 
@@ -303,7 +303,7 @@ public:
         retrieveInt16();
         return result;
     }
-
+    
     int8_t readInt8()
     {
         int8_t result = peekInt8();

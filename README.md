@@ -31,6 +31,7 @@ cd MyStreamer
 mkdir build
 cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
 
+
 # run and test
 
 #test Mystreamer 
@@ -38,5 +39,8 @@ cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
 
 # test_http_sever
 ./install/bin/Release/http_server_test
+
+# make docs
+./config/build_doc.sh
 
 ``` 
