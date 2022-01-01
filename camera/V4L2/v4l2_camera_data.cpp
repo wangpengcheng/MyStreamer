@@ -227,7 +227,7 @@ bool V4L2CameraData::Init( )
     if ( ret )
     {
         v4l2_buffer videoBuffer;
-
+        // 处理并映射每一个缓冲区
         for ( int i = 0; i < BUFFER_COUNT; i++ )
         {
             //将buffer重新设置为0
@@ -385,7 +385,7 @@ void V4L2CameraData::VideoCaptureLoop( )
 
         videoBuffer.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         videoBuffer.memory = V4L2_MEMORY_MMAP;
-
+        // 在这里进行数据的拷贝
         ecode = ioctl( VideoFd, VIDIOC_DQBUF, &videoBuffer );
         if ( ecode < 0 )
         {

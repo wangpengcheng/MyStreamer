@@ -15,7 +15,7 @@
 #include "base_tool.h"
 #include <atomic>
 #include <vector>
-
+#include <map>
 NAMESPACE_START
 /**
  * 异步日志线程类
