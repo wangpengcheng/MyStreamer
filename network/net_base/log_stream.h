@@ -1,7 +1,27 @@
-// Use of this source code is governed by a BSD-style license
-// that can be found in the License file.
-//
-// Author: Shuo Chen (chenshuo at chenshuo dot com)
+/**
+ * @file log_stream.h
+ * @brief  日志流相关文件
+ * @author wangpengcheng  (wangpengcheng2018@gmail.com)
+ * @version 1.0
+ * @date 2021-12-05 00:13:08
+ * @copyright Copyright (c) 2021  IRLSCU
+ * 
+ * @par 修改日志:
+ * <table>
+ * <tr>
+ *    <th> Commit date</th>
+ *    <th> Version </th> 
+ *    <th> Author </th>  
+ *    <th> Description </th>
+ * </tr>
+ * <tr>
+ *    <td> 2021-12-05 00:13:08 </td>
+ *    <td> 1.0 </td>
+ *    <td> wangpengcheng </td>
+ *    <td> 添加文档注释 </td>
+ * </tr>
+ * </table>
+ */
 
 #ifndef BASE_LOGSTREAM_H
 #define BASE_LOGSTREAM_H
@@ -20,7 +40,9 @@
 NAMESPACE_START
 namespace detail
 {
-
+    /**
+     * @brief 
+     */
     const int kSmallBuffer = 4000;
     const int kLargeBuffer = 4000 * 1000;
     // buffer模板类
@@ -60,7 +82,7 @@ namespace detail
         void add(size_t len) { cur_ += len; }
         // 重置标志位
         void reset() { cur_ = data_; }
-        // 
+        // 将数组队列设置为0
         void bzero() { memZero(data_, sizeof(data_)); }
 
         // for used by GDB

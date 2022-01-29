@@ -8,7 +8,7 @@ NAMESPACE_START
 
 // A barely usable WeakCallback
 /*
-wpc: 2019-11-27 23:23 
+wpc: 2019-11-27 23:23
 这个主要是使用C++的functional实现回调函数类抽象，
 主要是，实现回调函数的晚绑定。
 参考连接：
@@ -28,13 +28,14 @@ public:
 
     // 设置默认操作函数；将对象和回调函数输入function_中；创建
 
-    void operator()(ARGS &&... args) const
+    void operator()(ARGS &&...args) const
     {
         // 检测原指针是否存在
         std::shared_ptr<CLASS> ptr(object_.lock());
         if (ptr)
         {
-            /* 这里将左值转发为右值 ；注意引用折叠；实现完美转发
+            /* 
+            这里将左值转发为右值 ；注意引用折叠；实现完美转发
             https://blog.csdn.net/theonegis/article/details/86568427
             */
             function_(ptr.get(), std::forward<ARGS>(args)...);

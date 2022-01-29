@@ -43,7 +43,7 @@ public:
         NullPointer,               ///< Input parameter is a null pointer
         OutOfMemory,               ///< Out of memory
         IOError,                   ///< I/O error
-        DeivceNotReady,            ///< Device (whatever it might be) is not ready for the requested action
+        DeviceNotReady,            ///< Device (whatever it might be) is not ready for the requested action
         ConfigurationNotSupported, ///< Configuration is not supported by device/object/whoever
         UnknownProperty,           ///< Specified property is not known
         UnsupportedProperty,       ///< Specified property is not supported by device/object/whoever

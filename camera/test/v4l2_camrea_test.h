@@ -24,7 +24,6 @@
 #ifndef V4L2_CAMERA_TEST_H
 #define V4L2_CAMERA_TEST_H
 
-
 #include "video_source_listener_interface.h"
 #include "image.h"
 #include <iostream>
@@ -34,56 +33,58 @@
 #define IMAGEWIDTH 3264
 #define IMAGEHEIGHT 2448
 
-
 NAMESPACE_START
-
 
 /**
  * @brief opencv监听类，监听处理显示图像 \n 创建一个opencv的listener测试类
  */
-class OpenCVListener: public VideoSourceListenerInterface{
-public :
+class OpenCVListener : public VideoSourceListenerInterface
+{
+public:
     OpenCVListener();
-    ~ OpenCVListener();
-    void OnNewImage( const std::shared_ptr<const Image>& image );
+    ~OpenCVListener();
+    void OnNewImage(const std::shared_ptr<const Image> &image);
     // 视频错误信号
-    void OnError( const std::string& errorMessage, bool fatal );
-    IplImage* img;
+    void OnError(const std::string &errorMessage, bool fatal);
+    IplImage *img;
     CvMat cvmat;
 };
 
 OpenCVListener::OpenCVListener()
 {
-    cvNamedWindow("Capture",CV_WINDOW_AUTOSIZE);
+    cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
 }
 OpenCVListener::~OpenCVListener()
 {
-
 }
 
-void OpenCVListener::OnNewImage( const std::shared_ptr<const Image>& image ){
+void OpenCVListener::OnNewImage(const std::shared_ptr<const Image> &image)
+{
     /* 输出宽，高大小以及数据 指针地址 */
     //std::cout<<"width: "<<image->Width()<<"height："<<image->Height()<<"；size:"<<image->Size()<<"data_addr"<<&image<<"; data_addr:"<<(void*)(image->Data())<<";datasize:"<<sizeof(image->Data())<<std::endl;
-    std::cout<<image->TimeStamp().tv_sec<<":"<<image->TimeStamp().tv_usec<<std::endl;
-    auto temp_img=Image::Allocate(image->Width(),image->Height(),image->Format(),false);
+    std::cout << image->TimeStamp().tv_sec << ":" << image->TimeStamp().tv_usec << std::endl;
+    auto temp_img = Image::Allocate(image->Width(), image->Height(), image->Format(), false);
     /* 将数据写入文件 */
     //WriteImageToFile(image);
     /* 在这里进行数据的输出 */
     /* 在这里进行一次数据复制 */
-    cvmat=cvMat(image->Width(),image->Height(),CV_8UC3,(void*)image->Data());
-    img = cvDecodeImage(&cvmat,1);
-    std::cout<<img->width<<","<<img->height<<std::endl;
-    if(!img){
-		printf("DecodeImage error!\n");
+    cvmat = cvMat(image->Width(), image->Height(), CV_8UC3, (void *)image->Data());
+    img = cvDecodeImage(&cvmat, 1);
+    std::cout << img->width << "," << img->height << std::endl;
+    if (!img)
+    {
+        printf("DecodeImage error!\n");
     }
-	cvShowImage("Capture",img);
+    cvShowImage("Capture", img);
     cvReleaseImage(&img);
-    if((cvWaitKey(1)&255) == 27){
-			exit(0);
+    if ((cvWaitKey(1) & 255) == 27)
+    {
+        exit(0);
     }
 }
-void OpenCVListener::OnError( const std::string& errorMessage, bool fatal ){
-    std::cout<<errorMessage<<std::endl;
+void OpenCVListener::OnError(const std::string &errorMessage, bool fatal)
+{
+    std::cout << errorMessage << std::endl;
 }
 NAMESPACE_END
 #endif

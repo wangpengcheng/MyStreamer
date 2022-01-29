@@ -6,13 +6,13 @@
  * @version 1.0
  * @date 2020-12-16 20:26:56
  * @copyright Copyright (c) 2020  IRLSCU
- * 
+ *
  * @par 修改日志:
  * <table>
  * <tr>
  *    <th> Commit date</th>
- *    <th> Version </th> 
- *    <th> Author </th>  
+ *    <th> Version </th>
+ *    <th> Author </th>
  *    <th> Description </th>
  * <tr>
  *    <td> 2020-12-16 20:26:56 </td>
@@ -48,7 +48,7 @@ public:
     ~V4L2Camera();
     /**
      * @brief  单例构造函数类
-     * @return const std::shared_ptr<V4L2Camera> 
+     * @return const std::shared_ptr<V4L2Camera>
      */
     static const std::shared_ptr<V4L2Camera> Create();
 
@@ -69,8 +69,8 @@ public:
     void WaitForStop();
     /**
      * @brief  检查相机是否正在正常运行
-     * @return true 
-     * @return false 
+     * @return true
+     * @return false
      */
     bool IsRunning();
 
@@ -81,9 +81,9 @@ public:
     uint32_t FramesReceived();
 
     /**
-     * @brief Set the Listener object 
+     * @brief Set the Listener object
      * @param  listener         监听者接收类
-     * @return VideoSourceListenerInterface* 
+     * @return VideoSourceListenerInterface*
      */
     VideoSourceListenerInterface *SetListener(VideoSourceListenerInterface *listener);
 
@@ -112,7 +112,7 @@ public:
     void SetVideoDeviceName(std::string videoDeviceName);
     /**
      * @brief 获取长度
-     * @return uint32_t 对应长度 
+     * @return uint32_t 对应长度
      */
     uint32_t Width() const;
     /**
@@ -129,7 +129,7 @@ public:
 
     /**
      * @brief 查询帧率
-     * @return uint32_t 
+     * @return uint32_t
      */
     uint32_t FrameRate() const;
     /**
@@ -139,8 +139,8 @@ public:
     void SetFrameRate(uint32_t frameRate);
     /**
      * @brief  开启jpeg编码
-     * @return true 
-     * @return false 
+     * @return true
+     * @return false
      */
     bool IsJpegEncodingEnabled() const;
     /**
