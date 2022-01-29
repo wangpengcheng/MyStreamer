@@ -13,8 +13,8 @@
  * <table>
  * <tr>
  *    <th>Commit date</th>
- *    <th>Version</th> 
- *    <th>Author</th>  
+ *    <th>Version</th>
+ *    <th>Author</th>
  *    <th>Description</th>
  * <tr>
  *    <td>2020-12-15 12:45:17 </td>
@@ -35,7 +35,7 @@
  * @param  values           解析结果输出Map函数值
  * @return true             解析成功
  * @return false            解析失败
- * 
+ *
  */
 bool SimpleJsonParser(const std::string &jsonStr, std::map<std::string, std::string> &values);
 
